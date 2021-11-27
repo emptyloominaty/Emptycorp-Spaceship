@@ -1,0 +1,3 @@
+class Antenna extends Part {
+
+}
