@@ -7,7 +7,6 @@ class Ship {
     //---------------------------------------------
     speed = 0 //c
 
-
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
 
     //TODO: water/food?
@@ -22,7 +21,115 @@ class Ship {
     shields = []
     weapons = []
 
+    everyFrame(fps) {
+        this.chargeCapacitors(fps)
 
+        //TODO:FIX? consumption per sec...
+        let batteries = this.checkBatteries()
+        let percent = 1-(batteries[0]/batteries[1])
+        for(let i = 0; i<this.generators.length; i++) {
+            this.generators[i].run(percent,fps)
+        }
+
+    }
+
+    checkTank(type) {
+        let val = 0
+        for (let i = 0; i<this.tanks.length; i++) {
+            if (this.tanks[i].type === type) {
+                val += this.tanks[i].capacity
+            }
+        }
+        return val
+    }
+
+    useTank(type,val) {
+        for (let i = 0; i<this.tanks.length; i++) {
+            if (this.tanks[i].type === type) {
+                if (this.tanks[i].capacity>val) {
+                    this.tanks[i].capacity-=val
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    generatePower(val) {
+        for (let i = 0; i<this.batteries.length; i++) {
+            this.batteries[i].charge+=val/60/60
+            val=0
+            if (this.batteries[i].charge>this.batteries[i].maxCharge) {
+                val = this.batteries[i].charge - this.batteries[i].maxCharge
+                this.batteries[i].charge = this.batteries[i].maxCharge
+            }
+        }
+    }
+
+    chargeCapacitors(fps) { //every 1sec
+        let chargeNeeded = 0
+        let chargeAvailable = 0
+        let chargeArray = []
+
+        for (let i = 0; i<this.capacitors.length; i++) {
+            chargeArray[i] = 0
+            if (this.capacitors[i].charge<this.capacitors[i].maxCharge) {
+                chargeNeeded += this.capacitors[i].maxCharge-this.capacitors[i].charge
+                chargeArray[i] = this.capacitors[i].maxCharge-this.capacitors[i].charge
+            }
+        }
+        for (let i = 0; i<this.batteries.length; i++) {
+            if (this.batteries[i].charge>chargeNeeded) {
+                if ( this.batteries[i].maxDischargeSec > chargeNeeded) {
+                    chargeAvailable += chargeNeeded/fps
+                    this.batteries[i].charge -= chargeNeeded/fps
+                } else {
+                    chargeAvailable += this.batteries[i].maxDischargeSec/fps
+                    this.batteries[i].charge -= this.batteries[i].maxDischargeSec/fps
+                }
+            }
+        }
+        for (let i = 0; i<this.capacitors.length; i++) {
+            if (this.capacitors[i].charge<this.capacitors[i].maxCharge) {
+                if (chargeArray[i]<=chargeAvailable) {
+                    this.capacitors[i].charge += chargeArray[i]
+                    chargeAvailable -= chargeArray[i]
+                } else {
+                    this.capacitors[i].charge += chargeAvailable
+                    chargeAvailable = 0
+                }
+
+            }
+        }
+    }
+
+    usePower(val) {
+        for (let i = 0; i<this.capacitors.length; i++) {
+            if (this.capacitors[i].charge>val) {
+                this.capacitors[i].charge -= val / 60 / 60
+                return true
+            }
+            else {
+                val = val-this.capacitors[i].charge
+                this.capacitors[i].charge=0
+            }
+        }
+        if (val!==0) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    checkBatteries() {
+        let val = 0
+        let valMax = 0
+        for (let i = 0; i<this.batteries.length; i++) {
+            valMax += this.batteries[i].maxCharge
+            val += this.batteries[i].charge
+        }
+        return [val,valMax]
+    }
 
 
     constructor(parts) {
@@ -37,14 +144,17 @@ class Ship {
         }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
-            this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output))
+            this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn || 1))
         }
         for (let i = 0 ; i < parts.tanks.length ; i++) {
             let part = parts.tanks[i]
             this.tanks.push(new Tank(part.weight || 0,part.name || "name", part.tankType, part.type, part.fuelWeight || 0, part.volume || 0, part.pressure || 0))
         }
-
-        //this.engines.push
+        for (let i = 0 ; i < parts.engines.length ; i++) {
+            let part = parts.engines[i]
+            this.engines.push(new Engine(part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
+                part.consumptionFuel, part.consumptionPower))
+        }
         //this.shields.push
         //this.weapons.push
     }
@@ -53,11 +163,11 @@ class Ship {
 
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
-    batteries: [{weight:1000, capacity: 50, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 50MWh",},],
-    capacitors: [{weight:50, capacity: 0.2, /* MWh */name:"Capacitor 720MWs"},
-                {weight:10, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},],
-    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */},
-        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */},], //
+    batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},],
+    capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},
+                {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},],
+    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
+        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.00018408 /* ly/h */, thrust: 17987.52,/* TN */ maxSpeed:12 /* ly/h */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000 /* m/s */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.1,1.5] /*MWh 0-maintaining 1-charging*/}],

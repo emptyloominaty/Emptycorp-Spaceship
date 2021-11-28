@@ -26,6 +26,7 @@ class Battery extends Part {
         this.charge = charge
         this.maxCharge = charge
         this.maxDischarge = maxDischargeRate
+        this.maxDischargeSec = maxDischargeRate/60/60
     }
 
 }

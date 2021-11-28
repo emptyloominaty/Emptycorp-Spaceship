@@ -8,7 +8,7 @@ function update(progress) {
     gameFPS = 1/progress*1000
     timeSec += progress/1000
 
-
+    playerShip.everyFrame(gameFPS)
 
 
 
