@@ -1,5 +1,7 @@
 class Engine extends Part {
 
+
+
     constructor(weight,name,fuelType, type, minSpeed, maxSpeed, thrust, consumptionFuel, consumptionPower) {
         super(weight,name,"engine")
         this.fuelType = fuelType

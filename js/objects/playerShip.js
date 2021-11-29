@@ -9,6 +9,14 @@ class Ship {
 
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
 
+    //---------------------------------------------
+    targetSpeed = 0
+    speedMode = "Sublight"
+
+    powerInput = 0
+    powerOutput = 0
+    
+    //---------------------------------------------
     //TODO: water/food?
     //TODO: cooling?
 
@@ -22,15 +30,34 @@ class Ship {
     weapons = []
 
     everyFrame(fps) {
+        let outputNeeded = this.powerOutput
+        this.resetVars()
+
         this.chargeCapacitors(fps)
 
-        //TODO:FIX? consumption per sec...
-        let batteries = this.checkBatteries()
-        let percent = 1-(batteries[0]/batteries[1])
+        
+        let percent = 0
+        document.getElementById("debug7").innerText = "g0: "+this.generators[0].output
+        document.getElementById("debug8").innerText = "g1: "+this.generators[1].output
         for(let i = 0; i<this.generators.length; i++) {
+            percent = outputNeeded/this.generators[i].output
+            if (i===0) {
+                document.getElementById("debug9").innerText = "p0: "+percent + "= on0: "+outputNeeded+" / out0: "+this.generators[i].output
+            } else if (i===1) {
+                document.getElementById("debug10").innerText = "p1: "+percent + "= on1: "+outputNeeded+" / out1: "+this.generators[i].output
+            }
+           if((this.generators[i].output-outputNeeded)<0) {
+               outputNeeded = outputNeeded-this.generators[i].output
+           }
+            document.getElementById("debug6").innerText = percent*100+"%"
+
             this.generators[i].run(percent,fps)
         }
+    }
 
+    resetVars() {
+        this.powerInput = 0
+        this.powerOutput = 0
     }
 
     checkTank(type) {
@@ -55,7 +82,8 @@ class Ship {
         return false
     }
 
-    generatePower(val) {
+    generatePower(val) { //MW
+        this.powerInput += val*gameFPS
         for (let i = 0; i<this.batteries.length; i++) {
             this.batteries[i].charge+=val/60/60
             val=0
@@ -66,7 +94,7 @@ class Ship {
         }
     }
 
-    chargeCapacitors(fps) { //every 1sec
+    chargeCapacitors(fps) {
         let chargeNeeded = 0
         let chargeAvailable = 0
         let chargeArray = []
@@ -104,6 +132,7 @@ class Ship {
     }
 
     usePower(val) {
+        this.powerOutput += val*gameFPS
         for (let i = 0; i<this.capacitors.length; i++) {
             if (this.capacitors[i].charge>val) {
                 this.capacitors[i].charge -= val / 60 / 60
@@ -144,7 +173,7 @@ class Ship {
         }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
-            this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn || 1))
+            this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn))
         }
         for (let i = 0 ; i < parts.tanks.length ; i++) {
             let part = parts.tanks[i]
@@ -164,9 +193,10 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},],
+    computers: [{}], //TODO:
     capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},
                 {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},],
-    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
+    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:1},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.00018408 /* ly/h */, thrust: 17987.52,/* TN */ maxSpeed:12 /* ly/h */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000 /* m/s */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],

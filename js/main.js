@@ -10,6 +10,8 @@ function update(progress) {
 
     playerShip.everyFrame(gameFPS)
 
+    playerShip.usePower(0.1/gameFPS)
+
 
 
 
