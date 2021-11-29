@@ -94,6 +94,7 @@ class Ship {
         }
     }
 
+
     chargeCapacitors(fps) {
         let chargeNeeded = 0
         let chargeAvailable = 0
@@ -141,16 +142,20 @@ class Ship {
 
     usePower(val) {
         for (let i = 0; i<this.capacitors.length; i++) {
-            if (this.capacitors[i].charge>val) {
-                this.capacitors[i].charge -= val / 60 / 60
+            if (this.capacitors[i].charge>=val / 3600) {
+                    this.capacitors[i].charge -= val / 3600
                 this.powerOutput += val*gameFPS
                 return true
             } else {
-                this.powerOutput += val*gameFPS
+                this.powerOutput += (val-this.capacitors[i].charge)*gameFPS
                 val = val-this.capacitors[i].charge
-                this.capacitors[i].charge=0
+                this.capacitors[i].charge -= val / 3600
+                if (this.capacitors[i].charge<0) {
+                    this.capacitors[i].charge=0
+                }
             }
         }
+
         if (val!==0) {
             return false
         } else {
@@ -200,10 +205,10 @@ class Ship {
 
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
-    batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},],
+    batteries: [{weight:500, capacity: 0.001, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
     computers: [{}], //TODO:
-    capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},
-                {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},],
+    capacitors: [{weight:50, capacity: 0.001, /* MWh */name:"Capacitor 180MWs"},  //0.05
+                {weight:10, capacity: 0.0005, /* MWh */name:"Capacitor 54MWs"},], //0.012
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:1},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.00018408 /* ly/h */, thrust: 17987.52,/* TN */ maxSpeed:12 /* ly/h */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
