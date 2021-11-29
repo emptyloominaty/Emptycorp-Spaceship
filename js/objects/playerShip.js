@@ -29,37 +29,37 @@ class Ship {
     shields = []
     weapons = []
 
+//------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
         let outputNeeded = this.powerOutput
         this.resetVars()
 
         this.chargeCapacitors(fps)
 
-        
+
         let percent = 0
-        document.getElementById("debug7").innerText = "g0: "+this.generators[0].output
-        document.getElementById("debug8").innerText = "g1: "+this.generators[1].output
+        let battery = this.checkBatteries()
+        let charging = 0
+        if ((battery[0]/battery[1])<0.9) {
+            charging = 1
+        }
         for(let i = 0; i<this.generators.length; i++) {
             percent = outputNeeded/this.generators[i].output
-            if (i===0) {
-                document.getElementById("debug9").innerText = "p0: "+percent + "= on0: "+outputNeeded+" / out0: "+this.generators[i].output
-            } else if (i===1) {
-                document.getElementById("debug10").innerText = "p1: "+percent + "= on1: "+outputNeeded+" / out1: "+this.generators[i].output
-            }
            if((this.generators[i].output-outputNeeded)<0) {
                outputNeeded = outputNeeded-this.generators[i].output
            }
-            document.getElementById("debug6").innerText = percent*100+"%"
-
+           if (charging===1) {
+               percent = 1
+           }
             this.generators[i].run(percent,fps)
         }
     }
-
+//------------------------------------------------------------------------------------------------------------------
     resetVars() {
         this.powerInput = 0
         this.powerOutput = 0
     }
-
+//------------------------------------------------------------------------------------------------------------------
     checkTank(type) {
         let val = 0
         for (let i = 0; i<this.tanks.length; i++) {
@@ -115,6 +115,14 @@ class Ship {
                     chargeAvailable += this.batteries[i].maxDischargeSec/fps
                     this.batteries[i].charge -= this.batteries[i].maxDischargeSec/fps
                 }
+            } else if (this.batteries[i].charge>0) {
+                let a = this.batteries[i].maxDischargeSec/fps
+                if (this.batteries[i].charge < a) {
+                    a = this.batteries[i].charge
+                }
+                chargeAvailable += a
+                this.batteries[i].charge -= a
+
             }
         }
         for (let i = 0; i<this.capacitors.length; i++) {
@@ -132,13 +140,13 @@ class Ship {
     }
 
     usePower(val) {
-        this.powerOutput += val*gameFPS
         for (let i = 0; i<this.capacitors.length; i++) {
             if (this.capacitors[i].charge>val) {
                 this.capacitors[i].charge -= val / 60 / 60
+                this.powerOutput += val*gameFPS
                 return true
-            }
-            else {
+            } else {
+                this.powerOutput += val*gameFPS
                 val = val-this.capacitors[i].charge
                 this.capacitors[i].charge=0
             }
@@ -197,7 +205,7 @@ let shipDefaultParts = {
     capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},
                 {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},],
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:1},
-        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
+        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.00018408 /* ly/h */, thrust: 17987.52,/* TN */ maxSpeed:12 /* ly/h */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000 /* m/s */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.1,1.5] /*MWh 0-maintaining 1-charging*/}],
