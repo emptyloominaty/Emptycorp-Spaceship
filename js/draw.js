@@ -9,7 +9,9 @@ function draw(progress) {
         debug4text += "tank["+i+"]: ("+ playerShip.tanks[i].type +") "+ playerShip.tanks[i].capacity +" / "+ playerShip.tanks[i].maxCapacity +"<br/>"
     }
     document.getElementById("debug4").innerHTML = debug4text
-    document.getElementById("debug5").innerText = "-"+ (playerShip.powerOutput*1000).toFixed(2) +"kW / "+  (playerShip.powerInput*1000).toFixed(2) +"kW"
+    document.getElementById("debug5").innerText = "-"+ (playerShip.powerOutput*1000).toFixed(2) +"kW / +"+  (playerShip.powerInput*1000).toFixed(2) +"kW"
+
+    document.getElementById("debug8").innerText = playerShip.weight.toFixed(2) +" kg"
 
     //------------------------------------------------BUTTONS---------------------------------------
 

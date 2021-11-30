@@ -10,7 +10,7 @@ function update(progress) {
 
     playerShip.everyFrame(gameFPS)
 
-    document.getElementById("debug6").innerText = playerShip.usePower(0.008) //0.1
+    document.getElementById("debug6").innerText = playerShip.usePower(0.1/gameFPS)
 }
 
 
