@@ -36,3 +36,7 @@ function debug3() {
         playerShip.generators[1].on=1
     }
 }
+
+function debug4() {
+    playerShip.targetSpeed = document.getElementById("set_speed_input").value
+}

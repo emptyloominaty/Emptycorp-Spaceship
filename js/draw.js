@@ -12,7 +12,7 @@ function draw(progress) {
     document.getElementById("debug5").innerText = "-"+ (playerShip.powerOutput*1000).toFixed(2) +"kW / +"+  (playerShip.powerInput*1000).toFixed(2) +"kW"
 
     document.getElementById("debug8").innerText = playerShip.weight.toFixed(2) +" kg"
-
+    document.getElementById("debug8").innerText = playerShip.speed +"c ("+(playerShip.speed/8765.812756).toFixed(2)+"ly/h)"+" / "+playerShip.targetSpeed+"c"+ "("+(playerShip.targetSpeed/8765.812756).toFixed(2)+"ly/h)"
     //------------------------------------------------BUTTONS---------------------------------------
 
 

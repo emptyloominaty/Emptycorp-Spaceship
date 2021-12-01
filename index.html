@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+
     <!-- START -->
+    <script src="js/functions.js" defer></script>
     <script src="js/main.js" defer></script>
     <!-- -->
     <script src="js/objects/ShipParts/part.js" defer></script>
@@ -42,7 +44,15 @@
  <p id="debug13"> </p>
 
  <button id="btnSetting0" onclick="debug1()">CHARGE</button>
- <button id="btnSetting1" onclick="debug2()">SWITCH[0]</button>
- <button id="btnSetting2" onclick="debug3()">SWITCH[1]</button>
+ <button id="btnSetting1" onclick="debug2()">SWITCH H2 Gen[0]</button>
+ <button id="btnSetting2" onclick="debug3()">SWITCH Ur Gen[1]</button>
+
+ <label id="set_speed_input_text" for="set_speed_input">Set Speed: </label>
+ <input type="number"  value="0"  id="set_speed_input">
+ <button id="btnSetting3" onclick="debug4()">Set</button>
+
+
+
+
 </body>
 </html>

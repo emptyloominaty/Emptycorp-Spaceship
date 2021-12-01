@@ -11,8 +11,8 @@ class Ship {
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
 
     //---------------------------------------------
-    targetSpeed = 0
-    speedMode = "Sublight"
+    targetSpeed = 0 //c
+    speedMode = "FTL"
 
     powerInput = 0
     powerOutput = 0
@@ -39,7 +39,7 @@ class Ship {
 
         this.chargeCapacitors(fps)
 
-
+        //Generators
         let percent = 0
         let battery = this.checkBatteries()
         let charging = 0
@@ -48,7 +48,7 @@ class Ship {
         }
         for(let i = 0; i<this.generators.length; i++) {
             percent = outputNeeded/this.generators[i].output
-           if((this.generators[i].output-outputNeeded)<0) {
+           if(this.generators[i].on===1 && (this.generators[i].output-outputNeeded)<0) {
                outputNeeded = outputNeeded-this.generators[i].output
            }
            if (charging===1) {
@@ -56,7 +56,18 @@ class Ship {
            }
             this.generators[i].run(percent,fps)
         }
+        //Update Weight
         this.updateWeight()
+        //propulsion
+        if (this.targetSpeed>0) {
+            for(let i = 0; i<this.engines.length; i++) {
+                if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
+                    let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
+                    this.speed += (((thrust*1000000)/this.weight)/299792458)/fps     //  MN-->N  kg  M/S->C
+                }
+            }
+
+        }
     }
 //------------------------------------------------------------------------------------------------------------------
     resetVars() {
@@ -238,13 +249,13 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{}], //TODO:
+    computers: [{}], //TODO: Navigation, engineControl, Communication, LifeSupport ?
     capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},  //0.05
                 {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},], //0.012
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:1},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
-    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.00018408 /* ly/h */, thrust: 17987.52,/* TN */ maxSpeed:12 /* ly/h */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000 /* m/s */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
+    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
+        {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000000/299792458 /* c */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.1,1.5] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
