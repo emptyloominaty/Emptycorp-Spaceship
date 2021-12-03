@@ -14,7 +14,7 @@ class Ship {
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "Sublight"
-    propulsion = "on"
+    propulsion = "off"
     acc = 0
     powerInput = 0
     powerOutput = 0
@@ -46,7 +46,7 @@ class Ship {
         let percent = 0
         let battery = this.checkBatteries()
         let charging = 0
-        if ((battery[0]/battery[1])<0.98) {
+        if ((battery[0]/battery[1])<0.999) {
             charging = 1
         }
         for(let i = 0; i<this.generators.length; i++) {
@@ -98,6 +98,23 @@ class Ship {
         if (this.speed<-1) {
             this.speed = -1
         }
+
+
+
+        //computers
+        for(let i = 0; i<this.computers.length; i++) {
+            if(this.computers[i].on===1) {
+                this.computers[i].run()
+            }
+
+        }
+    }
+
+//------------------------------------------------------------------------------------------------------------------
+    resetVars() {
+        this.powerInput = 0
+        this.powerOutput = 0
+        this.thrust = 0
     }
     resetWarpEngines() {
         for(let i = 0; i<this.engines.length; i++) {
@@ -105,12 +122,6 @@ class Ship {
                 this.engines[i].maxFTLThrust=0
             }
         }
-    }
-//------------------------------------------------------------------------------------------------------------------
-    resetVars() {
-        this.powerInput = 0
-        this.powerOutput = 0
-        this.thrust = 0
     }
     updateWeight() {
         this.weight = this.baseWeight
@@ -265,6 +276,10 @@ class Ship {
             let part = parts.capacitors[i]
             this.capacitors.push(new Capacitor(part.weight || 0,part.name || "name", part.capacity))
         }
+        for (let i = 0 ; i < parts.computers.length ; i++) {
+            let part = parts.computers[i]
+            this.computers.push(new Computer(part.weight || 0,part.name || "name", part.modules, part.baseConsumption))
+        }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
             this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn))
@@ -287,7 +302,7 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{}], //TODO: Navigation, engineControl, Communication, LifeSupport ?
+    computers: [{weight:150, memory:512 /* TB */ ,ram:32 /* TB */, cpu:{cores:256, speed:6/* GhZ */}, baseConsumption:0.0007 /* MWh */,name:"Computer A100", modules:["communication","fuelConsumption","lifeSupport","navigation"]}],
     capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},  //0.05
                 {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},], //0.012
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},

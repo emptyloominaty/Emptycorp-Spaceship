@@ -1,20 +1,15 @@
 let lastRender = 0
-let timeSec = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
 
 
 function update(progress) {
     gameFPS = 1/progress*1000
-    timeSec += progress/1000
-
     playerShip.everyFrame(gameFPS)
 
     //document.getElementById("debug6").innerText = playerShip.usePower(0.1/gameFPS)
 }
 
-
-//TEST
 
 //Charge Capacitors to 100%
 function debug1() {
