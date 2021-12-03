@@ -6,16 +6,19 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
+    position = {x:0, y:0, direction:0}
     weight = this.baseWeight
 
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
 
     //---------------------------------------------
     targetSpeed = 0 //c
-    speedMode = "FTL"
-
+    speedMode = "Sublight"
+    propulsion = "on"
+    acc = 0
     powerInput = 0
     powerOutput = 0
+    thrust = 0
     
     //---------------------------------------------
     //TODO: water/food?
@@ -59,20 +62,55 @@ class Ship {
         //Update Weight
         this.updateWeight()
         //propulsion
-        if (this.targetSpeed>0) {
+        if (this.propulsion==="on") {
             for(let i = 0; i<this.engines.length; i++) {
                 if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
+                    this.thrust += thrust
                     this.speed += (((thrust*1000000)/this.weight)/299792458)/fps     //  MN-->N  kg  M/S->C
+                    if (this.speedMode==="Sublight") {
+                        if (this.acc === 1 && this.speed>this.targetSpeed) {
+                            this.propulsion="off"
+                        } else if (this.acc === 0 && this.speed<this.targetSpeed ) {
+                            this.propulsion="off"
+                        }
+
+                    }
                 }
             }
+        }
 
+        if (this.speed>1) {
+            let warpFriction = (Math.pow(this.speed*75, 1.5))
+            document.getElementById("debug12").innerText = (warpFriction).toFixed(2)+" MN"
+            this.speed -= (((warpFriction*1000000)/this.weight)/299792458)/fps
+            if (this.speed<0) {
+                this.speed=0
+            }
+        }
+        if (this.speed>0 && this.speedMode==="FTL") {
+            if (this.targetSpeed==0 || this.propulsion==="off") {
+               this.speed-= this.speed/30 //todo:fix ?
+
+                this.resetWarpEngines()
+            }
+        }
+        if (this.speed<-1) {
+            this.speed = -1
+        }
+    }
+    resetWarpEngines() {
+        for(let i = 0; i<this.engines.length; i++) {
+            if (this.engines[i].type==="FTL") {
+                this.engines[i].maxFTLThrust=0
+            }
         }
     }
 //------------------------------------------------------------------------------------------------------------------
     resetVars() {
         this.powerInput = 0
         this.powerOutput = 0
+        this.thrust = 0
     }
     updateWeight() {
         this.weight = this.baseWeight
@@ -252,10 +290,10 @@ let shipDefaultParts = {
     computers: [{}], //TODO: Navigation, engineControl, Communication, LifeSupport ?
     capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},  //0.05
                 {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},], //0.012
-    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:1},
-        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
+    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
+        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:215000000/299792458 /* c */ , thrust: 1 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
+        {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.1,1.5] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
