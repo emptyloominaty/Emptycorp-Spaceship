@@ -29,7 +29,7 @@ class Engine extends Part {
                 }
             } else if (this.type === "FTL") {
                 let thrust = (this.thrust*(this.maxSpeed/(speed+0.1)))*this.maxFTLThrust
-                let divThrustVal = 10+(1000000/(speed+10))
+                let divThrustVal = 1+(1000000/(speed+5))
                 thrust = thrust*(0.00000000000000000000000000000000001+(targetSpeed-speed)/divThrustVal)
                 if (thrust>this.thrust*this.maxFTLThrust) {thrust = this.thrust*this.maxFTLThrust}
                 if (speed>this.maxSpeed) {thrust = 0}
@@ -39,7 +39,7 @@ class Engine extends Part {
                     }
                 }
             }
-            //-------------------BRAKING
+            //-------------------"BRAKING"
         } else if (targetSpeed<speed) {
             if (this.type === "Sublight") {
                 let thrust = this.thrust*(-1)
@@ -52,7 +52,9 @@ class Engine extends Part {
                     }
                 }
             } else if (this.type === "FTL") {
-
+                if (targetSpeed<speed/1.01) {
+                    playerShip.speed-=speed/30
+                }
             }
         }
 
