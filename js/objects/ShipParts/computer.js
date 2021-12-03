@@ -1,11 +1,12 @@
 class Computer extends Part {
     on = 1
     modules = []
+    mode = 0 //0 = 0%  1 = 100% usage
     run() {
-       if (playerShip.usePower(this.consumption/gameFPS)) {
+       if (playerShip.usePower(this.consumption[0]/gameFPS,this.group)) { //todo:fix power consumption
            for (let i = 0; i<this.modules.length; i++) {
                if (this.modules[i].on===1) {
-                   if (playerShip.usePower(this.modules[i].consumption/gameFPS)) {
+                   if (playerShip.usePower(this.modules[i].consumption/gameFPS,this.group)) {
                        this.modules[i].run()
                    }
                }

@@ -58,14 +58,14 @@ class Engine extends Part {
             }
         }
 
-
+        playerShip.propulsion = "off"
         return 0
     }
 
     usePower(speed,throttle) {
         let powerNeed = (this.consumptionPower[0]+(this.consumptionPower[1]*(speed/this.maxSpeed)))*throttle
         if (powerNeed<0) {powerNeed=0}
-        return playerShip.usePower(powerNeed/gameFPS)
+        return playerShip.usePower(powerNeed/gameFPS,this.group)
     }
 
     useFuel(speed,throttle) {

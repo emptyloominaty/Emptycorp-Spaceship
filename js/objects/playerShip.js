@@ -19,6 +19,7 @@ class Ship {
     powerInput = 0
     powerOutput = 0
     thrust = 0
+    usingFuel = "fuel1"
     
     //---------------------------------------------
     //TODO: water/food?
@@ -234,17 +235,19 @@ class Ship {
         }
     }
 
-    usePower(val) {
+    usePower(val,powerGroup) {
         this.powerOutput += val*gameFPS
         for (let i = 0; i<this.capacitors.length; i++) {
-            if (this.capacitors[i].charge>=val / 3600) {
+            if (this.capacitors[i].powerGroup === powerGroup || this.capacitors[i].powerGroup === "everything") {
+                if (this.capacitors[i].charge >= val / 3600) {
                     this.capacitors[i].charge -= val / 3600
-                return true
-            } else {
-                val = val-this.capacitors[i].charge
-                this.capacitors[i].charge -= val / 3600
-                if (this.capacitors[i].charge<0) {
-                    this.capacitors[i].charge=0
+                    return true
+                } else {
+                    val = val - this.capacitors[i].charge
+                    this.capacitors[i].charge -= val / 3600
+                    if (this.capacitors[i].charge < 0) {
+                        this.capacitors[i].charge = 0
+                    }
                 }
             }
         }
@@ -253,6 +256,7 @@ class Ship {
         } else {
             return true
         }
+
     }
 
     checkBatteries() {
@@ -274,11 +278,11 @@ class Ship {
         }
         for (let i = 0 ; i < parts.capacitors.length ; i++) {
             let part = parts.capacitors[i]
-            this.capacitors.push(new Capacitor(part.weight || 0,part.name || "name", part.capacity))
+            this.capacitors.push(new Capacitor(part.weight || 0,part.name || "name", part.capacity, part.powerGroup))
         }
         for (let i = 0 ; i < parts.computers.length ; i++) {
             let part = parts.computers[i]
-            this.computers.push(new Computer(part.weight || 0,part.name || "name", part.modules, part.baseConsumption))
+            this.computers.push(new Computer(part.weight || 0,part.name || "name", part.modules, part.consumption))
         }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
@@ -302,9 +306,13 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{weight:150, memory:512 /* TB */ ,ram:32 /* TB */, cpu:{cores:256, speed:6/* GhZ */}, baseConsumption:0.0007 /* MWh */,name:"Computer A100", modules:["communication","fuelConsumption","lifeSupport","navigation"]}],
-    capacitors: [{weight:50, capacity: 0.05, /* MWh */name:"Capacitor 180MWs"},  //0.05
-                {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 54MWs"},], //0.012
+    computers: [{weight:150, memory:512 /* TB */ ,ram:32 /* TB */, cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["communication","fuelConsumption","lifeSupport","navigation"]}],
+    capacitors: [{weight:50, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"computer"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"antenna"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"shield"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"weapon"},
+                {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 43.2MWs",powerGroup:"everything"}],
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},

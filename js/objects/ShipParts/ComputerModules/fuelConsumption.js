@@ -9,11 +9,13 @@ class FuelConsumptionModule {
     fuelArrayPrecise = []
     fuelConsumptionAvg = 0
     fuelConsumptionAvgPrecise = 0
+    range = 0
+    rangePrecise = 0
 
     run() {
-        this.fuelA = playerShip.checkTank("fuel1")
+        this.fuelA = playerShip.checkTank(playerShip.usingFuel)
         this.fuelDelta = this.fuelB - this.fuelA
-        this.fuelB = playerShip.checkTank("fuel1")
+        this.fuelB = playerShip.checkTank(playerShip.usingFuel)
 
         //fuel consumption (2sec avg)
         if (this.fuelArray.length>=120) {
@@ -24,8 +26,8 @@ class FuelConsumptionModule {
         for (let i = 0;i<this.fuelArray.length ;i++) {
             cons+=this.fuelArray[i]
         }
-        this.fuelConsumptionAvg = cons/120
-        document.getElementById("debug13").innerText = (this.fuelConsumptionAvg*3600000*gameFPS).toFixed(1)+" g/h"
+        this.fuelConsumptionAvg = (cons/120)*gameFPS*3600000//g/h
+        document.getElementById("debug13").innerText = (this.fuelConsumptionAvg).toFixed(1)+" g/h"
         //fuel consumption (10sec avg)
         if (this.fuelArrayPrecise.length>=600) {
             this.fuelArrayPrecise.shift()
@@ -36,11 +38,21 @@ class FuelConsumptionModule {
         for (let i = 0;i<this.fuelArrayPrecise.length ;i++) {
             consPrecise+=this.fuelArrayPrecise[i]
         }
-        this.fuelConsumptionAvgPrecise = consPrecise/600
-        document.getElementById("debug14").innerText = (this.fuelConsumptionAvgPrecise*3600000*gameFPS).toFixed(1)+" g/h"
+        this.fuelConsumptionAvgPrecise = (consPrecise/600)*gameFPS*3600000 //g/h
+        document.getElementById("debug14").innerText = (this.fuelConsumptionAvgPrecise).toFixed(1)+" g/h"
+
+
+        let speed = playerShip.speed/8765.812756 //ly/h
+        let fuelTimeLeft = this.fuelB/this.fuelConsumptionAvg //seconds
+        this.range = speed*(fuelTimeLeft/3600) //ly range
+        document.getElementById("debug15").innerText = "range: "+(this.range).toFixed(1)+" ly "
+
+        let fuelTimeLeftPrecise = this.fuelB/this.fuelConsumptionAvgPrecise //seconds
+        this.rangePrecise = speed*(fuelTimeLeftPrecise/3600) //ly range
 
 
 
 
+        //todo: return??? ram cpu usage?
     }
 }

@@ -1,6 +1,7 @@
 class Capacitor extends Part {
     charge = 0 //MWh
     maxCharge = 0 //MWh
+    powerGroup = "everything"
 
     discharge(val) {
         if ((this.charge-val)<0) {
@@ -20,10 +21,11 @@ class Capacitor extends Part {
         }
     }
 
-    constructor(weight,name,charge) {
+    constructor(weight,name,charge,powerGroup) {
         super(weight,name,"capacitor")
         this.charge = charge
         this.maxCharge = charge
+        this.powerGroup = powerGroup
 
     }
 
