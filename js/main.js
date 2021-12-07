@@ -6,8 +6,7 @@ let gameFPS = 60
 function update(progress) {
     gameFPS = 1/progress*1000
     playerShip.everyFrame(gameFPS)
-
-    //document.getElementById("debug6").innerText = playerShip.usePower(0.1/gameFPS)
+    
 }
 
 

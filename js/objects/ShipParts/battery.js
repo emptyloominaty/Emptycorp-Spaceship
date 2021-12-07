@@ -21,8 +21,8 @@ class Battery extends Part {
         }
     }
 
-    constructor(weight,name,charge,maxDischargeRate) {
-        super(weight,name,"battery")
+    constructor(id,weight,name,charge,maxDischargeRate) {
+        super(weight,name,"battery",id)
         this.charge = charge
         this.maxCharge = charge
         this.maxDischarge = maxDischargeRate

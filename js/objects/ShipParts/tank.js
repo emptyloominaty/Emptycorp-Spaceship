@@ -1,7 +1,7 @@
 class Tank extends Part {
     gasDensity = 0
-    constructor(weight,name, tankType, type, fuelWeight, volume, pressure) {
-        super(weight,name,"tank" )
+    constructor(id,weight,name, tankType, type, fuelWeight, volume, pressure) {
+        super(weight,name,"tank",id)
         this.tankType = tankType
         this.type = type
         this.fuelWeight = fuelWeight

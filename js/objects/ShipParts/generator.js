@@ -39,8 +39,8 @@ class Generator extends Part {
     }
 
 
-    constructor(weight,name,type,output,defaultOn) {
-        super(weight,name,"generator")
+    constructor(id,weight,name,type,output,defaultOn) {
+        super(weight,name,"generator",id)
         this.type = type
         this.output = output
         if (type === "H2FuelCell") {

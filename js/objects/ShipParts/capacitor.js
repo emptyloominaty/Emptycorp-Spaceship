@@ -21,8 +21,8 @@ class Capacitor extends Part {
         }
     }
 
-    constructor(weight,name,charge,powerGroup) {
-        super(weight,name,"capacitor")
+    constructor(id,weight,name,charge,powerGroup) {
+        super(weight,name,"capacitor",id)
         this.charge = charge
         this.maxCharge = charge
         this.powerGroup = powerGroup

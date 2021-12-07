@@ -74,8 +74,8 @@ class Engine extends Part {
         return playerShip.useTank(this.fuelType,fuelNeed/gameFPS)
     }
 
-    constructor(weight,name,fuelType, type, minSpeed, maxSpeed, thrust, consumptionFuel, consumptionPower) {
-        super(weight,name,"engine")
+    constructor(id,weight,name,fuelType, type, minSpeed, maxSpeed, thrust, consumptionFuel, consumptionPower) {
+        super(weight,name,"engine",id)
         this.fuelType = fuelType
         this.type = type
         this.minSpeed = minSpeed

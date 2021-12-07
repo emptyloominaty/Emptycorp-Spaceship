@@ -7,8 +7,6 @@ function draw(progress) {
         debug2text += "capacitor["+playerShip.capacitors[i].powerGroup+"]:"+ (playerShip.capacitors[i].charge*1000).toFixed(2) +" / "+ (playerShip.capacitors[i].maxCharge*1000) +"<br/>"
     }
     document.getElementById("debug2").innerHTML = debug2text
-  /*  document.getElementById("debug2").innerText = "Capacitor[0]: "+ (playerShip.capacitors[0].charge*1000).toFixed(2) + " / " +  (playerShip.capacitors[0].maxCharge*1000) +"kWh"
-    document.getElementById("debug3").innerText = "Capacitor[1]: "+ (playerShip.capacitors[1].charge*1000).toFixed(2) + " / " +  (playerShip.capacitors[1].maxCharge*1000) +"kWh "*/
 
     let debug4text = ""
     for (let i = 0; i< playerShip.tanks.length; i++) {

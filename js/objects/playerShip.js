@@ -10,7 +10,6 @@ class Ship {
     weight = this.baseWeight
 
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
-
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "Sublight"
@@ -20,6 +19,7 @@ class Ship {
     powerOutput = 0
     thrust = 0
     usingFuel = "fuel1"
+    everyS = 0
     
     //---------------------------------------------
     //TODO: water/food?
@@ -38,6 +38,10 @@ class Ship {
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
+        this.everyS+=progress
+        if (this.everyS>=1000) {
+            this.everySec()
+        }
         let outputNeeded = this.powerOutput
         this.resetVars()
 
@@ -107,7 +111,17 @@ class Ship {
             if(this.computers[i].on===1) {
                 this.computers[i].run()
             }
+        }
+        //antennas
+        for(let i = 0; i<this.antennas.length; i++) {
+            this.antennas[i].run()
+        }
+    }
 
+    everySec() {
+
+        for(let i = 0; i<this.antennas.length; i++) {
+            this.antennas[i].everySec()
         }
     }
 
@@ -271,30 +285,34 @@ class Ship {
 
 
     constructor(parts) {
-        //this.antennas.push
+        for (let i = 0 ; i < parts.antennas.length ; i++) {
+            let part = parts.antennas[i]
+            this.antennas.push(new Antenna(i,part.weight || 0,part.name || "name", part.maxSpeed, part.consumptionPower, part.consumptionFuel, part.fuelType))
+        }
+
         for (let i = 0 ; i < parts.batteries.length ; i++) {
             let part = parts.batteries[i]
-            this.batteries.push(new Battery(part.weight || 0,part.name || "name", part.capacity, part.maxDischarge))
+            this.batteries.push(new Battery(i,part.weight || 0,part.name || "name", part.capacity, part.maxDischarge))
         }
         for (let i = 0 ; i < parts.capacitors.length ; i++) {
             let part = parts.capacitors[i]
-            this.capacitors.push(new Capacitor(part.weight || 0,part.name || "name", part.capacity, part.powerGroup))
+            this.capacitors.push(new Capacitor(i,part.weight || 0,part.name || "name", part.capacity, part.powerGroup))
         }
         for (let i = 0 ; i < parts.computers.length ; i++) {
             let part = parts.computers[i]
-            this.computers.push(new Computer(part.weight || 0,part.name || "name", part.modules, part.consumption))
+            this.computers.push(new Computer(i,part.weight || 0,part.name || "name", part.modules, part.consumption, part.memory))
         }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
-            this.generators.push(new Generator(part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn))
+            this.generators.push(new Generator(i,part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn))
         }
         for (let i = 0 ; i < parts.tanks.length ; i++) {
             let part = parts.tanks[i]
-            this.tanks.push(new Tank(part.weight || 0,part.name || "name", part.tankType, part.type, part.fuelWeight || 0, part.volume || 0, part.pressure || 0))
+            this.tanks.push(new Tank(i,part.weight || 0,part.name || "name", part.tankType, part.type, part.fuelWeight || 0, part.volume || 0, part.pressure || 0))
         }
         for (let i = 0 ; i < parts.engines.length ; i++) {
             let part = parts.engines[i]
-            this.engines.push(new Engine(part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
+            this.engines.push(new Engine(i,part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
                 part.consumptionFuel, part.consumptionPower))
         }
         //this.shields.push
@@ -304,9 +322,9 @@ class Ship {
 
 
 let shipDefaultParts = {
-    antennas: [{weight:3, minSpeed:0.064, maxSpeed:100 /* mbit */, consumptionPower:[0.05, 1, 42]/* kW */, consumptionFuel:[0.001, 0.32, 10]/* g/hour*/,}], //0 = listening, 1-min speed, 2-max speed
+    antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}], //0 = listening, 1-min speed, 2-max speed
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{weight:150, memory:512 /* TB */ ,ram:32 /* TB */, cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["communication","fuelConsumption","lifeSupport","navigation"]}],
+    computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","lifeSupport","navigation"]}],
     capacitors: [{weight:50, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"computer"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"antenna"},
