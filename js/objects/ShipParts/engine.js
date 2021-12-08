@@ -58,7 +58,6 @@ class Engine extends Part {
             }
         }
 
-        playerShip.propulsion = "off"
         return 0
     }
 

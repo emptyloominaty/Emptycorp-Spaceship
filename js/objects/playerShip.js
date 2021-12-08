@@ -322,7 +322,7 @@ class Ship {
 
 
 let shipDefaultParts = {
-    antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}], //0 = listening, 1-min speed, 2-max speed
+    antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
     computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","lifeSupport","navigation"]}],
     capacitors: [{weight:50, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
