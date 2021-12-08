@@ -48,12 +48,13 @@ class FuelConsumptionModule {
 
 
         if (this.partsActivated.calcRange===1) {
+
             let speed = playerShip.speed/8765.812756 //ly/h
-            let fuelTimeLeft = this.fuelB/this.fuelConsumptionAvg //seconds
+            let fuelTimeLeft = ((this.fuelB*1000)/this.fuelConsumptionAvg)*3600 //seconds
             this.range = speed*(fuelTimeLeft/3600) //ly range
             document.getElementById("debug15").innerText = "range: "+(this.range).toFixed(1)+" ly "
             if (this.partsActivated.preciseConsumption===1) {
-                let fuelTimeLeftPrecise = this.fuelB/this.fuelConsumptionAvgPrecise //seconds
+                let fuelTimeLeftPrecise = ((this.fuelB*1000)/this.fuelConsumptionAvgPrecise)*3600 //seconds
                 this.rangePrecise = speed*(fuelTimeLeftPrecise/3600) //ly range
             }
         }
