@@ -14,7 +14,7 @@ class Ship {
     surfaceArea =  128 //m2
 
 
-    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
+    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:294}
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "Sublight"
@@ -27,6 +27,9 @@ class Ship {
     everyS = 0
     pressureSet = 1
     temperatureSet = 294
+
+    lights = { insideOn: 1, outsideOn:0, insideConsumption:0.0002, outsideConsumption:0.0005
+    }
     
     //---------------------------------------------
 
@@ -139,6 +142,9 @@ class Ship {
         document.getElementById("debug12").innerText = "x: "+(this.position.x)+" ly"
         document.getElementById("debug13").innerText = "y: "+(this.position.y)+" ly"
         document.getElementById("debug14").innerText = "dir: "+(this.position.direction)+"°"
+
+        //lights
+        this.doLights()
     }
 
     everySec() {
@@ -200,6 +206,18 @@ class Ship {
         let vy = Math.cos(angleInRadian) * speed
         this.position.x += vx
         this.position.y += vy
+    }
+    doLights() {
+        if (this.lights.insideOn===1) {
+            if (!this.usePower(this.lights.insideConsumption/gameFPS,"light")) {
+                this.lights.insideOn=0
+            }
+        }
+        if (this.lights.outsideOn===1) {
+            if (!this.usePower(this.lights.outsideConsumption/gameFPS,"light")) {
+                this.lights.outsideOn=0
+            }
+        }
     }
 //------------------------------------------------------------------------------------------------------------------
     checkTank(type) {
@@ -368,19 +386,19 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation"]}],
-    capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"computer"},
-                {weight:4, capacity: 0.0010, /* MWh */name:"Capacitor 3.6MWs",powerGroup:"antenna"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"shield"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"weapon"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"lifeSupport"},
-                {weight:70, capacity: 0.0050, /* MWh */name:"Capacitor 18MWs",powerGroup:"everything"}],
+    computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0003,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation"]}],
+    capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"engine"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"computer"},
+                {weight:4, capacity: 0.0010, /* MWh */name:"Capacitor 1kWh",powerGroup:"antenna"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"shield"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"weapon"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"lifeSupport"},
+                {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
-    shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.1,1.5] /*MWh 0-maintaining 1-charging*/}],
+    shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
         {weight:100,tankType:"gas",type:"H2",volume:80 ,pressure:680 },
