@@ -26,8 +26,6 @@ class Computer extends Part {
                 this.comm = this.modules[i]
             } else if (modules[i]==="fuelConsumption") {
                 this.modules.push(new FuelConsumptionModule())
-            } else if (modules[i]==="lifeSupport") {
-                this.modules.push(new LifeSupportModule())
             } else if (modules[i]==="navigation") {
                 this.modules.push(new NavigationModule())
             } else if (modules[i]==="memory") {

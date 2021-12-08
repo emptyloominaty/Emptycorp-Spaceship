@@ -9,7 +9,7 @@ class Ship {
     position = {x:0, y:0, direction:0}
     weight = this.baseWeight
 
-    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
+    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}   //21 0.04
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "Sublight"
@@ -20,12 +20,11 @@ class Ship {
     thrust = 0
     usingFuel = "fuel1"
     everyS = 0
+    pressureSet = 1
     
     //---------------------------------------------
-    //TODO: water/food?
-    //TODO: cooling?
 
-
+    lifeSupport = [new LifeSupport(0,5.4,"Atmosphere Control",0.00004,0.00010)]
     antennas = []
     batteries = []
     capacitors = []
@@ -96,7 +95,7 @@ class Ship {
         if (this.speed>0 && this.speedMode==="FTL") {
             if (this.targetSpeed==0 || this.propulsion==="off") {
                this.speed-= this.speed/30 //todo:fix ?
-
+                if (this.speed<0.000000000000000000000000001) { this.speed = 0}
                 this.resetWarpEngines()
             }
         }
@@ -116,7 +115,11 @@ class Ship {
         for(let i = 0; i<this.antennas.length; i++) {
             this.antennas[i].run()
         }
-    }
+        //life support
+        for(let i = 0; i<this.lifeSupport.length; i++) {
+            this.lifeSupport[i].run()
+        }
+           }
 
     everySec() {
 
@@ -184,6 +187,18 @@ class Ship {
             if (this.tanks[i].type === type) {
                 if (this.tanks[i].capacity>val) {
                     this.tanks[i].capacity-=val
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fillTank(type,val) {
+        for (let i = 0; i<this.tanks.length; i++) {
+            if (this.tanks[i].type === type) {
+                if (this.tanks[i].maxCapacity>this.tanks[i].capacity+val) {
+                    this.tanks[i].capacity+=val
                     return true
                 }
             }
@@ -289,7 +304,6 @@ class Ship {
             let part = parts.antennas[i]
             this.antennas.push(new Antenna(i,part.weight || 0,part.name || "name", part.maxSpeed, part.consumptionPower, part.consumptionFuel, part.fuelType))
         }
-
         for (let i = 0 ; i < parts.batteries.length ; i++) {
             let part = parts.batteries[i]
             this.batteries.push(new Battery(i,part.weight || 0,part.name || "name", part.capacity, part.maxDischarge))
@@ -324,13 +338,14 @@ class Ship {
 let shipDefaultParts = {
     antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
     batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
-    computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","lifeSupport","navigation"]}],
-    capacitors: [{weight:50, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
+    computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation"]}],
+    capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"computer"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"antenna"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"shield"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"weapon"},
-                {weight:10, capacity: 0.012, /* MWh */name:"Capacitor 43.2MWs",powerGroup:"everything"}],
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"lifeSupport"},
+                {weight:70, capacity: 0.012, /* MWh */name:"Capacitor 43.2MWs",powerGroup:"everything"}],
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
@@ -344,7 +359,7 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
-        {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */ },
+        {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
     weapons: [{type:"laser", power:20/* MW */, length:0.1 /*seconds*/}]
 }
