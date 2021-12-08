@@ -9,7 +9,12 @@ class Ship {
     position = {x:0, y:0, direction:0}
     weight = this.baseWeight
 
-    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}   //21 0.04
+    //radiation heat transfer
+    emissivityCoefficient = 0.44 //avg
+    surfaceArea =  128 //m2
+
+
+    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:293}
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "Sublight"
@@ -21,10 +26,12 @@ class Ship {
     usingFuel = "fuel1"
     everyS = 0
     pressureSet = 1
+    temperatureSet = 294
     
     //---------------------------------------------
 
-    lifeSupport = [new LifeSupport(0,5.4,"Atmosphere Control",0.00004,0.00010)]
+    lifeSupport = [new AtmosphereControl(0,5.4,"Atmosphere Control",0.00004,0.00010),
+        new TemperatureControl(0,28.2,"Temperature Control",0.00001,0.00314,0.00158)]
     antennas = []
     batteries = []
     capacitors = []
@@ -119,7 +126,20 @@ class Ship {
         for(let i = 0; i<this.lifeSupport.length; i++) {
             this.lifeSupport[i].run()
         }
-           }
+
+
+        //heat transfer radiation
+        let heatTransfer = (((this.surfaceArea * this.emissivityCoefficient)/this.weight)*Math.pow((this.atmosphere.temperature/293),1.75))*2 //bullshit but idc
+        this.atmosphere.temperature -= heatTransfer/gameFPS
+        document.getElementById("debug4Co2").innerText = "HT: "+heatTransfer+""
+        //TODO:Star
+
+        //-----------------------
+        this.move()
+        document.getElementById("debug12").innerText = "x: "+(this.position.x)+" ly"
+        document.getElementById("debug13").innerText = "y: "+(this.position.y)+" ly"
+        document.getElementById("debug14").innerText = "dir: "+(this.position.direction)+"°"
+    }
 
     everySec() {
 
@@ -170,6 +190,16 @@ class Ship {
             weight+=this[part][i].weight
         }
         return weight
+    }
+    move() {
+        let speedInlyh = this.speed/8765.812756  //lyh
+        let speed = speedInlyh/3600/gameFPS
+
+        let angleInRadian = (this.position.direction*Math.PI) / 180
+        let vx = Math.sin(angleInRadian) * speed
+        let vy = Math.cos(angleInRadian) * speed
+        this.position.x += vx
+        this.position.y += vy
     }
 //------------------------------------------------------------------------------------------------------------------
     checkTank(type) {
@@ -341,11 +371,11 @@ let shipDefaultParts = {
     computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0002,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation"]}],
     capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"engine"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"computer"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"antenna"},
+                {weight:4, capacity: 0.0010, /* MWh */name:"Capacitor 3.6MWs",powerGroup:"antenna"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"shield"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"weapon"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 12.6MWs",powerGroup:"lifeSupport"},
-                {weight:70, capacity: 0.012, /* MWh */name:"Capacitor 43.2MWs",powerGroup:"everything"}],
+                {weight:70, capacity: 0.0050, /* MWh */name:"Capacitor 18MWs",powerGroup:"everything"}],
     generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
         {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},

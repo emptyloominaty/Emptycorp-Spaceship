@@ -1,4 +1,4 @@
-class LifeSupport extends Part {
+class AtmosphereControl extends Part {
     on = 1
     usage = 0
     size = 0.068
@@ -33,7 +33,7 @@ class LifeSupport extends Part {
                             }
                         }
                     }
-                } else if (playerShip.atmosphere.pressure>playerShip.pressureSet+0.001 && playerShip.atmosphere.pressure>0.000001) {
+                } else if (playerShip.atmosphere.pressure>playerShip.pressureSet+0.001 && playerShip.atmosphere.pressure>0.001) {
                     if (playerShip.usePower((this.maxConsumption*50) / gameFPS, this.group)) {
                         let val = (100*playerShip.atmosphere.pressure)/gameFPS
                         let n2use = (val)*3.76
@@ -43,10 +43,6 @@ class LifeSupport extends Part {
                         playerShip.atmosphere.pressure-=(((val*4.76)/1000)/playerShip.atmosphere.volume)
                     }
                 }
-                //TODO:O2
-
-
-                //TODO:N2 ?
             }
         }
         document.getElementById("debug1Co2").innerText = "Pressure: "+playerShip.atmosphere.pressure+"bar"
@@ -56,6 +52,44 @@ class LifeSupport extends Part {
         super(weight,name,"lifeSupport",id)
         this.baseConsumption = baseConsumption
         this.maxConsumption = maxConsumption
+    }
+
+}
+
+
+class TemperatureControl extends Part {
+    on = 1
+    size = 0.0121
+    run() {
+        if (playerShip.usePower(this.baseConsumption/gameFPS, this.group)) {
+            //COOLING
+            if (playerShip.atmosphere.temperature > playerShip.temperatureSet + 0.001) {
+                let percent =  (playerShip.atmosphere.temperature-playerShip.temperatureSet)+0.01
+                if (percent>1) {percent=1}
+
+                let dec = (this.size * percent)/playerShip.atmosphere.volume
+                if (playerShip.usePower((this.coldConsumption*percent)/gameFPS, this.group)) {
+                    playerShip.atmosphere.temperature -= dec
+                }
+            //HEATING
+            } else if (playerShip.atmosphere.temperature < playerShip.temperatureSet - 0.001) {
+                let percent =  (playerShip.temperatureSet-playerShip.atmosphere.temperature)+0.01 //0.01
+                if (percent>1) {percent=1}
+                let inc = this.size * percent/playerShip.atmosphere.volume
+                if (playerShip.usePower((this.heatConsumption*percent)/gameFPS, this.group)) {
+                    playerShip.atmosphere.temperature += inc
+                }
+            }
+        }
+        document.getElementById("debug3Co2").innerText = "Temperature: "+playerShip.atmosphere.temperature+"K"
+    }
+
+
+    constructor(id,weight,name,baseConsumption,heatConsumption,coldConsumption) {
+        super(weight,name,"lifeSupport",id)
+        this.baseConsumption = baseConsumption
+        this.heatConsumption = heatConsumption
+        this.coldConsumption = coldConsumption
     }
 
 }
