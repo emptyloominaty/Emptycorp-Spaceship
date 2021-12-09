@@ -129,6 +129,10 @@ class Ship {
         for(let i = 0; i<this.lifeSupport.length; i++) {
             this.lifeSupport[i].run()
         }
+        //capacitors
+        for(let i = 0; i<this.capacitors.length; i++) {
+            this.capacitors[i].run()
+        }
 
 
         //heat transfer radiation
@@ -146,7 +150,7 @@ class Ship {
         //lights
         this.doLights()
     }
-
+//------------------------------------------------------------------------------------------------------------------
     everySec() {
 
         for(let i = 0; i<this.antennas.length; i++) {

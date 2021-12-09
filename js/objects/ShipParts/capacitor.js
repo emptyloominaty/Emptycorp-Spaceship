@@ -3,6 +3,11 @@ class Capacitor extends Part {
     maxCharge = 0 //MWh
     powerGroup = "everything"
 
+    run() {
+        this.charge-=(0.00000075*this.maxCharge)*((this.charge/this.maxCharge)+0.5) /gameFPS
+    }
+
+
     discharge(val) {
         if ((this.charge-val)<0) {
             return false

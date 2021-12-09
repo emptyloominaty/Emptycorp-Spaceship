@@ -1,5 +1,9 @@
 function draw(progress) {
 
+
+
+
+
     //------------------------------------------------DEBUG---------------------------------------
     document.getElementById("debug1").innerText = "Battery: "+ (playerShip.batteries[0].charge*1000).toFixed(5) + " / " +  (playerShip.batteries[0].maxCharge*1000) +"kWh"
     let debug2text = ""
@@ -20,9 +24,4 @@ function draw(progress) {
     document.getElementById("debug10").innerText = (playerShip.speed*299792458).toFixed(4)+"m/s"
 
     document.getElementById("debug11").innerText = (playerShip.thrust).toFixed(2)+" MN"
-
-    //------------------------------------------------BUTTONS---------------------------------------
-
-
-
 }
