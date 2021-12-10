@@ -2,11 +2,24 @@ let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
 
+let inputRange_speed = 0
+let inputNumber_speed = 0
 
 function update(progress) {
     gameFPS = 1/progress*1000
     playerShip.everyFrame(gameFPS)
-    
+
+
+
+
+    //speed range<->number
+     if (document.getElementById("inputRange_speed").value!==inputRange_speed) {
+         document.getElementById("inputNumber_speed").value = document.getElementById("inputRange_speed").value
+     } else if (document.getElementById("inputNumber_speed").value!==inputNumber_speed) {
+         document.getElementById("inputRange_speed").value = document.getElementById("inputNumber_speed").value
+     }
+     inputRange_speed = document.getElementById("inputRange_speed").value
+     inputNumber_speed = document.getElementById("inputNumber_speed").value
 }
 
 

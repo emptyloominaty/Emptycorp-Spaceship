@@ -352,6 +352,7 @@ class Ship {
 
 
     constructor(parts) {
+        let maxSpeed = 0
         for (let i = 0 ; i < parts.antennas.length ; i++) {
             let part = parts.antennas[i]
             this.antennas.push(new Antenna(i,part.weight || 0,part.name || "name", part.maxSpeed, part.consumptionPower, part.consumptionFuel, part.fuelType))
@@ -380,9 +381,11 @@ class Ship {
             let part = parts.engines[i]
             this.engines.push(new Engine(i,part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
                 part.consumptionFuel, part.consumptionPower))
+            if (part.maxSpeed>maxSpeed) {maxSpeed = part.maxSpeed}
         }
         //this.shields.push
         //this.weapons.push
+        document.getElementById("inputRange_speed").max = maxSpeed
     }
 }
 

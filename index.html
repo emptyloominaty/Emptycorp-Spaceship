@@ -34,14 +34,49 @@
     <!-- -->
     <script src="js/draw.js" defer></script>
     <script src="js/loopInit.js" defer></script>
+    <script src="js/input.js" defer></script>
     <!-- END -->
 
 </head>
 <body>
 <div id="app">
     <div id="topBar">
-
+        <div id="lightsControl">
+            <h3>Lights</h3>
+            <label>Inside: <button id="btn_lightsInside" onclick="inputFunctions.toggleLightsInside()" >On</button></label>
+            <label>Outside: <button id="btn_lightsOutside" onclick="inputFunctions.toggleLightsOutside()" >Off</button></label>
+        </div>
+        <div id="computerControl">
+            <div>
+                <label>Computer: <button id="btn_computer" onclick="inputFunctions.toggleComputer()" >On</button></label>
+                CPU USAGE
+                MEMORY USAGE
+            </div>
+            <div>
+                <label>Memory: <button id="btn_memoryModule" onclick="inputFunctions.toggleComputerModule(0)" >On</button></label>
+                <label>Communication: <button id="btn_communicationModule" onclick="inputFunctions.toggleComputerModule(1)" >On</button></label>
+                <label>Fuel Consumption: <button id="btn_fuelConsumptionModule" onclick="inputFunctions.toggleComputerModule(2)" >On</button></label>
+                <label>Navigation: <button id="btn_navigationModule" onclick="inputFunctions.toggleComputerModule(3)" >On</button></label>
+            </div>
     </div>
+        <div id="antennasControl">
+
+        </div>
+        <div id="enginesControl">
+            <label>Speed Mode: <button id="btn_speedMode" onclick="inputFunctions.toggleSpeedMode()" >Sublight</button></label>
+            <label>Speed: <input type="number" value="0"  id="inputNumber_speed" ><button onclick="inputFunctions.setSpeed()" >Set</button></label>
+
+            <label>Turn off Engines: <button id="btn_turnOffEngines" onclick="inputFunctions.turnOffEngines()" >On</button></label>
+        </div>
+        <div id="AtmosphereControl">
+
+        </div>
+        <div id="ShieldsControl">
+
+        </div>
+    </div>
+    <!-- WIDTH 100% ?-->
+    <input type="range" min="0" max="10000" value="0"  id="inputRange_speed" >
 
 
 </div>
