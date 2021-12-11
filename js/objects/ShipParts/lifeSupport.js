@@ -61,27 +61,33 @@ class TemperatureControl extends Part {
     on = 1
     size = 0.0121
     run() {
-        if (playerShip.usePower(this.baseConsumption/gameFPS, this.group)) {
-            //COOLING
-            if (playerShip.atmosphere.temperature > playerShip.temperatureSet + 0.001) {
-                let percent =  (playerShip.atmosphere.temperature-playerShip.temperatureSet)+0.01
-                if (percent>1) {percent=1}
+        if (this.on===1) {
+            if (playerShip.usePower(this.baseConsumption / gameFPS, this.group)) {
+                //COOLING
+                if (playerShip.atmosphere.temperature > playerShip.temperatureSet + 0.001) {
+                    let percent = (playerShip.atmosphere.temperature - playerShip.temperatureSet) + 0.01
+                    if (percent > 1) {
+                        percent = 1
+                    }
 
-                let dec = (this.size * percent)/playerShip.atmosphere.volume
-                if (playerShip.usePower((this.coldConsumption*percent)/gameFPS, this.group)) {
-                    playerShip.atmosphere.temperature -= dec
-                }
-            //HEATING
-            } else if (playerShip.atmosphere.temperature < playerShip.temperatureSet - 0.001) {
-                let percent =  (playerShip.temperatureSet-playerShip.atmosphere.temperature)+0.01 //0.01
-                if (percent>1) {percent=1}
-                let inc = this.size * percent/playerShip.atmosphere.volume
-                if (playerShip.usePower((this.heatConsumption*percent)/gameFPS, this.group)) {
-                    playerShip.atmosphere.temperature += inc
+                    let dec = (this.size * percent) / playerShip.atmosphere.volume
+                    if (playerShip.usePower((this.coldConsumption * percent) / gameFPS, this.group)) {
+                        playerShip.atmosphere.temperature -= dec
+                    }
+                    //HEATING
+                } else if (playerShip.atmosphere.temperature < playerShip.temperatureSet - 0.001) {
+                    let percent = (playerShip.temperatureSet - playerShip.atmosphere.temperature) + 0.01 //0.01
+                    if (percent > 1) {
+                        percent = 1
+                    }
+                    let inc = this.size * percent / playerShip.atmosphere.volume
+                    if (playerShip.usePower((this.heatConsumption * percent) / gameFPS, this.group)) {
+                        playerShip.atmosphere.temperature += inc
+                    }
                 }
             }
         }
-        document.getElementById("debug3Co2").innerText = "Temperature: "+playerShip.atmosphere.temperature+"K"
+        document.getElementById("debug3Co2").innerText = "Temperature: " + playerShip.atmosphere.temperature + "K"
     }
 
 

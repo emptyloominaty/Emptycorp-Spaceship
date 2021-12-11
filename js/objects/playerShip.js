@@ -17,7 +17,7 @@ class Ship {
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:294}
     //---------------------------------------------
     targetSpeed = 0 //c
-    speedMode = "Sublight"
+    speedMode = "FTL"
     propulsion = "off"
     acc = 0
     powerInput = 0
@@ -350,6 +350,22 @@ class Ship {
         return [val,valMax]
     }
 
+    getSpeedText(speed) {
+        let ret = ""
+        if (speed>10000000) {
+            ret = (speed/8765.812756/3600).toFixed(2)+"ly/s"
+        }else if (speed>1000) {
+            ret = (speed/8765.812756).toFixed(2)+"ly/h"
+        }else if (speed>0.01) {
+            ret = (speed).toFixed(2)+"c"
+        } else if (speed>0.0001) {
+            ret = (speed*299792.458).toFixed(2)+"km/s"
+        } else {
+            ret = (speed*299792458).toFixed(2)+"m/s"
+        }
+
+        return ret
+    }
 
     constructor(parts) {
         let maxSpeed = 0
@@ -386,6 +402,7 @@ class Ship {
         //this.shields.push
         //this.weapons.push
         document.getElementById("inputRange_speed").max = maxSpeed
+        this.maxSpeed = maxSpeed
     }
 }
 

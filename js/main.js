@@ -5,22 +5,45 @@ let gameFPS = 60
 let inputRange_speed = 0
 let inputNumber_speed = 0
 
+
+let elements = {
+    inputRange_speed: document.getElementById("inputRange_speed"),
+    inputNumber_speed: document.getElementById("inputNumber_speed"),
+    atmosphereComposition: document.getElementById("atmosphereComposition"),
+    pressureAndTemperature: document.getElementById("pressureAndTemperature"),
+    speedFill: document.getElementById("speedFill"),
+    speedText: document.getElementById("speedText"),
+    antennasControl: document.getElementById("antennasControl"),
+    energyConsumption: document.getElementById("energyConsumption"),
+    energyGeneration: document.getElementById("energyGeneration"),
+}
+
+
 function update(progress) {
     gameFPS = 1/progress*1000
+
+    //update player ship
     playerShip.everyFrame(gameFPS)
 
 
 
 
     //speed range<->number
-     if (document.getElementById("inputRange_speed").value!==inputRange_speed) {
-         document.getElementById("inputNumber_speed").value = document.getElementById("inputRange_speed").value
-     } else if (document.getElementById("inputNumber_speed").value!==inputNumber_speed) {
-         document.getElementById("inputRange_speed").value = document.getElementById("inputNumber_speed").value
+     if (elements.inputRange_speed.value!==inputRange_speed) {
+         elements.inputNumber_speed.value = elements.inputRange_speed.value
+     } else if (elements.inputNumber_speed.value!==inputNumber_speed) {
+         elements.inputRange_speed.value = elements.inputNumber_speed.value
      }
-     inputRange_speed = document.getElementById("inputRange_speed").value
-     inputNumber_speed = document.getElementById("inputNumber_speed").value
+     inputRange_speed = elements.inputRange_speed.value
+     inputNumber_speed = elements.inputNumber_speed.value
+
+
 }
+
+
+
+
+
 
 
 //Charge Capacitors to 100%

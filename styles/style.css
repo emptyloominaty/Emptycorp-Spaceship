@@ -1,5 +1,104 @@
 html {
     background-color: #343434;
-    color:#fff;
+    color: #d1d1d1;
     font-family: Consolas, monospace;
 }
+body {
+    margin:5px;
+}
+h3 {
+    margin:0;
+}
+
+p {
+    margin:0;
+}
+
+input[type=number] {
+
+}
+
+.flex-center {
+    display:flex;
+    justify-content: center;
+}
+
+.flex-column {
+    display:flex;
+    flex-direction:column;
+}
+
+.flex-row {
+    display:flex;
+    flex-direction:row;
+}
+
+
+.paddingDiv {
+    padding: 3px 5px 3px 5px;
+}
+
+#inputRange_speed {
+    width:100%;
+}
+
+#inputRange_speed {
+    margin:0;
+    opacity:0.5;
+    position:absolute;
+    height: 20px;
+    -webkit-appearance: none;
+    background: #111;
+    outline: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 1);
+}
+
+#inputRange_speed::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #295e9e;
+    cursor: pointer;
+    border: 4px solid #333;
+    box-shadow: -2007px 0 0 2000px #295e9e;
+}
+
+#speedBorder {
+    width:100%;
+    border:1px solid #111;
+    height: 20px;
+    border-radius: 15px 0 0 15px;
+    position:relative;
+}
+
+#speedFill {
+    width:0;
+    height: 20px;
+    background-color: #9099c8;
+    border-radius: 15px 0 0 15px;
+    position:absolute;
+}
+#speedText {
+    padding-left:10px;
+    font-weight:600;
+    text-shadow: 0 0 2px #fff;
+    color:#000;
+    position:absolute;
+}
+
+#energyConsumption {
+    color: #ffad9b;
+}
+
+#energyGeneration {
+    color: #a1ff9f;
+}
+
+/* ONLY FOR DEBUG*/
+/*
+div {
+    border:1px solid #fff;
+}*/

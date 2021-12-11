@@ -1,7 +1,25 @@
+//START
+
+
+
+//GENERATE ANTENNAS DIV
+let antennasHTML = ""
+for (let i = 0; i<playerShip.antennas.length; i++) {
+    antennasHTML += "Antenna["+i+"]: <button id='btn_antenna"+i+"' onclick='inputFunctions.toggleAntenna("+i+")'>On</button>"
+}
+elements.antennasControl.innerHTML = antennasHTML
+
+
+
+
 function draw(progress) {
-
-
-
+    //------------------------------------------------UI------------------------------------------
+    elements.atmosphereComposition.innerText = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
+    elements.pressureAndTemperature.innerText =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
+    //update speed bar
+    elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
+    elements.speedText.innerText = "Speed: "+playerShip.getSpeedText(playerShip.speed)
+    //energy
 
 
     //------------------------------------------------DEBUG---------------------------------------
