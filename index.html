@@ -64,7 +64,6 @@
             </div>
     </div>
         <div id="antennasControl" class="paddingDiv">
-            TODO!!
         </div>
         <div id="enginesControl" class="flex-column topBarDiv">
             <label class="flex-row">Speed Mode: <button id="btn_speedMode" onclick="inputFunctions.toggleSpeedMode()" >FTL</button></label>
@@ -96,17 +95,35 @@
         <div id="speedText"></div>
         <input type="range" min="0" max="10000" value="0"  id="inputRange_speed" >
     </div>
-    <canvas width="100%" height="500px">
 
-    </canvas>
-    <div id="bottomDiv">
-        <div id="energyDiv">
-            <p id="energyConsumption"></p>
-            <p id="energyGeneration"></p>
+    <div>
+        <canvas width="1900px" height="500px" style="background-color:#000;width:100%;height:500px;" ></canvas>
+    </div>
+
+    <div id="bottomDiv" class="flex-row">
+        <div id="energyDiv" class="flex-row width400">
+            <div>
+                <p id="energyConsumption"></p>
+                <p id="energyGeneration"></p>
+                <div id="generatorsControl">
+                </div>
+                <div id="capacitors">
+                </div>
+            </div>
+            <div>
+                <div id="batteries">
+                    <div id="batteryBorder"><div id="batteryValue"><p id="batteryText"></p></div>></div>
+
+                </div>
+            </div>
+
         </div>
         <div id="computerScreen">
+            <canvas width="600px" height="400px" style="background-color:#000"></canvas>
         </div>
-        <div id="tanksDiv">
+        <div id="tanksDiv" class="width400">
+            <div id="gasTanksDiv"></div>
+            <div id="fuelTanksDiv"></div>
         </div>
     </div>
 

@@ -80,6 +80,7 @@ let inputFunctions = {
     },
     toggleGenerator(id) {
         playerShip.generators[id].on = 1 - playerShip.generators[id].on
+        this.toggleButtonText( document.getElementById("btn_generator"+id),playerShip.generators[id].on)
     },
 
 

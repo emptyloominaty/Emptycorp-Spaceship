@@ -16,7 +16,16 @@ let elements = {
     antennasControl: document.getElementById("antennasControl"),
     energyConsumption: document.getElementById("energyConsumption"),
     energyGeneration: document.getElementById("energyGeneration"),
+    generatorsControl: document.getElementById("generatorsControl"),
+    capacitors: document.getElementById("capacitors"),
+    batteries: document.getElementById("batteries"),
+    batteryBorder: document.getElementById("batteryBorder"),
+    batteryValue: document.getElementById("batteryValue"),
+    batteryText: document.getElementById("batteryText"),
+    gasTanksDiv: document.getElementById("gasTanksDiv"),
+    fuelTanksDiv: document.getElementById("fuelTanksDiv"),
 }
+
 
 
 function update(progress) {

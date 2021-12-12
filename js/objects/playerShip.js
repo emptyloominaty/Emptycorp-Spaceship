@@ -50,6 +50,7 @@ class Ship {
         this.everyS+=progress
         if (this.everyS>=1000) {
             this.everySec()
+            this.everyS=0
         }
         let outputNeeded = this.powerOutput
         this.resetVars()
@@ -152,7 +153,12 @@ class Ship {
     }
 //------------------------------------------------------------------------------------------------------------------
     everySec() {
-
+        for (let i = 0; i<this.capacitors.length; i++) {
+            this.capArrayA[i] = this.capacitors[i].charge
+            this.capacitors[i].dischargePerSec = this.capArrayA[i]-this.capArrayB[i] - this.capacitors[i].chargedPerSec
+            this.capArrayB[i] = this.capacitors[i].charge
+            this.capacitors[i].chargedPerSec = 0
+        }
         for(let i = 0; i<this.antennas.length; i++) {
             this.antennas[i].everySec()
         }
@@ -306,9 +312,11 @@ class Ship {
             if (this.capacitors[i].charge<this.capacitors[i].maxCharge) {
                 if (chargeArray[i]<=chargeAvailable) {
                     this.capacitors[i].charge += chargeArray[i]
+                    this.capacitors[i].chargedPerSec += chargeArray[i]
                     chargeAvailable -= chargeArray[i]
                 } else {
                     this.capacitors[i].charge += chargeAvailable
+                    this.capacitors[i].chargedPerSec += chargeAvailable
                     chargeAvailable = 0
                 }
 
@@ -403,25 +411,31 @@ class Ship {
         //this.weapons.push
         document.getElementById("inputRange_speed").max = maxSpeed
         this.maxSpeed = maxSpeed
+        this.capArrayA = []
+        this.capArrayB = []
+        for (let i = 0; i<this.capacitors.length; i++) {
+            this.capArrayA.push(0)
+            this.capArrayB.push(0)
+        }
     }
 }
 
 
 let shipDefaultParts = {
     antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
-    batteries: [{weight:500, capacity: 1, /* MWh */maxDischarge:1 /* MWh */,name:"Battery 1MWh",},], //1
+    batteries: [{weight:350, capacity: 0.1, /* MWh */maxDischarge:0.5 /* MWh */,name:"Battery 0.1MWh",},],
     computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0003,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation"]}],
-    capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"engine"},
+    capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"lifeSupport"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"computer"},
                 {weight:4, capacity: 0.0010, /* MWh */name:"Capacitor 1kWh",powerGroup:"antenna"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"shield"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"weapon"},
-                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"lifeSupport"},
+                {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"engine"},
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
-    generators: [{weight:500, type:"H2FuelCell", output: 0.0027 /* MW */,defaultOn:0},
-        {weight:1000, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:1},], //
+    generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
+        {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weigth:500, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
+        {weigth:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},

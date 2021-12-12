@@ -33,6 +33,14 @@ input[type=number] {
     flex-direction:row;
 }
 
+#bottomDiv {
+    display:flex;
+    justify-content: space-evenly;
+}
+
+.width400 {
+    width:400px;
+}
 
 .paddingDiv {
     padding: 3px 5px 3px 5px;
@@ -97,8 +105,77 @@ input[type=number] {
     color: #a1ff9f;
 }
 
+.capacitorBorder {
+    width:100px;
+    height:22px;
+    border:1px solid #000;
+    position:relative;
+}
+
+.capacitorValue {
+    height:22px;
+    background-color: #295e9e;
+    position:absolute;
+}
+
+.capacitorType {
+    position:absolute;
+}
+
+
+#batteryBorder {
+    height:280px;
+    width:60px;
+    position:relative;
+}
+
+#batteryValue {
+    width:60px;
+    position:absolute;
+    bottom:0;
+    background-color: #539e52;
+}
+#batteryText {
+    text-align: center;
+    top:102px; /*(batteryBorder.height-72)/2 */
+    position:absolute;
+}
+
+.tankBorder {
+    width:300px;
+    height:22px;
+    border:1px solid #000;
+    position:relative;
+}
+
+.tankValue {
+    height:22px;
+    position:absolute;
+}
+
+.gasTank {
+    background-color: #6f9a9e;
+}
+
+.fuelTank {
+    background-color: #9e9c6b;
+}
+
+.tankText {
+    position:absolute;
+    padding-left:10px;
+}
+
+.tankText2 {
+    position:absolute;
+    padding-left:100px;
+    left:0;
+    right:0;
+    text-align: center;
+}
+
+
 /* ONLY FOR DEBUG*/
-/*
 div {
     border:1px solid #fff;
-}*/
+}
