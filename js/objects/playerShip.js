@@ -97,7 +97,6 @@ class Ship {
 
         if (this.speed>1) {
             let warpFriction = (Math.pow(this.speed*75, 1.5))
-            document.getElementById("debug12").innerText = (warpFriction).toFixed(2)+" MN"
             this.speed -= (((warpFriction*1000000)/this.weight)/299792458)/fps
             if (this.speed<0) {
                 this.speed=0
@@ -139,14 +138,10 @@ class Ship {
         //heat transfer radiation
         let heatTransfer = (((this.surfaceArea * this.emissivityCoefficient)/this.weight)*Math.pow((this.atmosphere.temperature/293),1.75))*2 //bullshit but idc
         this.atmosphere.temperature -= heatTransfer/gameFPS
-        document.getElementById("debug4Co2").innerText = "HT: "+heatTransfer+""
         //TODO:Star
 
         //-----------------------
         this.move()
-        document.getElementById("debug12").innerText = "x: "+(this.position.x)+" ly"
-        document.getElementById("debug13").innerText = "y: "+(this.position.y)+" ly"
-        document.getElementById("debug14").innerText = "dir: "+(this.position.direction)+"°"
 
         //lights
         this.doLights()
@@ -161,6 +156,12 @@ class Ship {
         }
         for(let i = 0; i<this.antennas.length; i++) {
             this.antennas[i].everySec()
+        }
+
+        if (this.propulsion==="off") {
+            elements.btn_turnOffEngines.style.backgroundColor = "#d34644"
+        } else if (this.propulsion==="on") {
+            elements.btn_turnOffEngines.style.backgroundColor = "#4bd44f"
         }
     }
 

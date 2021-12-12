@@ -40,44 +40,45 @@
 </head>
 <body>
 <div id="app">
-    <div id="topBar" class="flex-center">
+    <div id="topBar" class="space-evenly">
         <div id="lightsControl" class="flex-column paddingDiv">
             <h3>Lights</h3>
-            <label class="flex-row">Inside: <button id="btn_lightsInside" onclick="inputFunctions.toggleLightsInside()" >On</button></label>
-            <label class="flex-row">Outside: <button id="btn_lightsOutside" onclick="inputFunctions.toggleLightsOutside()" >Off</button></label>
+            <label class="flex-row">Inside: <button id="btn_lightsInside" onclick="inputFunctions.toggleLightsInside()" ></button></label>
+            <label class="flex-row">Outside: <button id="btn_lightsOutside" onclick="inputFunctions.toggleLightsOutside()" ></button></label>
         </div>
         <div id="computerControl" class="flex-center paddingDiv">
             <div class="flex-column" >
-                <label class="flex-row">Computer: <button id="btn_computer" onclick="inputFunctions.toggleComputer()" >On</button></label>
+                <label class="flex-row">Computer: <button id="btn_computer" onclick="inputFunctions.toggleComputer()" ></button></label>
                 <p>CPU USAGE</p>
                 <p>MEMORY USAGE</p>
             </div>
-            <div class="paddingDiv flex-row">
-                <div class="flex-column paddingDiv">
-                    <label class="flex-row">Memory: <button id="btn_memoryModule" onclick="inputFunctions.toggleComputerModule(0)" >On</button></label>
-                    <label class="flex-row">Communication: <button id="btn_communicationModule" onclick="inputFunctions.toggleComputerModule(1)" >On</button></label>
-                    <label class="flex-row">Fuel Consumption: <button id="btn_fuelConsumptionModule" onclick="inputFunctions.toggleComputerModule(2)" >On</button></label>
-                </div>
-                <div class="flex-column paddingDiv">
-                    <label class="flex-row">Navigation: <button id="btn_navigationModule" onclick="inputFunctions.toggleComputerModule(3)" >On</button></label>
-                </div>
+        </div>
+        <div class="flex-row">
+            <div class="flex-column paddingDiv">
+                <label class="flex-row">Memory: <button id="btn_memoryModule" onclick="inputFunctions.toggleComputerModule(0)" ></button></label>
+                <label class="flex-row">Communication: <button id="btn_communicationModule" onclick="inputFunctions.toggleComputerModule(1)" ></button></label>
+                <label class="flex-row">Fuel Consumption: <button id="btn_fuelConsumptionModule" onclick="inputFunctions.toggleComputerModule(2)" ></button></label>
             </div>
-    </div>
+            <div class="flex-column paddingDiv">
+                <label class="flex-row">Navigation: <button id="btn_navigationModule" onclick="inputFunctions.toggleComputerModule(3)" ></button></label>
+            </div>
+        </div>
+
         <div id="antennasControl" class="paddingDiv">
         </div>
         <div id="enginesControl" class="flex-column topBarDiv">
             <label class="flex-row">Speed Mode: <button id="btn_speedMode" onclick="inputFunctions.toggleSpeedMode()" >FTL</button></label>
-            <label class="flex-row">Speed: <input type="number" value="0"  id="inputNumber_speed" ><button onclick="inputFunctions.setSpeed()" >Set</button></label>
-            <label class="flex-row">Turn off Engines: <button id="btn_turnOffEngines" onclick="inputFunctions.turnOffEngines()" >On</button></label>
+            <label class="flex-row">Speed: <input type="number" value="0"  id="inputNumber_speed" ><button id="btn_setSpeed" onclick="inputFunctions.setSpeed()" >Set</button></label>
+            <label class="flex-row">Turn off Engines: <button id="btn_turnOffEngines" onclick="inputFunctions.turnOffEngines()" ></button></label>
         </div>
         <div id="AtmosphereControl" class="flex-row paddingDiv">
             <div class="paddingDiv">
-                <label class="flex-row">Atmosphere Control: <button id="btn_atmosphereControl" onclick="inputFunctions.toggleAtmosphereControl()" >On</button></label>
-                <label class="flex-row">Temperature Control: <button id="btn_temperatureControl" onclick="inputFunctions.toggleTemperatureControl()" >On</button></label>
+                <label class="flex-row">Atmosphere Control: <button id="btn_atmosphereControl"  onclick="inputFunctions.toggleAtmosphereControl()" ></button></label>
+                <label class="flex-row">Temperature Control: <button id="btn_temperatureControl" onclick="inputFunctions.toggleTemperatureControl()" ></button></label>
             </div>
             <div class="paddingDiv">
-                <label class="flex-row">Set Pressure:  <input type="range" min="0" max="2" step="0.1" value="1"  id="inputRange_pressure" oninput="txt_pressure.value = inputRange_pressure.value;inputFunctions.setPressure()" ><output id="txt_pressure">1</output> Bar</label>
-                <label class="flex-row">Set Temperature:  <input type="range" min="0" max="30" step="0.5" value="21"  id="inputRange_temperature" oninput="txt_temperature.value = inputRange_temperature.value;inputFunctions.setTemperature()" ><output id="txt_temperature">21</output> °C</label>
+                <label class="flex-row">Set Pressure:  <input type="range" class="inputRange" min="0" max="2" step="0.1" value="1"  id="inputRange_pressure" oninput="txt_pressure.value = inputRange_pressure.value;inputFunctions.setPressure()" ><output id="txt_pressure">1</output> Bar</label>
+                <label class="flex-row">Set Temperature:  <input type="range" class="inputRange" min="0" max="30" step="0.5" value="21"  id="inputRange_temperature" oninput="txt_temperature.value = inputRange_temperature.value;inputFunctions.setTemperature()" ><output id="txt_temperature">21</output> °C</label>
             </div>
             <div class="paddingDiv">
                 <p id="atmosphereComposition"></p>
@@ -88,7 +89,7 @@
             Shields: Off
         </div>
     </div>
-    <!-- WIDTH 100% ?-->
+
     <div id="speedBorder">
         <div id="speedFill">
         </div>
@@ -97,14 +98,18 @@
     </div>
 
     <div>
-        <canvas width="1900px" height="500px" style="background-color:#000;width:100%;height:500px;" ></canvas>
+        <canvas width="1900px" height="550px" style="background-color:#000;width:100%;height:550px;" ></canvas>
     </div>
 
     <div id="bottomDiv" class="flex-row">
-        <div id="energyDiv" class="flex-row width400">
+        <div id="energyDiv" class="flex-row width400 backgroundBottomDiv">
             <div>
-                <p id="energyConsumption"></p>
-                <p id="energyGeneration"></p>
+                <div id="powerGenCons" class="flex-row">
+                    <p id="energyConsumption"></p>
+                    <p id="energyGeneration"></p>
+                </div>
+
+
                 <div id="generatorsControl">
                 </div>
                 <div id="capacitors">
@@ -112,58 +117,20 @@
             </div>
             <div>
                 <div id="batteries">
-                    <div id="batteryBorder"><div id="batteryValue"><p id="batteryText"></p></div>></div>
-
+                    <div id="batteryBorder"><div id="batteryValue"></div><p id="batteryText" class="whiteText"></p></div>
                 </div>
             </div>
 
         </div>
-        <div id="computerScreen">
+        <div id="computerScreen" class="backgroundBottomDiv">
             <canvas width="600px" height="400px" style="background-color:#000"></canvas>
         </div>
-        <div id="tanksDiv" class="width400">
+        <div id="tanksDiv" class="width400 backgroundBottomDiv">
             <div id="gasTanksDiv"></div>
             <div id="fuelTanksDiv"></div>
         </div>
     </div>
 
 </div>
-<!-- DEBUG SHIT -->
- <p id="debug1"> </p>
- <p id="debug2"> </p>
- <p id="debug3"> </p>
- <p id="debug4"> </p>
- <p id="debug5"> </p>
- <p id="debug6"> </p>
- <p id="debug7"> </p>
- <p id="debug8"> </p>
- <p id="debug9"> </p>
- <p id="debug10"> </p>
- <p id="debug11"> </p>
- <p id="debug12"> </p>
- <p id="debug13"> </p>
- <p id="debug14"> </p>
- <p id="debug15"> </p>
- <p id="debug16"> </p>
- <p id="debug17"> </p>
- <p id="debug1Co2"> </p>
- <p id="debug2Co2"> </p>
- <p id="debug3Co2"> </p>
- <p id="debug4Co2"> </p>
- <p id="debug5Co2"> </p>
- <p id="debug6Co2"> </p>
-
- <button id="btnSetting0" onclick="debug1()">CHARGE</button>
- <button id="btnSetting1" onclick="debug2()">SWITCH H2 Gen[0]</button>
- <button id="btnSetting2" onclick="debug3()">SWITCH Ur Gen[1]</button>
-
- <label id="set_speed_input_text" for="set_speed_input">Set Speed: </label>
- <input type="number"  value="0"  id="set_speed_input">
- <button id="btnSetting3" onclick="debug4()">Set</button>
-
- <button id="btnSetting4" onclick="debug5()">SWITCH SpeedMode</button>
-<!-- -->
-
-
 </body>
 </html>

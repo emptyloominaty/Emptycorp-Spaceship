@@ -10,7 +10,7 @@ class NavigationModule {
         this.calcPosition()
         //TODO:download position if needed or get idk
 
-        document.getElementById("debug16").innerText = "Distance: "+(this.distanceTraveled).toFixed(4)+" ly "
+
     }
 
     calcPosition() {

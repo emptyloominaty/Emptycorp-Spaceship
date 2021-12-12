@@ -1,10 +1,14 @@
 
+
 let inputFunctions = {
     toggleButtonText(id,val) {
         if (val===0) {
-            id.innerText = "Off"
+            //id.innerText = "Off"
+            id.style.backgroundColor = "#d34644"
         } else {
-            id.innerText = "On"
+            //id.innerText = "On"
+            id.style.backgroundColor = "#4bd44f"
+
         }
     },
     toggleButtonComputerModuleText(id,val) {
@@ -51,7 +55,7 @@ let inputFunctions = {
     },
     turnOffEngines() {
         playerShip.propulsion = "off"
-        document.getElementById("btn_turnOffEngines").innerText = playerShip.propulsion
+        document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
     },
     setSpeed() {
         playerShip.targetSpeed = document.getElementById("inputNumber_speed").value
@@ -82,7 +86,29 @@ let inputFunctions = {
         playerShip.generators[id].on = 1 - playerShip.generators[id].on
         this.toggleButtonText( document.getElementById("btn_generator"+id),playerShip.generators[id].on)
     },
+}
+
+
+inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
+inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
+inputFunctions.toggleButtonText(document.getElementById("btn_memoryModule"),playerShip.computers[0].modules[0].on)
+inputFunctions.toggleButtonText(document.getElementById("btn_communicationModule"),playerShip.computers[0].modules[1].on)
+inputFunctions.toggleButtonText(document.getElementById("btn_fuelConsumptionModule"),playerShip.computers[0].modules[2].on)
+inputFunctions.toggleButtonText(document.getElementById("btn_navigationModule"),playerShip.computers[0].modules[3].on)
+inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
+inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
+inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
+if (playerShip.propulsion==="off") {
+    document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
+} else {
+    document.getElementById("btn_turnOffEngines").style.backgroundColor = "#4bd44f"
+}
 
 
 
+for (let i = 0; i<playerShip.antennas.length; i++) {
+    inputFunctions.toggleButtonText( document.getElementById("btn_antenna"+i),playerShip.antennas[i].on)
+}
+for (let i = 0; i<playerShip.generators.length; i++) {
+    inputFunctions.toggleButtonText(document.getElementById("btn_generator" + i), playerShip.generators[i].on)
 }

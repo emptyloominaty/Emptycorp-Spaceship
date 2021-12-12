@@ -29,7 +29,6 @@ class FuelConsumptionModule {
             cons+=this.fuelArray[i]
         }
         this.fuelConsumptionAvg = (cons/120)*gameFPS*3600000//g/h
-        document.getElementById("debug13").innerText = (this.fuelConsumptionAvg).toFixed(1)+" g/h"
 
         //fuel consumption (10sec avg)
         if (this.partsActivated.preciseConsumption===1) {
@@ -43,7 +42,6 @@ class FuelConsumptionModule {
                 consPrecise+=this.fuelArrayPrecise[i]
             }
             this.fuelConsumptionAvgPrecise = (consPrecise/600)*gameFPS*3600000 //g/h
-            document.getElementById("debug14").innerText = (this.fuelConsumptionAvgPrecise).toFixed(1)+" g/h"
         }
 
 
@@ -52,7 +50,6 @@ class FuelConsumptionModule {
             let speed = playerShip.speed/8765.812756 //ly/h
             let fuelTimeLeft = ((this.fuelB*1000)/this.fuelConsumptionAvg)*3600 //seconds
             this.range = speed*(fuelTimeLeft/3600) //ly range
-            document.getElementById("debug15").innerText = "range: "+(this.range).toFixed(1)+" ly "
             if (this.partsActivated.preciseConsumption===1) {
                 let fuelTimeLeftPrecise = ((this.fuelB*1000)/this.fuelConsumptionAvgPrecise)*3600 //seconds
                 this.rangePrecise = speed*(fuelTimeLeftPrecise/3600) //ly range

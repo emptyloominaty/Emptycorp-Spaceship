@@ -3,8 +3,12 @@ html {
     color: #d1d1d1;
     font-family: Consolas, monospace;
 }
+* {
+    overflow-x: hidden;
+}
+
 body {
-    margin:5px;
+    margin:0;
 }
 h3 {
     margin:0;
@@ -14,9 +18,64 @@ p {
     margin:0;
 }
 
-input[type=number] {
-
+#topBar {
+    margin-top:3px;
 }
+
+
+button {
+    overflow: hidden;
+    margin-top:3px;
+    border: 1px solid #fff;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width:16px;
+    height:16px;
+}
+
+#btn_speedMode {
+    width:60px;
+    height:18px;
+    background-color:#000;
+}
+
+#btn_setSpeed {
+    width:40px;
+    height:18px;
+    background-color:#000;
+}
+
+.buttonOn {
+    background-color: #4bd44f; /* Green */
+}
+
+.buttonOff {
+    background-color: #d34644; /* Green */
+}
+
+input[type=number] {
+    width:60px;
+    background-color: transparent;
+    border:0;
+    color: #d1d1d1;
+    outline:none;
+}
+
+.whiteText {
+    color:#fff;
+}
+
+.space-between {
+    display:flex;
+    justify-content: space-between;
+}
+.space-evenly {
+    display:flex;
+    justify-content: space-evenly;
+}
+
 
 .flex-center {
     display:flex;
@@ -34,8 +93,15 @@ input[type=number] {
 }
 
 #bottomDiv {
+    position:absolute;
+    width:100%;
+    top:500px;
     display:flex;
     justify-content: space-evenly;
+}
+
+#tanksDiv,#energyDiv {
+    margin-top:50px;
 }
 
 .width400 {
@@ -43,8 +109,10 @@ input[type=number] {
 }
 
 .paddingDiv {
-    padding: 3px 5px 3px 5px;
+    padding: 0 5px 3px 5px;
 }
+
+
 
 #inputRange_speed {
     width:100%;
@@ -78,7 +146,7 @@ input[type=number] {
     width:100%;
     border:1px solid #111;
     height: 20px;
-    border-radius: 15px 0 0 15px;
+    border-radius: 15px 15px 15px 15px;
     position:relative;
 }
 
@@ -97,16 +165,9 @@ input[type=number] {
     position:absolute;
 }
 
-#energyConsumption {
-    color: #ffad9b;
-}
-
-#energyGeneration {
-    color: #a1ff9f;
-}
-
 .capacitorBorder {
-    width:100px;
+    margin-top:5px;
+    width:120px;
     height:22px;
     border:1px solid #000;
     position:relative;
@@ -120,32 +181,51 @@ input[type=number] {
 
 .capacitorType {
     position:absolute;
+    padding-left:5px;
 }
 
+.capacitorText {
+    margin-top:5px;
+    padding-left:5px;
+    width:120px;
+    line-height: 22px;
+    text-align:center;
+}
+
+.capacitorText2 {
+    width:70px;
+    font-size:14px;
+    padding:5px;
+    border:1px solid #000;
+    text-align: center;
+}
 
 #batteryBorder {
-    height:280px;
+    height:350px;
     width:60px;
     position:relative;
+    border:1px solid #000;
 }
 
 #batteryValue {
     width:60px;
     position:absolute;
     bottom:0;
-    background-color: #539e52;
+    background-color: #50a84a;
 }
 #batteryText {
     text-align: center;
-    top:102px; /*(batteryBorder.height-72)/2 */
+    top:139px; /*(batteryBorder.height-72)/2 */
     position:absolute;
 }
 
 .tankBorder {
-    width:300px;
+    width:calc(100% - 2px);
     height:22px;
     border:1px solid #000;
     position:relative;
+    margin-bottom:3px;
+    margin-right:5px;
 }
 
 .tankValue {
@@ -164,18 +244,110 @@ input[type=number] {
 .tankText {
     position:absolute;
     padding-left:10px;
+    line-height:22px;
 }
 
 .tankText2 {
     position:absolute;
-    padding-left:100px;
+    /*padding-left:50px;*/
+    padding-right:5px;
     left:0;
     right:0;
-    text-align: center;
+    text-align: right;
+    line-height:22px;
+}
+
+#energyDiv {
+    display:flex;
+    justify-content: space-between;
 }
 
 
-/* ONLY FOR DEBUG*/
+#energyConsumption {
+    color: #ffad9b;
+    padding:3px;
+}
+
+#energyGeneration {
+    color: #a1ff9f;
+    padding:3px;
+}
+
+#powerGenCons {
+    justify-content: space-evenly;
+    margin-bottom:10px;
+}
+
+
+
+
+.backgroundBottomDiv {
+    background-color:#333;
+    border:1px solid #000;
+    border-radius:3px;
+    padding:4px;
+}
+
+
+
+
+
+.inputRange {
+    width:60px;
+
+}
+
+.inputRange {
+    -webkit-appearance: none;
+    width: 60px;
+    height: 15px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.inputRange:hover {
+    opacity: 1;
+}
+
+.inputRange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 15px;
+    background: #0097dc;
+    cursor: pointer;
+}
+
+.inputRange::-moz-range-thumb {
+    width: 10px;
+    height: 15px;
+    background: #0097dc;
+    cursor: pointer;
+}
+
+
+
+/* ONLY FOR DEBUG*//*
 div {
     border:1px solid #fff;
+}*/
+
+
+
+
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

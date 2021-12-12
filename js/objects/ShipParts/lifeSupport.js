@@ -14,9 +14,6 @@ class AtmosphereControl extends Part {
                         let totalCo2 = co2 * playerShip.atmosphere.volume * playerShip.atmosphere.pressure
                         let change = (this.size * this.usage * co2) / gameFPS
                         let change2 = co2 - ((totalCo2 - change) / playerShip.atmosphere.volume / playerShip.atmosphere.pressure)
-
-                        console.log()
-
                         playerShip.atmosphere.carbonDioxide -= change2
                         playerShip.atmosphere.oxygen += change2
                     }
@@ -45,8 +42,6 @@ class AtmosphereControl extends Part {
                 }
             }
         }
-        document.getElementById("debug1Co2").innerText = "Pressure: "+playerShip.atmosphere.pressure+"bar"
-        document.getElementById("debug2Co2").innerText = " N2: " + playerShip.atmosphere.nitrogen + "% | O2: " + playerShip.atmosphere.oxygen + "%  | CO2: " + playerShip.atmosphere.carbonDioxide + "% "
     }
     constructor(id,weight,name,baseConsumption,maxConsumption) {
         super(weight,name,"lifeSupport",id)
@@ -87,7 +82,6 @@ class TemperatureControl extends Part {
                 }
             }
         }
-        document.getElementById("debug3Co2").innerText = "Temperature: " + playerShip.atmosphere.temperature + "K"
     }
 
 

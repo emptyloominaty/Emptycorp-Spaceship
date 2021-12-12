@@ -25,8 +25,8 @@ class Engine extends Part {
                 if (this.usePower(speed,consumption)) {
                     if (this.useFuel(speed,consumption)) {
                         return thrust
-                    }
-                }
+                    } else {this.noPowerOrFuel()}
+                } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
                 let thrust = (this.thrust*(this.maxSpeed/(speed+0.1)))*this.maxFTLThrust
                 let divThrustVal = 1+(1000000/(speed+5))
@@ -36,8 +36,8 @@ class Engine extends Part {
                 if (this.usePower(speed,1)) {
                     if (this.useFuel(speed,1)) {
                         return thrust
-                    }
-                }
+                    } else {this.noPowerOrFuel()}
+                } else {this.noPowerOrFuel()}
             }
             //-------------------"BRAKING"
         } else if (targetSpeed<speed) {
@@ -49,8 +49,8 @@ class Engine extends Part {
                 if (this.usePower(speed,consumption)) {
                     if (this.useFuel(speed,consumption)) {
                         return thrust
-                    }
-                }
+                    } else {this.noPowerOrFuel()}
+                } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
                 if (targetSpeed<speed/1.01) {
                     playerShip.speed-=speed/30
@@ -59,6 +59,10 @@ class Engine extends Part {
         }
 
         return 0
+    }
+
+    noPowerOrFuel() {
+        playerShip.propulsion="off"
     }
 
     usePower(speed,throttle) {
