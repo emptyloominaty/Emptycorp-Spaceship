@@ -1,21 +1,20 @@
 class AtmosphereControl extends Part {
     on = 1
     usage = 0
-    size = 0.068
+    size = 8.5
     run() {
         if (this.on===1) {
             //CO2
             if (playerShip.usePower(this.baseConsumption/gameFPS, this.group)) {
                 let co2 = playerShip.atmosphere.carbonDioxide
-                if (co2>0.04) {
-                    this.usage = (co2*100)-3.9
+                if (co2>0.03) {
+                    this.usage = (co2*100)-2.9
                     if (this.usage>1) {this.usage=1}
-                    if (playerShip.usePower((this.maxConsumption*this.usage)/gameFPS, this.group)) {
+                    if (playerShip.usePower(((this.maxConsumption*this.usage*this.size/2))/gameFPS, this.group)) {
                         let totalCo2 = co2 * playerShip.atmosphere.volume * playerShip.atmosphere.pressure
-                        let change = (this.size * this.usage * co2) / gameFPS
-                        let change2 = co2 - ((totalCo2 - change) / playerShip.atmosphere.volume / playerShip.atmosphere.pressure)
-                        playerShip.atmosphere.carbonDioxide -= change2
-                        playerShip.atmosphere.oxygen += change2
+                        let change = (this.size * this.usage * Math.pow(co2,2)) / gameFPS
+                        playerShip.atmosphere.carbonDioxideVolume -= change
+                        playerShip.atmosphere.oxygenVolume += change
                     }
                 }
                 //PRESSURE
@@ -26,7 +25,8 @@ class AtmosphereControl extends Part {
                             let n2use = (val)*3.76
                             let o2use = (val)
                             if (playerShip.useTank("N2",n2use) && playerShip.useTank("O2",o2use)) {
-                                playerShip.atmosphere.pressure+=(((val*4.76)/1000)/playerShip.atmosphere.volume)
+                                playerShip.atmosphere.oxygenVolume += o2use
+                                playerShip.atmosphere.nitrogenVolume += n2use
                             }
                         }
                     }
@@ -37,9 +37,14 @@ class AtmosphereControl extends Part {
                         let o2use = (val)
                         playerShip.fillTank("N2",n2use)
                         playerShip.fillTank("O2",o2use)
-                        playerShip.atmosphere.pressure-=(((val*4.76)/1000)/playerShip.atmosphere.volume)
+                        playerShip.atmosphere.carbonDioxideVolume -= (val*(100/playerShip.atmosphere.oxygen))*(playerShip.atmosphere.carbonDioxide/100)
+                        playerShip.atmosphere.oxygenVolume -= o2use
+                        playerShip.atmosphere.nitrogenVolume -= n2use
                     }
                 }
+                if (playerShip.atmosphere.carbonDioxideVolume<0) {playerShip.atmosphere.carbonDioxideVolume=0}
+                if (playerShip.atmosphere.oxygenVolume<0) {playerShip.atmosphere.oxygenVolume=0}
+                if (playerShip.atmosphere.nitrogenVolume<0) {playerShip.atmosphere.nitrogenVolume=0}
             }
         }
     }
@@ -67,7 +72,7 @@ class TemperatureControl extends Part {
 
                     let dec = (this.size * percent) / playerShip.atmosphere.volume
                     if (playerShip.usePower((this.coldConsumption * percent) / gameFPS, this.group)) {
-                        playerShip.atmosphere.temperature -= dec
+                        playerShip.atmosphere.temperature -= dec/(gameFPS/60)
                     }
                     //HEATING
                 } else if (playerShip.atmosphere.temperature < playerShip.temperatureSet - 0.001) {
@@ -77,7 +82,7 @@ class TemperatureControl extends Part {
                     }
                     let inc = this.size * percent / playerShip.atmosphere.volume
                     if (playerShip.usePower((this.heatConsumption * percent) / gameFPS, this.group)) {
-                        playerShip.atmosphere.temperature += inc
+                        playerShip.atmosphere.temperature += inc /(gameFPS/60)
                     }
                 }
             }

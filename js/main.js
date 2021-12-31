@@ -28,9 +28,10 @@ let elements = {
 }
 
 
-
+let speedInc = 1
 function update(progress) {
-    gameFPS = 1/progress*1000
+
+    gameFPS = (1/progress*1000)/speedInc
 
     //update player ship
     playerShip.everyFrame(gameFPS)

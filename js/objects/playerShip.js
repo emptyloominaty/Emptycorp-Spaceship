@@ -1,5 +1,6 @@
 class Ship {
     //---------------------------------------------
+    crew = [{name:"Empty",status:"alive",dying:0}]
     baseWeight = 5500 //kg
     armor = 500
     armorMax = 500
@@ -10,11 +11,12 @@ class Ship {
     weight = this.baseWeight
 
     //radiation heat transfer
-    emissivityCoefficient = 0.44 //avg
+    emissivityCoefficient = 0.12 //avg
     surfaceArea =  128 //m2
 
 
-    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:294}
+    atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:294,
+                oxygenVolume:3360, nitrogenVolume:12633.6, carbonDioxideVolume:6.4, /*Litres*/} //16000
     //---------------------------------------------
     targetSpeed = 0 //c
     speedMode = "FTL"
@@ -22,6 +24,10 @@ class Ship {
     acc = 0
     powerInput = 0
     powerOutput = 0
+
+    powerInputArray = []
+    powerOutputArray = []
+
     thrust = 0
     usingFuel = "fuel1"
     everyS = 0
@@ -47,6 +53,19 @@ class Ship {
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
+
+        this.powerInputArray.push(this.powerInput)
+        if (this.powerInputArray.length>60) {
+            this.powerInputArray.shift()
+        }
+        this.powerOutputArray.push(this.powerOutput)
+        if (this.powerOutputArray.length>60) {
+            this.powerOutputArray.shift()
+        }
+        this.doCrew()
+        this.getAtmospherePercent()
+
+
         this.everyS+=progress
         if (this.everyS>=1000) {
             this.everySec()
@@ -150,7 +169,7 @@ class Ship {
     everySec() {
         for (let i = 0; i<this.capacitors.length; i++) {
             this.capArrayA[i] = this.capacitors[i].charge
-            this.capacitors[i].dischargePerSec = this.capArrayA[i]-this.capArrayB[i] - this.capacitors[i].chargedPerSec
+            this.capacitors[i].dischargePerSec = (this.capArrayA[i]-this.capArrayB[i] - this.capacitors[i].chargedPerSec)*(gameFPS/60)
             this.capArrayB[i] = this.capacitors[i].charge
             this.capacitors[i].chargedPerSec = 0
         }
@@ -229,6 +248,39 @@ class Ship {
                 this.lights.outsideOn=0
             }
         }
+    }
+    doCrew() {
+        for(let i = 0; i<this.crew.length; i++) {
+            if (this.crew[i].status!=="death") {
+                this.atmosphere.carbonDioxideVolume += 0.0057/gameFPS
+                this.atmosphere.oxygenVolume -= 0.0057/gameFPS
+
+                if (this.crew[i].dying>0) {this.crew.dying-=1/gameFPS}
+
+                if (this.atmosphere.carbonDioxide>8 || this.atmosphere.oxygen<10 || this.atmosphere.pressure<0.3) {
+                    this.crew[i].status = "unconscious"
+                    this.crew[i].dying+=2/gameFPS
+                } else if (this.crew[i].status==="unconscious") {this.crew[i].status = "alive"}
+                if (this.atmosphere.carbonDioxide>10 || this.atmosphere.oxygen<8 || this.atmosphere.pressure<0.2) {
+                    this.crew[i].dying+=10/gameFPS
+                }
+                if (this.atmosphere.carbonDioxide>14 || this.atmosphere.oxygen<3 || this.atmosphere.pressure<0.1) {
+                    this.crew[i].dying+=250/gameFPS
+                }
+
+                if (this.crew[i].dying>1000) {
+                    this.crew[i].status = "death"
+                }
+            }
+        }
+    }
+    getAtmospherePercent() {
+
+
+        this.atmosphere.pressure = (this.atmosphere.nitrogenVolume+this.atmosphere.oxygenVolume+this.atmosphere.carbonDioxideVolume)/(this.atmosphere.volume*1000)
+        this.atmosphere.nitrogen = (this.atmosphere.nitrogenVolume/(this.atmosphere.volume*this.atmosphere.pressure*1000))*100
+        this.atmosphere.oxygen = (this.atmosphere.oxygenVolume/(this.atmosphere.volume*this.atmosphere.pressure*1000))*100
+        this.atmosphere.carbonDioxide = (this.atmosphere.carbonDioxideVolume/(this.atmosphere.volume*this.atmosphere.pressure*1000))*100
     }
 //------------------------------------------------------------------------------------------------------------------
     checkTank(type) {

@@ -59,8 +59,20 @@ function draw(progress) {
     elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
     elements.speedText.innerText = "Speed: "+playerShip.getSpeedText(playerShip.speed)
     //energy
-    elements.energyConsumption.innerText = "-"+(playerShip.powerOutput*1000).toFixed(2) +"kW"
-    elements.energyGeneration.innerText = "+"+(playerShip.powerInput*1000).toFixed(2) +"kW"
+    let powerInput = 0
+    let powerOutput = 0
+    for (let i = 0; i<playerShip.powerInputArray.length; i++) {
+        powerInput += playerShip.powerInputArray[i]
+    }
+    powerInput = powerInput/playerShip.powerInputArray.length
+
+    for (let i = 0; i<playerShip.powerOutputArray.length; i++) {
+        powerOutput += playerShip.powerOutputArray[i]
+    }
+    powerOutput = powerOutput/playerShip.powerOutputArray.length
+
+    elements.energyConsumption.innerText = "-"+(powerOutput*1000).toFixed(1) +"kW"
+    elements.energyGeneration.innerText = "+"+(powerInput*1000).toFixed(1) +"kW"
     //capacitors
     for (let i = 0; i<playerShip.capacitors.length; i++) {
         elements["capacitorValue" + i].style.width = (playerShip.capacitors[i].charge / playerShip.capacitors[i].maxCharge * 100) + "%"

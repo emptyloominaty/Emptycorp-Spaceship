@@ -46,7 +46,7 @@ let inputFunctions = {
         this.toggleButtonText( document.getElementById("btn_antenna"+id),playerShip.antennas[id].on)
     },
     toggleSpeedMode() {
-        if (playerShip.speedMode === "FTL") {
+        if (playerShip.speedMode === "FTL" && playerShip.speed<0.0000001) {
             playerShip.speedMode = "Sublight"
         } else {
             playerShip.speedMode = "FTL"
@@ -91,10 +91,6 @@ let inputFunctions = {
 
 inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
 inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
-inputFunctions.toggleButtonText(document.getElementById("btn_memoryModule"),playerShip.computers[0].modules[0].on)
-inputFunctions.toggleButtonText(document.getElementById("btn_communicationModule"),playerShip.computers[0].modules[1].on)
-inputFunctions.toggleButtonText(document.getElementById("btn_fuelConsumptionModule"),playerShip.computers[0].modules[2].on)
-inputFunctions.toggleButtonText(document.getElementById("btn_navigationModule"),playerShip.computers[0].modules[3].on)
 inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
 inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
 inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
