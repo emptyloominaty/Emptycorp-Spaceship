@@ -16,6 +16,7 @@
     <script src="js/objects/ShipParts/ComputerModules/communication.js" defer></script>
     <script src="js/objects/ShipParts/ComputerModules/fuelConsumption.js" defer></script>
     <script src="js/objects/ShipParts/ComputerModules/navigation.js" defer></script>
+    <script src="js/objects/ShipParts/ComputerModules/display.js" defer></script>
     <!-- -->
     <script src="js/objects/ShipParts/antenna.js" defer></script>
     <script src="js/objects/ShipParts/battery.js" defer></script>
@@ -30,7 +31,11 @@
     <!-- -->
     <script src="js/objects/playerShip.js" defer></script>
     <script src="js/objects/network/servers/server.js" defer></script>
+    <script src="js/objects/network/servers/timeServer.js" defer></script>
+
     <script src="js/objects/network/mainServer.js" defer></script>
+    <!-- -->
+    <script src="js/DrawGalaxy/canvasMain.js" defer></script>
     <!-- -->
     <script src="js/draw.js" defer></script>
     <script src="js/loopInit.js" defer></script>
@@ -112,7 +117,7 @@
 
         </div>
         <div id="computerScreen" class="backgroundBottomDiv">
-            <canvas width="600px" height="400px" style="background-color:#000"></canvas>
+            <canvas id="computerDisplay" width="600px" height="400px" style="background-color:#000"></canvas>
         </div>
         <div id="tanksDiv" class="width400 backgroundBottomDiv">
             <div id="gasTanksDiv"></div>

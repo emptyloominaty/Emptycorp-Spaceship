@@ -2,6 +2,7 @@ let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
 
+
 let inputRange_speed = 0
 let inputNumber_speed = 0
 
@@ -33,8 +34,8 @@ function update(progress) {
 
     gameFPS = (1/progress*1000)/speedInc
 
-    //update player ship
     playerShip.everyFrame(gameFPS)
+    mainServer.run()
 
     //speed range<->number
      if (elements.inputRange_speed.value!==inputRange_speed) {
