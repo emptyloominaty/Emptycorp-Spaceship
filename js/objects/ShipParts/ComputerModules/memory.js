@@ -3,9 +3,8 @@ class MemoryModule {
     on = 1
     data = []
     memoryUse = 0
-    constructor(memorySize) {
-        this.memorySize = memorySize
-    }
+    memorySize = 4
+
 
     run() {
 

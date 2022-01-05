@@ -14,11 +14,11 @@ class DisplayModule {
     }
 
     drawCircle(x,y,radius,color) {
-        screen.beginPath()
-        screen.fillStyle = color
-        screen.arc(x, y, radius, 0, 2 * Math.PI, false)
-        screen.fill()
-        screen.closePath()
+        this.canvas.beginPath()
+        this.canvas.fillStyle = color
+        this.canvas.arc(x, y, radius, 0, 2 * Math.PI, false)
+        this.canvas.fill()
+        this.canvas.closePath()
     }
 
     drawText(x,y,text,font,color,align) {
@@ -47,11 +47,11 @@ class DisplayModule {
     }
 
     reset() {
-
+        this.canvas.clearRect(0,0,this.resolution.w,this.resolution.h)
     }
 
     run() {
-        this.canvas.clearRect(0,0,this.resolution.w,this.resolution.h)
+        this.reset()
     }
 
     constructor() {

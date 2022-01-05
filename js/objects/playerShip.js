@@ -136,9 +136,7 @@ class Ship {
 
         //computers
         for(let i = 0; i<this.computers.length; i++) {
-            if(this.computers[i].on===1) {
-                this.computers[i].run()
-            }
+            this.computers[i].run()
         }
         //antennas
         for(let i = 0; i<this.antennas.length; i++) {

@@ -1,25 +1,34 @@
 class Computer extends Part {
     on = 1
-    modules = []
     mode = 0 //0 = 0%  1 = 100% usage
-    memory = 0
-    comm = 0
-    display = false
+    memorySize = 4
     time = 0
     tab = "main"
 
+    //display
+    mapScaling = 60 //px per ly
+
+
+
+
     run() {
-       if (playerShip.usePower(this.consumption[0]/gameFPS,this.group)) { //todo:fix power consumption
-           for (let i = 0; i<this.modules.length; i++) {
-               if (this.modules[i].on===1) {
-                   if (playerShip.usePower(this.modules[i].consumption/gameFPS,this.group)) {
-                       this.modules[i].run()
-                   }
-               }
-           }
-           this.drawUi()
-           this.time+=1000/gameFPS
-       }
+        if(this.on===1) {
+            if (playerShip.usePower(this.consumption[0] / gameFPS, this.group)) { //todo:fix power consumption
+                for (let i = 0; i < this.modules.length; i++) {
+                    if (this.modules[i].on === 1) {
+                        if (playerShip.usePower(this.modules[i].consumption / gameFPS, this.group)) {
+                            this.modules[i].run()
+                        }
+                    }
+                }
+                this.drawUi()
+                this.time += 1000 / gameFPS
+            }
+        } else {
+            if (this.display) {
+                this.display.reset()
+            }
+        }
     }
 
     getTimeString(time) {
@@ -51,14 +60,54 @@ class Computer extends Part {
             //fps,time
             let color3 = "#d7d7d7"
             let font3 = "12px Consolas"
+            //vals
+            let color4 = "#7aff82"
+            //ship
+            let colorShip = "#3b57da"
+            //error
+            let colorError = "#da4f57"
+
 
             if (this.tab==="main") {
-
-            } else if (this.tab==="fuelcons") {
+                //------------------------------------------------------------------------Main Tab
                 this.display.drawRect(100,100,50,50,"#00ff00") //test
+            } else if (this.tab==="fuelcons") {
+                //------------------------------------------------------------------------Fuel Consumption Tab
+                if (this.fuelCons.on===1) {
+                    this.display.drawText(5,20,"Fuel Consumption: ",font1,color1,'left')
+                    if (this.fuelCons.fuelConsumptionAvgPrecise<1000) {
+                        this.display.drawText(170,20,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
+                    } else {
+                        this.display.drawText(170,20,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
+                    }
+                    this.display.drawText(5,40,"Range: ",font1,color1,'left')
+                    this.display.drawText(170,40,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
+                } else {
+                    this.display.drawText(5,20,"Off",font1,colorError,'left')
+                }
+            } else if (this.tab==="nav") {
+                //------------------------------------------------------------------------Navigation Tab
+                if (this.nav.on===1) {
+                    this.display.drawText(5, 20, "x: ", font1, color1, 'left')
+                    this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color4, 'left')
+                    this.display.drawText(5, 40, "y: ", font1, color1, 'left')
+                    this.display.drawText(25, 40, this.nav.position.y.toFixed(2) + "ly", font1, color4, 'left')
+                    this.display.drawText(5, 60, "d: ", font1, color1, 'left')
+                    this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color4, 'left')
+
+                    //map
+                    this.drawMap()
+                    //ship
+                    this.display.drawCircle(300, 180, 5, colorShip)
+
+                } else {
+                    this.display.drawText(5,20,"Off",font1,colorError,'left')
+                }
             }
 
+
             //bottom
+            this.display.drawRect(0,height-40,width,height,"#000000") //test
             this.display.drawLine(0,height-40,width,height-40,2,color1)
             this.display.drawText(50,height-15,"Main",font1,color1,'center')
             this.display.drawLine(100,height-40,100,height,2,color1)
@@ -79,6 +128,61 @@ class Computer extends Part {
         }
     }
 
+    drawMap() {
+        //map
+        let colorMap = "#a1a1a1"
+        let colorMapText = "#b4b169"
+        let font = "12px Consolas"
+
+        let a = []
+        let pos = {x: playerShip.computers[0].nav.position.x % 1, y: playerShip.computers[0].nav.position.y % 1}
+        let posR = {x: playerShip.computers[0].nav.position.x, y: playerShip.computers[0].nav.position.y}
+
+        let topLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
+            y: posR.y+(((this.display.resolution.h-40)/this.mapScaling)/2)
+        } //ly
+        let topRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
+            y: posR.y+(((this.display.resolution.h-40)/this.mapScaling)/2)
+        }  //ly
+        let bottomLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
+            y: posR.y-(((this.display.resolution.h-40)/this.mapScaling)/2)
+        } //ly
+        let bottomRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
+            y: posR.y-(((this.display.resolution.h-40)/this.mapScaling)/2)
+        }  //ly
+
+
+
+
+
+        for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
+            let x = i*this.mapScaling+(pos.x*this.mapScaling)
+            this.display.drawLine(x,0,x,this.display.resolution.h-40,1,colorMap)
+
+            let xval =  Math.floor((((posR.x))+(this.display.resolution.w/this.mapScaling)/2)-i)
+            this.display.drawText(x,350,xval,font,colorMapText,'center')
+        }
+
+        for(let i = 0; i<((this.display.resolution.h-40)/this.mapScaling); i++) {
+            let y = i*this.mapScaling+(pos.y*this.mapScaling)
+            this.display.drawLine(0,y,this.display.resolution.w,y,1,colorMap)
+
+            let yval = Math.floor(((((posR.y))+((this.display.resolution.h-40)/this.mapScaling)/2))-i)
+            this.display.drawText(599,y,yval,font,colorMapText,'right')
+        }
+
+        //x:0 y:0
+        let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
+        let y0 = (posR.y*this.mapScaling)+(((this.display.resolution.h-40))/2)
+
+      /*  this.display.drawText(300,50,x0,font,colorMapText,'center')
+        this.display.drawText(300,70,y0,font,colorMapText,'center')*/
+
+        this.display.drawCircle(x0,y0,5,colorMap)
+
+        return a
+    }
+
 
 
     touchScreen(x,y) {
@@ -87,7 +191,6 @@ class Computer extends Part {
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
             {x1:200, y1:360,x2:300,y2:400,function: () => {this.tab = "fuelcons"}},
         ]
-
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
             if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {
@@ -95,35 +198,27 @@ class Computer extends Part {
                 break
             }
         }
-
-
-
     }
 
 
-
-
+    updateMemory(memorySize) {
+        this.memory.memorySize = memorySize
+    }
 
     constructor(id,weight,name,modules,consumption,memorySize) {
         super(weight,name,"computer",id)
         this.consumption = consumption
 
-        for(let i = 0; i<modules.length; i++) {
-            if (modules[i]==="communication") {
-                this.modules.push(new CommunicationModule())
-                this.comm = this.modules[i]
-            } else if (modules[i]==="fuelConsumption") {
-                this.modules.push(new FuelConsumptionModule())
-            } else if (modules[i]==="navigation") {
-                this.modules.push(new NavigationModule())
-            } else if (modules[i]==="memory") {
-                this.modules.push(new MemoryModule(memorySize))
-                this.memory = this.modules[i]
-            } else if (modules[i]==="display") {
-                this.modules.push(new DisplayModule())
-                this.display = this.modules[i]
-            }
-        }
+        this.comm = new CommunicationModule()
+        this.fuelCons = new FuelConsumptionModule()
+        this.display = new DisplayModule()
+        this.nav = new NavigationModule()
+        this.memory = new MemoryModule()
 
+        this.modules = [this.comm,this.fuelCons,this.display,this.nav,this.memory]
+
+
+        this.memorySize = memorySize
+        this.updateMemory(memorySize)
     }
 }
