@@ -60,6 +60,7 @@ class Computer extends Part {
             let font3 = "12px Consolas"
             //vals
             let color4 = "#7aff82"
+            let colorTT= "#80d9ff"
             //ship
             let colorShip = "#3b57da"
             //error
@@ -68,26 +69,31 @@ class Computer extends Part {
 
             if (this.tab==="main") {
                 //------------------------------------------------------------------------Main Tab
+                //thrust and throttle
                 this.display.drawText(5, 20, "Thrust: ", font1, color1, 'left')
-                this.display.drawText(90, 20, this.data.engineThrustString, font1, color4, 'left')
+                this.display.drawText(90, 20, this.data.engineThrustString, font1, colorTT, 'left')
                 this.display.drawText(5, 40, "Throttle: ", font1, color1, 'left')
-                this.display.drawText(90, 40, (this.data.engineThrottle*100).toFixed(1) + "%", font1, color4, 'left')
+                this.display.drawText(90, 40, (this.data.engineThrottle*100).toFixed(1) + "%", font1, colorTT, 'left')
+                //Fuel Consumption Tab
+                if (this.fuelCons.on===1) {
+                    this.display.drawText(5,60,"Fuel Consumption: ",font1,color1,'left')
+                    if (this.fuelCons.fuelConsumptionAvgPrecise<1000) {
+                        this.display.drawText(170,60,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
+                    } else {
+                        this.display.drawText(170,60,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
+                    }
+                    this.display.drawText(5,80,"Range: ",font1,color1,'left')
+                    this.display.drawText(170,80,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
+                } else {
+                    this.display.drawText(5,60,"Off",font1,colorError,'left')
+                }
+                //
+
+            } else if (this.tab==="2") {
+                //------------------------------------------------------------------------
 
                 this.display.drawRect(100,100,50,50,"#00ff00") //test
-            } else if (this.tab==="fuelcons") {
-                //------------------------------------------------------------------------Fuel Consumption Tab
-                if (this.fuelCons.on===1) {
-                    this.display.drawText(5,20,"Fuel Consumption: ",font1,color1,'left')
-                    if (this.fuelCons.fuelConsumptionAvgPrecise<1000) {
-                        this.display.drawText(170,20,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
-                    } else {
-                        this.display.drawText(170,20,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
-                    }
-                    this.display.drawText(5,40,"Range: ",font1,color1,'left')
-                    this.display.drawText(170,40,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
-                } else {
-                    this.display.drawText(5,20,"Off",font1,colorError,'left')
-                }
+
             } else if (this.tab==="nav") {
                 //------------------------------------------------------------------------Navigation Tab
                 if (this.nav.on===1) {
@@ -118,10 +124,10 @@ class Computer extends Part {
             this.display.drawLine(150,height-40,150,height,2,color1)
             this.display.drawText(175,height-15,"Comm",font1,color1,'center')
             this.display.drawLine(200,height-40,200,height,2,color1)
-            this.display.drawText(250,height-15,"FuelCons",font1,color1,'center')
+            this.display.drawText(250,height-15,"2",font1,color1,'center')
 
             this.display.drawLine(300,height-40,300,height,2,color1)
-            this.display.drawText(350,height-15,"2",font1,color1,'center')
+            this.display.drawText(350,height-15,"1",font1,color1,'center')
             this.display.drawLine(400,height-40,400,height,2,color1)
             this.display.drawText(450,height-15,this.tab,font2,color2,'center')
             this.display.drawLine(500,height-40,500,height,2,color1)
@@ -205,7 +211,6 @@ class Computer extends Part {
         let buttons = [{x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
-            {x1:200, y1:360,x2:300,y2:400,function: () => {this.tab = "fuelcons"}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
@@ -228,7 +233,7 @@ class Computer extends Part {
         this.nav = new NavigationModule()
 
         this.modules = [this.comm,this.fuelCons,this.display,this.nav]
-        
+
         this.memorySize = memorySize
     }
 }

@@ -35,6 +35,9 @@ class Engine extends Part {
                 //(((thrust*1000000)/this.weight)/299792458)/fps
 
                 let thrustNeed = warpFrictionTarget
+                if (speed<targetSpeed && speed!==0) {
+                    thrustNeed = thrustNeed * (Math.pow((targetSpeed/speed), 3))
+                }
                 if (thrust>thrustNeed) {
                     thrust = thrustNeed
                 }
@@ -64,10 +67,10 @@ class Engine extends Part {
                 } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
                 if (targetSpeed<speed/1.01) {
-                    if (this.speed<1000) {
-                        this.speed-=25
+                    if (speed<1000) {
+                        playerShip.speed-=25
                     }
-                    this.speed-= this.speed/20
+                    playerShip.speed-= speed/20
                 }
             }
         }
