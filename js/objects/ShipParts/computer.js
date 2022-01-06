@@ -4,6 +4,7 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N"}
 
     //display
     mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
@@ -67,6 +68,11 @@ class Computer extends Part {
 
             if (this.tab==="main") {
                 //------------------------------------------------------------------------Main Tab
+                this.display.drawText(5, 20, "Thrust: ", font1, color1, 'left')
+                this.display.drawText(90, 20, this.data.engineThrustString, font1, color4, 'left')
+                this.display.drawText(5, 40, "Throttle: ", font1, color1, 'left')
+                this.display.drawText(90, 40, (this.data.engineThrottle*100).toFixed(1) + "%", font1, color4, 'left')
+
                 this.display.drawRect(100,100,50,50,"#00ff00") //test
             } else if (this.tab==="fuelcons") {
                 //------------------------------------------------------------------------Fuel Consumption Tab
@@ -150,7 +156,7 @@ class Computer extends Part {
         }  //ly
 
 
-
+        //TODO:FIX
         for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
             let x = i*this.mapScaling+(pos.x*this.mapScaling)
             this.display.drawLine(x,0,x,this.display.resolution.h-bottom,1,colorMap)
@@ -173,8 +179,15 @@ class Computer extends Part {
         let testt = {x:2.5,y:1.5}
         let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
         let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
+        //TODO: if testx<0 and testx>this.display.resolution.w .....
+        if (testx>0 && testx<this.display.resolution.w && testy>0 && testy<this.display.resolution.h-bottom) {
+            this.display.drawCircle(testx,testy,10*scaling,colorMap)
+            this.display.drawText(300,10,"YAY",font,colorMapText,'center')
+        } else {
+            this.display.drawText(300,10,"NAY",font,colorMapText,'center')
+        }
 
-        this.display.drawCircle(testx,testy,10*scaling,colorMap)
+
         this.display.drawText(300,50,testx,font,colorMapText,'center')
         this.display.drawText(300,70,testy,font,colorMapText,'center')
         //--------------------------------------------------------
@@ -204,9 +217,6 @@ class Computer extends Part {
     }
 
 
-    updateMemory(memorySize) {
-        this.memory.memorySize = memorySize
-    }
 
     constructor(id,weight,name,modules,consumption,memorySize) {
         super(weight,name,"computer",id)
@@ -216,12 +226,9 @@ class Computer extends Part {
         this.fuelCons = new FuelConsumptionModule()
         this.display = new DisplayModule()
         this.nav = new NavigationModule()
-        this.memory = new MemoryModule()
 
-        this.modules = [this.comm,this.fuelCons,this.display,this.nav,this.memory]
-
-
+        this.modules = [this.comm,this.fuelCons,this.display,this.nav]
+        
         this.memorySize = memorySize
-        this.updateMemory(memorySize)
     }
 }

@@ -96,11 +96,25 @@ class Ship {
         //Update Weight
         this.updateWeight()
         //propulsion
+        this.computers[0].data.engineThrust = 0
+        this.computers[0].data.engineThrottle = 0
         if (this.propulsion==="on") {
             for(let i = 0; i<this.engines.length; i++) {
                 if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
                     this.thrust += thrust
+                    //------------------------------------------
+                    if (thrust>1000000000) {
+                        this.computers[0].data.engineThrustString = (thrust/1000000000).toFixed(1)+"PN"
+                    } else if (thrust>1000000) {
+                        this.computers[0].data.engineThrustString = (thrust/1000000).toFixed(1)+"TN"
+                    } else if (thrust>1000) {
+                        this.computers[0].data.engineThrustString = (thrust/1000).toFixed(1)+"GN"
+                    } else {
+                        this.computers[0].data.engineThrustString = (thrust).toFixed(2)+"MN"
+                    }
+                    this.computers[0].data.engineThrust = thrust
+                    //------------------------------------------
                     this.speed += (((thrust*1000000)/this.weight)/299792458)/fps     //  MN-->N  kg  M/S->C
                     if (this.speedMode==="Sublight") {
                         if (this.acc === 1 && this.speed>this.targetSpeed) {
@@ -123,7 +137,11 @@ class Ship {
         }
         if (this.speed>0 && this.speedMode==="FTL") {
             if (this.targetSpeed==0 || this.propulsion==="off") {
-               this.speed-= this.speed/30 //todo:fix ?
+                if (this.speed<1000) {
+                    this.speed-=25
+                }
+               this.speed-= this.speed/20
+
                 if (this.speed<0.000000000000000000000000001) { this.speed = 0}
                 this.resetWarpEngines()
             }
@@ -486,7 +504,7 @@ let shipDefaultParts = {
     generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weigth:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
+        {weight:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},

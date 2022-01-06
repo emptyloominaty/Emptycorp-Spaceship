@@ -20,6 +20,7 @@ class Engine extends Part {
                 let thrust = this.thrust*(this.maxSpeed/(speed+0.1))
                 thrust = thrust*(0.0001+(targetSpeed-speed)*10000000)
                 if (thrust>this.thrust) {thrust = this.thrust}
+                playerShip.computers[0].data.engineThrottle = thrust/this.thrust
                 if (speed>this.maxSpeed) {thrust = 0}
                 let consumption = thrust/this.thrust
                 if (this.usePower(speed,consumption)) {
@@ -28,13 +29,23 @@ class Engine extends Part {
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
-                let thrust = (this.thrust*(this.maxSpeed/(speed+0.1)))*this.maxFTLThrust
-                let divThrustVal = 1+(1000000/(speed+5))
-                thrust = thrust*(0.00000000000000000000000000000000001+(targetSpeed-speed)/divThrustVal)
+                let thrust = this.thrust*this.maxFTLThrust
+                let warpFriction = (Math.pow(speed*75, 1.5))
+                let warpFrictionTarget = (Math.pow(targetSpeed*75, 1.5))
+                //(((thrust*1000000)/this.weight)/299792458)/fps
+
+                let thrustNeed = warpFrictionTarget
+                if (thrust>thrustNeed) {
+                    thrust = thrustNeed
+                }
+
+                playerShip.computers[0].data.engineThrottle = thrust/this.thrust
+                let throttle = (thrust/this.thrust)+0.15
+                if (throttle>1) {throttle=1}
                 if (thrust>this.thrust*this.maxFTLThrust) {thrust = this.thrust*this.maxFTLThrust}
                 if (speed>this.maxSpeed) {thrust = 0}
-                if (this.usePower(speed,1)) {
-                    if (this.useFuel(speed,1)) {
+                if (this.usePower(speed,throttle)) {
+                    if (this.useFuel(speed,throttle)) {
                         return thrust
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}
@@ -53,7 +64,10 @@ class Engine extends Part {
                 } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
                 if (targetSpeed<speed/1.01) {
-                    playerShip.speed-=speed/30
+                    if (this.speed<1000) {
+                        this.speed-=25
+                    }
+                    this.speed-= this.speed/20
                 }
             }
         }
