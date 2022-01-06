@@ -6,10 +6,7 @@ class Computer extends Part {
     tab = "main"
 
     //display
-    mapScaling = 60 //px per ly
-
-
-
+    mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
 
     run() {
         if(this.on===1) {
@@ -133,53 +130,59 @@ class Computer extends Part {
         let colorMap = "#a1a1a1"
         let colorMapText = "#b4b169"
         let font = "12px Consolas"
+        let bottom = 40 //px
 
         let a = []
         let pos = {x: playerShip.computers[0].nav.position.x % 1, y: playerShip.computers[0].nav.position.y % 1}
         let posR = {x: playerShip.computers[0].nav.position.x, y: playerShip.computers[0].nav.position.y}
 
         let topLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y+(((this.display.resolution.h-40)/this.mapScaling)/2)
+            y: posR.y+(((this.display.resolution.h-bottom)/this.mapScaling)/2)
         } //ly
         let topRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y+(((this.display.resolution.h-40)/this.mapScaling)/2)
+            y: posR.y+(((this.display.resolution.h-bottom)/this.mapScaling)/2)
         }  //ly
         let bottomLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y-(((this.display.resolution.h-40)/this.mapScaling)/2)
+            y: posR.y-(((this.display.resolution.h-bottom)/this.mapScaling)/2)
         } //ly
         let bottomRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y-(((this.display.resolution.h-40)/this.mapScaling)/2)
+            y: posR.y-(((this.display.resolution.h-bottom)/this.mapScaling)/2)
         }  //ly
-
-
 
 
 
         for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
             let x = i*this.mapScaling+(pos.x*this.mapScaling)
-            this.display.drawLine(x,0,x,this.display.resolution.h-40,1,colorMap)
+            this.display.drawLine(x,0,x,this.display.resolution.h-bottom,1,colorMap)
 
             let xval =  Math.floor((((posR.x))+(this.display.resolution.w/this.mapScaling)/2)-i)
-            this.display.drawText(x,350,xval,font,colorMapText,'center')
+            this.display.drawText(x,this.display.resolution.h-bottom,xval,font,colorMapText,'center')
         }
 
-        for(let i = 0; i<((this.display.resolution.h-40)/this.mapScaling); i++) {
+        for(let i = 0; i<((this.display.resolution.h-bottom)/this.mapScaling); i++) {
             let y = i*this.mapScaling+(pos.y*this.mapScaling)
             this.display.drawLine(0,y,this.display.resolution.w,y,1,colorMap)
 
-            let yval = Math.floor(((((posR.y))+((this.display.resolution.h-40)/this.mapScaling)/2))-i)
+            let yval = Math.floor(((((posR.y))+((this.display.resolution.h-bottom)/this.mapScaling)/2))-i)
             this.display.drawText(599,y,yval,font,colorMapText,'right')
         }
 
+
+        //----------------------------------------------------TEST
+        let scaling = this.mapScaling/60
+        let testt = {x:2.5,y:1.5}
+        let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
+        let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
+
+        this.display.drawCircle(testx,testy,10*scaling,colorMap)
+        this.display.drawText(300,50,testx,font,colorMapText,'center')
+        this.display.drawText(300,70,testy,font,colorMapText,'center')
+        //--------------------------------------------------------
+
         //x:0 y:0
-        let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
-        let y0 = (posR.y*this.mapScaling)+(((this.display.resolution.h-40))/2)
-
-      /*  this.display.drawText(300,50,x0,font,colorMapText,'center')
-        this.display.drawText(300,70,y0,font,colorMapText,'center')*/
-
-        this.display.drawCircle(x0,y0,5,colorMap)
-
+        /*let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
+        let y0 = (posR.y*this.mapScaling)+(((this.display.resolution.h-40))/2)*/
+        //this.display.drawCircle(x0,y0,5,"#b47ca0")
         return a
     }
 
