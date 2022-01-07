@@ -23,8 +23,11 @@ class Ship {
     speedMode = "FTL"
     propulsion = "off"
     acc = 0
+    rcs = 1
+    eRcs = 1
     powerInput = 0
     powerOutput = 0
+    powerOutput2 = 0
 
     powerInputArray = []
     powerOutputArray = []
@@ -58,7 +61,7 @@ class Ship {
         if (this.powerInputArray.length>60) {
             this.powerInputArray.shift()
         }
-        this.powerOutputArray.push(this.powerOutput)
+        this.powerOutputArray.push(this.powerOutput2)
         if (this.powerOutputArray.length>60) {
             this.powerOutputArray.shift()
         }
@@ -166,36 +169,86 @@ class Ship {
         //direction
         this.position.direction += (this.position.angularSpeed*57.2957795)/fps
         if (this.position.targetDirection-0.01>this.position.direction || this.position.targetDirection+0.01<this.position.direction) {
-            //RCS
+            let thrust = 0
             let p = 100
             let targetDirection = this.position.targetDirection
-            //
             let timeUntil = 10
             if (this.position.angularSpeed!==0) {
                 timeUntil = ((this.position.targetDirection-this.position.direction)/(this.position.angularSpeed*57.2957795))
             }
-            if (timeUntil<5) {
-                targetDirection = this.position.direction-0.01
-            }
-            if (timeUntil<0.5) {
-                targetDirection = (this.position.targetDirection+this.position.direction)/2
-            }
+            if (this.rcs===1) {
+                //RCS
+                if (timeUntil<5) {
+                    targetDirection = this.position.direction-0.01
+                }
+                if (timeUntil<0.5) {
+                    targetDirection = (this.position.targetDirection+this.position.direction)/2
+                }
+                thrust = getRcsThrust(targetDirection,this.position.direction,p)
+            } else if (this.eRcs===1){
+                let tBoost = 1
+                //Reaction Wheel
+                if (timeUntil<10) {
+                    targetDirection = this.position.direction-0.01
+                }
+                if (timeUntil<0.2) {
+                    targetDirection = (this.position.targetDirection+this.position.direction)/2
+                }
+                if (timeUntil<-0.2) {
+                    tBoost = 10
+                }
 
-            //
-            let thrust = getRcsThrust(targetDirection,this.position.direction,p)
+                if (targetDirection>this.position.direction) {
+                    thrust = 0.0003*((targetDirection-this.position.direction)/30)
+                } else {
+                    thrust = 0.0003*((this.position.direction-targetDirection)/30)*(-1)
+                }
+                thrust = thrust*tBoost
+                let powerNeed = 0.00001
+                if (thrust>0) {
+                    powerNeed = thrust*(this.weight/75)
+                } else if (thrust<0) {
+                    powerNeed = (thrust*(-1))*(this.weight/75)
+                }
 
+                if (!playerShip.usePower(powerNeed/gameFPS,"engine")) {
+                    thrust = 0
+                }
+            }
             let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
             let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
             let acceleration = torque / shipInertia //(radians/s2)
             this.position.angularSpeed+= acceleration/fps
 
-        } else if (this.position.angularSpeed>0.000001 || this.position.angularSpeed<0.000001 || (this.position.targetDirection-0.005>this.position.direction || this.position.targetDirection+0.005<this.position.direction)){
+        } else if (this.position.angularSpeed>0.000001 || this.position.angularSpeed<-0.000001 && (this.position.targetDirection-0.005>this.position.direction || this.position.targetDirection+0.005<this.position.direction)){
+            if (this.eRcs===1){
             //REACTION WHEEL
             let powerNeed = this.position.angularSpeed*(this.weight/10000)
-            if (playerShip.usePower(powerNeed/gameFPS,"engine")) {
-                this.position.angularSpeed-=this.position.angularSpeed/20
-                if (this.position.angularSpeed<0.000001) {this.position.angularSpeed=0.000001}
+            if ((this.position.angularSpeed<0.000001 && this.position.angularSpeed>0) || (this.position.angularSpeed>-0.000001 && this.position.angularSpeed<0)) {
+            } else if (playerShip.usePower(powerNeed/gameFPS,"engine")) {
+                let thrust = 0
+                let targetDirection = this.position.targetDirection
+                let timeUntil = 10
+                if (this.position.angularSpeed!==0) {
+                    timeUntil = ((this.position.targetDirection-this.position.direction)/(this.position.angularSpeed*57.2957795))
+                }
+                if (timeUntil<5) {
+                    targetDirection = this.position.direction-0.01
+                }
+                if (timeUntil<0.5) {
+                    targetDirection = (this.position.targetDirection+this.position.direction)/2
+                }
+                if (targetDirection>this.position.direction) {
+                    thrust = 0.0001*((targetDirection-this.position.direction)/30)
+                } else {
+                    thrust = 0.0001*((this.position.direction-targetDirection)/30)*(-1)
+                }
+                let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
+                let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
+                let acceleration = torque / shipInertia //(radians/s2)
+                this.position.angularSpeed+= acceleration/fps
             }
+        }
         }
         //------------------------------------------------------------------------------------------------------------------------
 
@@ -253,6 +306,7 @@ class Ship {
     resetVars() {
         this.powerInput = 0
         this.powerOutput = 0
+        this.powerOutput2 = 0
         this.thrust = 0
     }
     resetWarpEngines() {
@@ -340,8 +394,6 @@ class Ship {
         }
     }
     getAtmospherePercent() {
-
-
         this.atmosphere.pressure = (this.atmosphere.nitrogenVolume+this.atmosphere.oxygenVolume+this.atmosphere.carbonDioxideVolume)/(this.atmosphere.volume*1000)
         this.atmosphere.nitrogen = (this.atmosphere.nitrogenVolume/(this.atmosphere.volume*this.atmosphere.pressure*1000))*100
         this.atmosphere.oxygen = (this.atmosphere.oxygenVolume/(this.atmosphere.volume*this.atmosphere.pressure*1000))*100
@@ -448,14 +500,16 @@ class Ship {
             if (this.capacitors[i].powerGroup === powerGroup || this.capacitors[i].powerGroup === "everything") {
                 if (this.capacitors[i].charge >= val / 3600) {
                     this.capacitors[i].charge -= val / 3600
+                    this.powerOutput2 += val*gameFPS
                     return true
-                } else {
+                }/* else {
+                    this.powerOutput2 += this.capacitors[i].charge
                     val = val - this.capacitors[i].charge
                     this.capacitors[i].charge -= val / 3600
                     if (this.capacitors[i].charge < 0) {
                         this.capacitors[i].charge = 0
                     }
-                }
+                }*/
             }
         }
         if (val!==0) {

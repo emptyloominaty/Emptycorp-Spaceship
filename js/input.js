@@ -86,9 +86,21 @@ let inputFunctions = {
         playerShip.generators[id].on = 1 - playerShip.generators[id].on
         this.toggleButtonText( document.getElementById("btn_generator"+id),playerShip.generators[id].on)
     },
+    toggleRCS() {
+        playerShip.rcs = 1 - playerShip.rcs
+         this.toggleButtonText( document.getElementById("btn_rcs"),playerShip.rcs)
+    },
+    toggleERCS() {
+        playerShip.eRcs = 1 - playerShip.eRcs
+        this.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
+    },
+    setDirection() {
+        playerShip.position.targetDirection =  +(document.getElementById("inputRange_direction").value)
+    }
 }
 
-
+inputFunctions.toggleButtonText( document.getElementById("btn_rcs"),playerShip.rcs)
+inputFunctions.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
 inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
 inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
 inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)

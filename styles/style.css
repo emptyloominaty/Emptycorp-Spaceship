@@ -22,6 +22,10 @@ p {
     margin-top:3px;
 }
 
+output {
+    text-align: right;
+    width:30px;
+}
 
 button {
     overflow: hidden;
@@ -98,6 +102,22 @@ input[type=number] {
     top:500px;
     display:flex;
     justify-content: space-evenly;
+}
+
+@media only screen and (max-height: 950px) {
+    #bottomDiv {
+        top:450px;
+    }
+}
+@media only screen and (max-height: 900px) {
+    #bottomDiv {
+        top:400px;
+    }
+}
+@media only screen and (max-height: 820px) {
+    #bottomDiv {
+        top:300px;
+    }
 }
 
 #tanksDiv,#energyDiv {
@@ -288,6 +308,16 @@ input[type=number] {
     padding:4px;
 }
 
+
+.RcsControl {
+    background-color:#333;
+    border:1px solid #000;
+    border-radius:2px;
+    position:absolute;
+    left:0;
+    top:150px;
+    padding:5px;
+}
 
 
 

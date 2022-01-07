@@ -53,8 +53,7 @@
         <div id="computerControl" class="flex-center paddingDiv">
             <div class="flex-column" >
                 <label class="flex-row">Computer: <button id="btn_computer" onclick="inputFunctions.toggleComputer()" ></button></label>
-                <p>CPU USAGE</p>
-                <p>MEMORY USAGE</p>
+
             </div>
         </div>
         <div id="antennasControl" class="paddingDiv">
@@ -70,8 +69,8 @@
                 <label class="flex-row">Temperature Control: <button id="btn_temperatureControl" onclick="inputFunctions.toggleTemperatureControl()" ></button></label>
             </div>
             <div class="paddingDiv">
-                <label class="flex-row">Set Pressure:  <input type="range" class="inputRange" min="0" max="2" step="0.1" value="1"  id="inputRange_pressure" oninput="txt_pressure.value = inputRange_pressure.value;inputFunctions.setPressure()" ><output id="txt_pressure">1</output> Bar</label>
-                <label class="flex-row">Set Temperature:  <input type="range" class="inputRange" min="0" max="30" step="0.5" value="21"  id="inputRange_temperature" oninput="txt_temperature.value = inputRange_temperature.value;inputFunctions.setTemperature()" ><output id="txt_temperature">21</output> °C</label>
+                <label class="flex-row">Pressure:  <input type="range" class="inputRange" min="0" max="2" step="0.1" value="1"  id="inputRange_pressure" oninput="txt_pressure.value = inputRange_pressure.value;inputFunctions.setPressure()" ><output id="txt_pressure">1</output> Bar</label>
+                <label class="flex-row">Temperature:  <input type="range" class="inputRange" min="0" max="30" step="0.5" value="21"  id="inputRange_temperature" oninput="txt_temperature.value = inputRange_temperature.value;inputFunctions.setTemperature()" ><output id="txt_temperature">21</output> °C</label>
             </div>
             <div class="paddingDiv">
                 <p id="atmosphereComposition"></p>
@@ -124,9 +123,11 @@
         </div>
     </div>
 
-    <div>
-        RCS:
-        Direction:
+    <div class="RcsControl">
+        <label class="flex-row">RCS: <button id="btn_rcs" onclick="inputFunctions.toggleRCS()" ></button></label>
+        <label class="flex-row">ERCS: <button id="btn_eRcs" onclick="inputFunctions.toggleERCS()" ></button></label>
+        <label class="flex-row">Direction  </label>
+        <input type="range" class="inputRange" min="0" max="359" step="1" value="0"  id="inputRange_direction" oninput="txt_direction.value = inputRange_direction.value;inputFunctions.setDirection()" ><output id="txt_direction">0</output>°
     </div>
 
 </div>

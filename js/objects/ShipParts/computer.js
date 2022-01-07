@@ -98,9 +98,9 @@ class Computer extends Part {
                 this.display.drawText(25, 130, "+", fontBtn, colorBtnText, 'center')
                 this.display.drawText(65, 130, "-", fontBtn, colorBtnText, 'center')
 
-                this.display.drawText(10, 180, "dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
-                this.display.drawText(10, 200, "t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
-                this.display.drawText(10, 220, "as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 180, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
+                this.display.drawText(10, 200, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 220, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
@@ -110,6 +110,11 @@ class Computer extends Part {
             } else if (this.tab==="nav") {
                 //------------------------------------------------------------------------Navigation Tab
                 if (this.nav.on===1) {
+                    //map
+                    this.drawMap()
+                    //ship
+                    this.display.drawCircle(300, 180, 5, colorShip)
+                    //x,y,distance
                     this.display.drawText(5, 20, "x: ", font1, color1, 'left')
                     this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color4, 'left')
                     this.display.drawText(5, 40, "y: ", font1, color1, 'left')
@@ -117,10 +122,6 @@ class Computer extends Part {
                     this.display.drawText(5, 60, "d: ", font1, color1, 'left')
                     this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color4, 'left')
 
-                    //map
-                    this.drawMap()
-                    //ship
-                    this.display.drawCircle(300, 180, 5, colorShip)
 
                 } else {
                     this.display.drawText(5,20,"Off",font1,colorError,'left')
