@@ -2,7 +2,7 @@ class Engine extends Part {
     on = 1
 
 
-    run(percent,fps,targetSpeed,speed) {
+    run(percent,fps,targetSpeed,speed,angularSpeed = 0) {
         let p = percent/100
         if(p>1) {p = 1}
         if (this.type==="FTL") {
@@ -17,18 +17,20 @@ class Engine extends Part {
 
         if (targetSpeed>speed) {
             if (this.type === "Sublight") {
+                //-----------------------------------------------------------SUBLIGHT
                 let thrust = this.thrust*(this.maxSpeed/(speed+0.1))
                 thrust = thrust*(0.0001+(targetSpeed-speed)*10000000)
                 if (thrust>this.thrust) {thrust = this.thrust}
-                playerShip.computers[0].data.engineThrottle = thrust/this.thrust
                 if (speed>this.maxSpeed) {thrust = 0}
                 let consumption = thrust/this.thrust
+                playerShip.computers[0].data.engineThrottle = thrust/this.thrust
                 if (this.usePower(speed,consumption)) {
                     if (this.useFuel(speed,consumption)) {
                         return thrust
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
+                //-----------------------------------------------------------FTL
                 let thrust = this.thrust*this.maxFTLThrust
                 let warpFriction = (Math.pow(speed*75, 1.5))
                 let warpFrictionTarget = (Math.pow(targetSpeed*75, 1.5))
@@ -52,9 +54,20 @@ class Engine extends Part {
                         return thrust
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}
+            } else if (this.type==="RCS") {
+                //-----------------------------------------------------------RCS
+                let thrust = this.thrust*((targetSpeed-speed)/30)*p
+                if (thrust>this.thrust) {thrust = this.thrust}
+                let throttle = thrust/this.thrust
+                if (this.usePower(1,throttle)) {
+                    if (this.useFuel(1,throttle)) {
+                        return thrust
+                    } else {this.noPowerOrFuel()}
+                } else {this.noPowerOrFuel()}
             }
-            //-------------------"BRAKING"
         } else if (targetSpeed<speed) {
+            //---------------------------------------------------------------------------------------------------------------------------"BRAKING"
+            //-----------------------------------------------------------SUBLIGHT
             if (this.type === "Sublight") {
                 let thrust = this.thrust*(-1)
                 thrust = thrust*(0.0001+(speed-targetSpeed)*10000000)
@@ -66,12 +79,23 @@ class Engine extends Part {
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}
             } else if (this.type === "FTL") {
+                //-----------------------------------------------------------FTL
                 if (targetSpeed<speed/1.01) {
                     if (speed<1000) {
                         playerShip.speed-=25
                     }
                     playerShip.speed-= speed/20
                 }
+            } else if (this.type==="RCS") {
+                //-----------------------------------------------------------RCS
+                let thrust = this.thrust*((speed-targetSpeed)/30)*p
+                if (thrust>this.thrust) {thrust = this.thrust}
+                let throttle = thrust/this.thrust
+                if (this.usePower(1,throttle)) {
+                    if (this.useFuel(1,throttle)) {
+                        return thrust*(-1)
+                    } else {this.noPowerOrFuel()}
+                } else {this.noPowerOrFuel()}
             }
         }
 

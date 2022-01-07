@@ -4,7 +4,7 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N"}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0}
 
     //display
     mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
@@ -52,6 +52,8 @@ class Computer extends Part {
             //main
             let color1 = "#d7d7d7"
             let font1 = "16px Consolas"
+            let fontBtn = "24px Consolas"
+            let colorBtnText = "#424242"
             //current Tab
             let color2 = "#7e97d7"
             let font2 = "18px Consolas"
@@ -61,6 +63,7 @@ class Computer extends Part {
             //vals
             let color4 = "#7aff82"
             let colorTT= "#80d9ff"
+            let color5= "#b8a8ff"
             //ship
             let colorShip = "#3b57da"
             //error
@@ -78,16 +81,26 @@ class Computer extends Part {
                 if (this.fuelCons.on===1) {
                     this.display.drawText(5,60,"Fuel Consumption: ",font1,color1,'left')
                     if (this.fuelCons.fuelConsumptionAvgPrecise<1000) {
-                        this.display.drawText(170,60,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
+                        this.display.drawText(160,60,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
                     } else {
-                        this.display.drawText(170,60,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
+                        this.display.drawText(160,60,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
                     }
                     this.display.drawText(5,80,"Range: ",font1,color1,'left')
-                    this.display.drawText(170,80,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
+                    this.display.drawText(160,80,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
                 } else {
                     this.display.drawText(5,60,"Off",font1,colorError,'left')
                 }
-                //
+                //Direction Tab
+                this.display.drawText(5, 100, "Direction: ", font1, color1, 'left')
+                this.display.drawText(100, 100, this.data.shipDirection.toFixed(1)+"°", font1, color5, 'left')
+                this.display.drawRect(10,110,30,30,color1)
+                this.display.drawRect(50,110,30,30,color1)
+                this.display.drawText(25, 130, "+", fontBtn, colorBtnText, 'center')
+                this.display.drawText(65, 130, "-", fontBtn, colorBtnText, 'center')
+
+                this.display.drawText(10, 180, "dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
+                this.display.drawText(10, 200, "t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 220, "as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
@@ -206,11 +219,17 @@ class Computer extends Part {
     }
 
 
+   /* this.display.drawRect(10,110,30,30,color1)
+    this.display.drawRect(50,110,30,30,color1)*/
 
     touchScreen(x,y) {
-        let buttons = [{x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
+        let buttons = [
+            {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
+
+            {x1:10, y1:110,x2:40,y2:140,function: () => {playerShip.position.targetDirection++}},
+            {x1:50, y1:110,x2:80,y2:140,function: () => {playerShip.position.targetDirection--}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]

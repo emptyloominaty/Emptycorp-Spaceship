@@ -7,12 +7,13 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
-    position = {x:0, y:0, direction:0}
+    position = {x:0, y:0, direction:0, targetDirection:0, angularSpeed:0}
     weight = this.baseWeight
 
     //radiation heat transfer
     emissivityCoefficient = 0.12 //avg
     surfaceArea =  128 //m2
+    size = {l:7,h:3.5,w:3.5}
 
 
     atmosphere = {oxygen:21, nitrogen:78.96, carbonDioxide:0.04, volume:16/* m3 */, pressure:1/* bar */, temperature:294,
@@ -38,7 +39,6 @@ class Ship {
     }
     
     //---------------------------------------------
-
     lifeSupport = [new AtmosphereControl(0,5.4,"Atmosphere Control",0.00004,0.00010),
         new TemperatureControl(0,28.2,"Temperature Control",0.00001,0.00314,0.00158)]
     antennas = []
@@ -149,6 +149,55 @@ class Ship {
         if (this.speed<-1) {
             this.speed = -1
         }
+
+
+
+        //------------------------------------------------------------------------------------------------------------------------
+        let getRcsThrust = (targetDirection,direction,p) => {
+            let t = 0
+            for(let i = 0; i<this.engines.length; i++) {
+                if (this.engines[i].on===1 && this.engines[i].type==="RCS") {
+                    t += this.engines[i].run(p, fps, targetDirection, direction, this.position.angularSpeed)
+                }
+            }
+            return t
+        }
+
+        //direction
+        this.position.direction += (this.position.angularSpeed*57.2957795)/fps
+        if (this.position.targetDirection-0.01>this.position.direction || this.position.targetDirection+0.01<this.position.direction) {
+            //RCS
+            let p = 100
+            let targetDirection = this.position.targetDirection
+            //
+            let timeUntil = 10
+            if (this.position.angularSpeed!==0) {
+                timeUntil = ((this.position.targetDirection-this.position.direction)/(this.position.angularSpeed*57.2957795))
+            }
+            if (timeUntil<5) {
+                targetDirection = this.position.direction-0.01
+            }
+            if (timeUntil<0.5) {
+                targetDirection = (this.position.targetDirection+this.position.direction)/2
+            }
+
+            //
+            let thrust = getRcsThrust(targetDirection,this.position.direction,p)
+
+            let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
+            let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
+            let acceleration = torque / shipInertia //(radians/s2)
+            this.position.angularSpeed+= acceleration/fps
+
+        } else if (this.position.angularSpeed>0.000001 || this.position.angularSpeed<0.000001 || (this.position.targetDirection-0.005>this.position.direction || this.position.targetDirection+0.005<this.position.direction)){
+            //REACTION WHEEL
+            let powerNeed = this.position.angularSpeed*(this.weight/10000)
+            if (playerShip.usePower(powerNeed/gameFPS,"engine")) {
+                this.position.angularSpeed-=this.position.angularSpeed/20
+                if (this.position.angularSpeed<0.000001) {this.position.angularSpeed=0.000001}
+            }
+        }
+        //------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -504,7 +553,8 @@ let shipDefaultParts = {
     generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weight:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  }],
+        {weight:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
+        {weight:80, fuelType:"fuel1", type:"RCS", maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
