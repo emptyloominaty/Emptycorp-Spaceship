@@ -205,6 +205,7 @@ class Ship {
                 }
                 thrust = thrust*tBoost
                 let powerNeed = 0.00001
+                if (thrust>0.002) {thrust=0.002}
                 if (thrust>0) {
                     powerNeed = thrust*(this.weight/75)
                 } else if (thrust<0) {
