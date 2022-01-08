@@ -57,7 +57,7 @@ function draw(progress) {
     elements.pressureAndTemperature.innerText =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
     //update speed bar
     elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
-    elements.speedText.innerText = "Speed: "+playerShip.getSpeedText(playerShip.speed)
+    elements.speedText.innerText = "Speed: "+getSpeedText(playerShip.speed)
     //energy
     let powerInput = 0
     let powerOutput = 0

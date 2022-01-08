@@ -4,7 +4,7 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0}
 
     //display
     mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
@@ -62,8 +62,9 @@ class Computer extends Part {
             let font3 = "12px Consolas"
             //vals
             let color4 = "#7aff82"
-            let colorTT= "#80d9ff"
-            let color5= "#b8a8ff"
+            let colorTT = "#80d9ff"
+            let color5 = "#b8a8ff"
+            let colorSpeed = "#ffb9c5"
             //ship
             let colorShip = "#3b57da"
             //error
@@ -93,14 +94,18 @@ class Computer extends Part {
                 //Direction Tab
                 this.display.drawText(5, 100, "Direction: ", font1, color1, 'left')
                 this.display.drawText(100, 100, this.data.shipDirection.toFixed(1)+"°", font1, color5, 'left')
-                this.display.drawRect(10,110,30,30,color1)
-                this.display.drawRect(50,110,30,30,color1)
-                this.display.drawText(25, 130, "+", fontBtn, colorBtnText, 'center')
-                this.display.drawText(65, 130, "-", fontBtn, colorBtnText, 'center')
+                //Speed Tab
+                this.display.drawText(5, 120, "Speed: ", font1, color1, 'left')
+                this.display.drawText(130, 120, getSpeedText(this.data.speed), font1, colorSpeed, 'left')
+                this.display.drawText(5, 140, "Target Speed: ", font1, color1, 'left')
+                this.display.drawText(130, 140, getSpeedText(this.data.targetSpeed), font1, colorSpeed, 'left')
+                this.display.drawText(5, 160, "Input Speed: ", font1, color1, 'left')
+                this.display.drawText(130, 160, getSpeedText(this.data.inputSpeed), font1, colorSpeed, 'left')
 
-                this.display.drawText(10, 180, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
-                this.display.drawText(10, 200, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
-                this.display.drawText(10, 220, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
+                //DEBUG
+                this.display.drawText(10, 250, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
+                this.display.drawText(10, 270, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 290, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
@@ -199,23 +204,18 @@ class Computer extends Part {
         let testt = {x:2.5,y:1.5}
         let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
         let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
-        //TODO: if testx<0 and testx>this.display.resolution.w .....
         if (testx>0 && testx<this.display.resolution.w && testy>0 && testy<this.display.resolution.h-bottom) {
             this.display.drawCircle(testx,testy,10*scaling,colorMap)
-            this.display.drawText(300,10,"YAY",font,colorMapText,'center')
-        } else {
-            this.display.drawText(300,10,"NAY",font,colorMapText,'center')
         }
-
-
-        this.display.drawText(300,50,testx,font,colorMapText,'center')
-        this.display.drawText(300,70,testy,font,colorMapText,'center')
+        /*this.display.drawText(300,50,testx,font,colorMapText,'center')
+        this.display.drawText(300,70,testy,font,colorMapText,'center')*/
         //--------------------------------------------------------
 
         //x:0 y:0
         /*let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
         let y0 = (posR.y*this.mapScaling)+(((this.display.resolution.h-40))/2)*/
         //this.display.drawCircle(x0,y0,5,"#b47ca0")
+
         return a
     }
 
@@ -229,8 +229,6 @@ class Computer extends Part {
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
 
-            {x1:10, y1:110,x2:40,y2:140,function: () => {playerShip.position.targetDirection++}},
-            {x1:50, y1:110,x2:80,y2:140,function: () => {playerShip.position.targetDirection--}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]

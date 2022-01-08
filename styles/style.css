@@ -24,7 +24,7 @@ p {
 
 output {
     text-align: right;
-    width:30px;
+    width:35px;
 }
 
 button {
@@ -317,19 +317,12 @@ input[type=number] {
     left:0;
     top:150px;
     padding:5px;
-}
-
-
-
-
-.inputRange {
-    width:60px;
-
+    width:110px;
 }
 
 .inputRange {
     -webkit-appearance: none;
-    width: 60px;
+    width: 70px;
     height: 15px;
     background: #d3d3d3;
     outline: none;

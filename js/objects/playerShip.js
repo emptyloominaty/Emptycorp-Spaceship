@@ -103,7 +103,7 @@ class Ship {
         this.computers[0].data.engineThrottle = 0
         if (this.propulsion==="on") {
             for(let i = 0; i<this.engines.length; i++) {
-                if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
+                if (this.engines[i].on===1 && this.engines[i].type===this.speedMode && (this.engines[i].minSpeed+1)<this.targetSpeed) {
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
                     this.thrust += thrust
                     //------------------------------------------
@@ -528,23 +528,6 @@ class Ship {
             val += this.batteries[i].charge
         }
         return [val,valMax]
-    }
-
-    getSpeedText(speed) {
-        let ret = ""
-        if (speed>10000000) {
-            ret = (speed/8765.812756/3600).toFixed(2)+"ly/s"
-        }else if (speed>1000) {
-            ret = (speed/8765.812756).toFixed(2)+"ly/h"
-        }else if (speed>0.01) {
-            ret = (speed).toFixed(2)+"c"
-        } else if (speed>0.0001) {
-            ret = (speed*299792.458).toFixed(2)+"km/s"
-        } else {
-            ret = (speed*299792458).toFixed(2)+"m/s"
-        }
-
-        return ret
     }
 
     constructor(parts) {

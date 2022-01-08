@@ -46,6 +46,8 @@ function update(progress) {
      inputRange_speed = elements.inputRange_speed.value
      inputNumber_speed = elements.inputNumber_speed.value
 
+    playerShip.computers[0].data.inputSpeed = inputNumber_speed
+
 
 }
 

@@ -10,7 +10,8 @@ class NavigationModule {
         this.calcPosition()
         //TODO:download position if needed or get idk
         playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.direction)
-
+        playerShip.computers[0].data.speed = playerShip.speed
+        playerShip.computers[0].data.targetSpeed = playerShip.targetSpeed
     }
 
     calcPosition() {
