@@ -4,7 +4,7 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0,}
 
     //display
     mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
@@ -65,6 +65,8 @@ class Computer extends Part {
             let colorTT = "#80d9ff"
             let color5 = "#b8a8ff"
             let colorSpeed = "#ffb9c5"
+            let colorHeat = "#ffa5a0"
+            let colorCold = "#a2fffc"
             //ship
             let colorShip = "#3b57da"
             //error
@@ -101,6 +103,11 @@ class Computer extends Part {
                 this.display.drawText(130, 140, getSpeedText(this.data.targetSpeed), font1, colorSpeed, 'left')
                 this.display.drawText(5, 160, "Input Speed: ", font1, color1, 'left')
                 this.display.drawText(130, 160, getSpeedText(this.data.inputSpeed), font1, colorSpeed, 'left')
+
+                this.display.drawText(5, 180, "Heating: ", font1, color1, 'left')
+                this.display.drawText(80, 180, this.data.heating.toFixed(1)+"% ("+((this.data.heating/100)*playerShip.lifeSupport[1].heatConsumption*1000).toFixed(1)+"kW)", font1, colorHeat, 'left')
+                this.display.drawText(5, 200, "Cooling: ", font1, color1, 'left')
+                this.display.drawText(80, 200, this.data.cooling.toFixed(1)+"% ("+((this.data.cooling/100)*playerShip.lifeSupport[1].coldConsumption*1000).toFixed(1)+"kW)", font1, colorCold, 'left')
 
                 //DEBUG
                 this.display.drawText(10, 250, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')

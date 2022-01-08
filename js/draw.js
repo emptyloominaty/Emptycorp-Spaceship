@@ -78,7 +78,7 @@ function draw(progress) {
         elements["capacitorValue" + i].style.width = (playerShip.capacitors[i].charge / playerShip.capacitors[i].maxCharge * 100) + "%"
         elements["capacitorType" + i].innerText = playerShip.capacitors[i].powerGroup
         elements["capacitorText" + i].innerText = (playerShip.capacitors[i].charge*1000).toFixed(2)+"/"+(playerShip.capacitors[i].maxCharge*1000)+"kWh "
-        elements["capacitorText2" + i].innerText = (playerShip.capacitors[i].dischargePerSec*1000*3600).toFixed(1)+"kWh"
+        elements["capacitorText2" + i].innerText = (playerShip.capacitors[i].dischargePerSec*1000*3600).toFixed(1)+"kW"
     }
     //battery
     elements.batteryValue.style.height = ((playerShip.batteries[0].charge/playerShip.batteries[0].maxCharge)*100)+"%"

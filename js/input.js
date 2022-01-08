@@ -96,6 +96,9 @@ let inputFunctions = {
     },
     setDirection() {
         playerShip.position.targetDirection =  +(document.getElementById("inputRange_direction").value)
+    },
+    setTime() {
+        speedInc =  +(document.getElementById("inputRange_time").value)
     }
 }
 

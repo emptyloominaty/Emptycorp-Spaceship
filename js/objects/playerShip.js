@@ -149,8 +149,8 @@ class Ship {
                 this.resetWarpEngines()
             }
         }
-        if (this.speed<-1) {
-            this.speed = -1
+        if (this.speed<0) {
+            this.speed = 0
         }
 
 
@@ -206,6 +206,7 @@ class Ship {
                 thrust = thrust*tBoost
                 let powerNeed = 0.00001
                 if (thrust>0.002) {thrust=0.002}
+                if (thrust<-0.002) {thrust=-0.002}
                 if (thrust>0) {
                     powerNeed = thrust*(this.weight/75)
                 } else if (thrust<0) {

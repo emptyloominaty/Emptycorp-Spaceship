@@ -128,6 +128,8 @@
         <label class="flex-row">ERCS: <button id="btn_eRcs" onclick="inputFunctions.toggleERCS()" ></button></label>
         <label class="flex-row">Direction  </label>
         <input type="range" class="inputRange" min="0" max="359" step="1" value="0"  id="inputRange_direction" oninput="txt_direction.value = inputRange_direction.value;inputFunctions.setDirection()" ><output id="txt_direction">0</output>°
+        <label class="flex-row">Time  </label>
+        <input type="range" class="inputRange" min="1" max="4" step="1" value="1"  id="inputRange_time" oninput="txt_time.value = inputRange_time.value;inputFunctions.setTime()" ><output id="txt_time">1</output>x
     </div>
 
 </div>

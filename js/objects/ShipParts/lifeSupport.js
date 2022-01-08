@@ -61,6 +61,8 @@ class TemperatureControl extends Part {
     on = 1
     size = 0.0121
     run() {
+        playerShip.computers[0].data.cooling = 0
+        playerShip.computers[0].data.heating = 0
         if (this.on===1) {
             if (playerShip.usePower(this.baseConsumption / gameFPS, this.group)) {
                 //COOLING
@@ -69,6 +71,7 @@ class TemperatureControl extends Part {
                     if (percent > 1) {
                         percent = 1
                     }
+                    playerShip.computers[0].data.cooling = percent*100
 
                     let dec = (this.size * percent) / playerShip.atmosphere.volume
                     if (playerShip.usePower((this.coldConsumption * percent) / gameFPS, this.group)) {
@@ -80,6 +83,7 @@ class TemperatureControl extends Part {
                     if (percent > 1) {
                         percent = 1
                     }
+                    playerShip.computers[0].data.heating = percent*100
                     let inc = this.size * percent / playerShip.atmosphere.volume
                     if (playerShip.usePower((this.heatConsumption * percent) / gameFPS, this.group)) {
                         playerShip.atmosphere.temperature += inc /(gameFPS/60)
