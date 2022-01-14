@@ -67,7 +67,7 @@ class TemperatureControl extends Part {
             if (playerShip.usePower(this.baseConsumption / gameFPS, this.group)) {
                 //COOLING
                 if (playerShip.atmosphere.temperature > playerShip.temperatureSet + 0.001) {
-                    let percent = (playerShip.atmosphere.temperature - playerShip.temperatureSet) + 0.01
+                    let percent = (playerShip.atmosphere.temperature - playerShip.temperatureSet) + 0.001
                     if (percent > 1) {
                         percent = 1
                     }
@@ -79,7 +79,7 @@ class TemperatureControl extends Part {
                     }
                     //HEATING
                 } else if (playerShip.atmosphere.temperature < playerShip.temperatureSet - 0.001) {
-                    let percent = (playerShip.temperatureSet - playerShip.atmosphere.temperature) + 0.01 //0.01
+                    let percent = (playerShip.temperatureSet - playerShip.atmosphere.temperature) + 0.001 //0.01
                     if (percent > 1) {
                         percent = 1
                     }
@@ -99,6 +99,7 @@ class TemperatureControl extends Part {
         this.baseConsumption = baseConsumption
         this.heatConsumption = heatConsumption
         this.coldConsumption = coldConsumption
+        this.size = this.heatConsumption/0.28
     }
 
 }

@@ -1,0 +1,11 @@
+#throttleBar {
+    display:flex;
+}
+
+.throttleBar {
+    width:6px;
+    height:12px;
+    border:1px solid #000;
+    background-color:#333;
+    margin-right:2px;
+}

@@ -32,3 +32,49 @@ let getSpeedText = function(speed) {
     }
     return ret
 }
+
+let throttleBar = function() {
+    let throttle = playerShip.computers[0].data.engineThrottle*100
+    elements.throttleBar1.style.backgroundColor = "#000"
+    elements.throttleBar2.style.backgroundColor = "#000"
+    elements.throttleBar3.style.backgroundColor = "#000"
+    elements.throttleBar4.style.backgroundColor = "#000"
+    elements.throttleBar5.style.backgroundColor = "#000"
+    elements.throttleBar6.style.backgroundColor = "#000"
+    elements.throttleBar7.style.backgroundColor = "#000"
+    elements.throttleBar8.style.backgroundColor = "#000"
+    elements.throttleBar9.style.backgroundColor = "#000"
+    elements.throttleBar10.style.backgroundColor = "#000"
+
+    if (throttle>90) {
+        elements.throttleBar10.style.backgroundColor = "#90ffe9"
+    }
+    if (throttle>80) {
+        elements.throttleBar9.style.backgroundColor = "#77ffa1"
+    }
+    if (throttle>70) {
+        elements.throttleBar8.style.backgroundColor = "#57ff54"
+    }
+    if (throttle>60) {
+        elements.throttleBar7.style.backgroundColor = "#95ff5d"
+    }
+    if (throttle>50) {
+        elements.throttleBar6.style.backgroundColor = "#c7ff71"
+    }
+    if (throttle>40) {
+        elements.throttleBar5.style.backgroundColor = "#edff6c"
+    }
+    if (throttle>30) {
+        elements.throttleBar4.style.backgroundColor = "#fffc75"
+    }
+    if (throttle>20) {
+        elements.throttleBar3.style.backgroundColor = "#ffe476"
+    }
+    if (throttle>10) {
+        elements.throttleBar2.style.backgroundColor = "#ffcc8a"
+    }
+    if (throttle>0) {
+        elements.throttleBar1.style.backgroundColor = "#ff9679"
+    }
+
+}

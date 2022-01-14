@@ -38,7 +38,7 @@ class Ship {
     pressureSet = 1
     temperatureSet = 294
 
-    lights = { insideOn: 1, outsideOn:0, insideConsumption:0.0002, outsideConsumption:0.0005
+    lights = { insideOn: 1, outsideOn:0, insideConsumption:0.00004, outsideConsumption:0.0005
     }
     
     //---------------------------------------------
@@ -168,6 +168,12 @@ class Ship {
 
         //direction
         this.position.direction += (this.position.angularSpeed*57.2957795)/fps
+        if (this.position.direction>720) {
+            this.position.direction = 0
+        } else if (this.position.direction<-360) {
+            this.position.direction = 0
+        }
+
         if (this.position.targetDirection-0.01>this.position.direction || this.position.targetDirection+0.01<this.position.direction) {
             let thrust = 0
             let p = 100
@@ -438,6 +444,7 @@ class Ship {
 
     generatePower(val) { //MW
         this.powerInput += val*gameFPS
+        this.atmosphere.temperature += (val*10 / this.atmosphere.volume)/gameFPS
         for (let i = 0; i<this.batteries.length; i++) {
             this.batteries[i].charge+=val/60/60
             val=0
@@ -503,6 +510,7 @@ class Ship {
                 if (this.capacitors[i].charge >= val / 3600) {
                     this.capacitors[i].charge -= val / 3600
                     this.powerOutput2 += val*gameFPS
+                    this.atmosphere.temperature += (val*10 / this.atmosphere.volume)/gameFPS
                     return true
                 }/* else {
                     this.powerOutput2 += this.capacitors[i].charge

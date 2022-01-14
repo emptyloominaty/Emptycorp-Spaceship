@@ -26,6 +26,16 @@ let elements = {
     gasTanksDiv: document.getElementById("gasTanksDiv"),
     fuelTanksDiv: document.getElementById("fuelTanksDiv"),
     btn_turnOffEngines: document.getElementById("btn_turnOffEngines"),
+    throttleBar1: document.getElementById("throttleBar1"),
+    throttleBar2: document.getElementById("throttleBar2"),
+    throttleBar3: document.getElementById("throttleBar3"),
+    throttleBar4: document.getElementById("throttleBar4"),
+    throttleBar5: document.getElementById("throttleBar5"),
+    throttleBar6: document.getElementById("throttleBar6"),
+    throttleBar7: document.getElementById("throttleBar7"),
+    throttleBar8: document.getElementById("throttleBar8"),
+    throttleBar9: document.getElementById("throttleBar9"),
+    throttleBar10: document.getElementById("throttleBar10"),
 }
 
 
@@ -47,7 +57,7 @@ function update(progress) {
      inputNumber_speed = elements.inputNumber_speed.value
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
-
+    throttleBar()
 
 }
 
