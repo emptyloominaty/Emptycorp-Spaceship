@@ -562,7 +562,21 @@ class Ship {
             let part = parts.engines[i]
             this.engines.push(new Engine(i,part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
                 part.consumptionFuel, part.consumptionPower))
-            if (part.maxSpeed>maxSpeed) {maxSpeed = part.maxSpeed}
+
+            for (let i = 0; i<100000000; i+=100) {
+                let wp = Math.pow(i*75, 1.5)
+                if ((part.thrust - wp)>0) {
+                } else {
+                    if(maxSpeed<i) {
+                        maxSpeed = i
+                        break
+                    }
+                    break
+                }
+
+            }
+
+            //if (part.maxSpeed>maxSpeed) {maxSpeed = part.maxSpeed}
         }
         //this.shields.push
         //this.weapons.push
@@ -591,7 +605,7 @@ let shipDefaultParts = {
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
     generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
-    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 17987520000,/* MN */ maxSpeed:12*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
+    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
         {weight:80, fuelType:"fuel1", type:"RCS", maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
