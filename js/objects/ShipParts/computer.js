@@ -4,10 +4,15 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0,}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, }
+
+    //network
+    myAddress = 1
+    listeningPort = []
+    receivedData = new Array(65536).fill([])
 
     //display
-    mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60)
+    mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60) //TODO FIX
 
     run() {
         if(this.on===1) {
@@ -22,12 +27,43 @@ class Computer extends Part {
                 this.drawUi()
                 this.time += 1000 / gameFPS
             }
+            //network
+            if (this.listeningPort.length>0) {
+                for (let i = 0; i<this.listeningPort.length; i++) {
+                    if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
+                        for (let j = 0; j<this.receivedData[this.listeningPort[i]].length; j++) {
+                            let data = this.receivedData[this.listeningPort[i]][0]
+                            if (data.data.type==="var") {
+                                //time
+                                if (data.data.var==="time") {
+                                    this.time = data.data.time
+                                }
+                                //....
+                            }
+                            this.receivedData[this.listeningPort[i]].shift()
+                        }
+                    }
+                }
+            }
+            this.data.antennaRX = playerShip.antennas[0].rx[0]
+            this.data.antennaTX = playerShip.antennas[0].tx[0]
+            //-----
+        //OFF
         } else {
             if (this.display) {
                 this.display.reset()
             }
         }
     }
+
+    functions = {
+        receiveTime: ()=> {
+            this.comm.transmitData([0.002, 2, 2, {data:"time", senderAddress:this.myAddress}])
+            this.listeningPort.push(2)
+        },
+
+    }
+
 
     getTimeString(time) {
         time = time/1000
@@ -109,10 +145,14 @@ class Computer extends Part {
                 this.display.drawText(5, 200, "Cooling: ", font1, color1, 'left')
                 this.display.drawText(80, 200, this.data.cooling.toFixed(1)+"% ("+((this.data.cooling/100)*playerShip.lifeSupport[1].coldConsumption*1000).toFixed(1)+"kW)", font1, colorCold, 'left')
 
+                this.display.drawRect(250,250,50,50,"#77f2ff") //UPDATE TIME
+
+                this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
+                this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 //DEBUG
-                this.display.drawText(10, 250, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
-                this.display.drawText(10, 270, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
-                this.display.drawText(10, 290, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 290, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
+                this.display.drawText(10, 310, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 330, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
@@ -236,6 +276,7 @@ class Computer extends Part {
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
 
+            {x1:250, y1:250,x2:300,y2:300,function: () => {this.functions.receiveTime()}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]

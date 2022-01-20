@@ -25,7 +25,6 @@ class Antenna extends Part {
                         this.transmit(transmitData.size, transmitData.address, transmitData.port, transmitData.data)
                         this.transmitArray.shift()
                     }
-
                 } else {
                     this.on = 0
                 }

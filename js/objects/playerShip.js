@@ -540,6 +540,14 @@ class Ship {
         return [val,valMax]
     }
 
+    //--------------------------NETWORK--------------------------
+
+    receive(size,address,port,data) {
+        return this.antennas[0].receive(size, address, port, data)
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     constructor(parts) {
         let maxSpeed = 0
         for (let i = 0 ; i < parts.antennas.length ; i++) {
