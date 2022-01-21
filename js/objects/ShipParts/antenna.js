@@ -22,7 +22,7 @@ class Antenna extends Part {
                     //transmit
                     if (this.transmitArray.length > 0) {
                         let transmitData = this.transmitArray[0]
-                        this.transmit(transmitData.size, transmitData.address, transmitData.port, transmitData.data)
+                        this.transmit(transmitData.size, transmitData.address, transmitData.port, transmitData.data, transmitData.senderAddress)
                         this.transmitArray.shift()
                     }
                 } else {
@@ -38,23 +38,23 @@ class Antenna extends Part {
         this.tx[0] = 0
     }
 
-    transmit(size,address,port,data) {
+    transmit(size,address,port,data,senderAddress) {
         if (this.tx[0]+size<this.tx[1]) {
             if (playerShip.usePower((this.consumptionPower[1]*size)/gameFPS,this.group)) { //TODO:consumption speed idk
                 if (playerShip.useTank(this.fuelType,(this.consumptionFuel[1]*size)/gameFPS)) {
                     this.tx[0] += size
-                    mainServer.sendData(size,address,port,data)
+                    mainServer.sendData(size,address,port,data,senderAddress)
                 }
             }
         }
     }
 
-    receive(size,address,port,data) {
+    receive(size,address,port,data,senderAddress) {
         if (this.rx[0]+size<this.rx[1]) {
             if (playerShip.usePower((this.consumptionPower[1]*size)/gameFPS,this.group)) { //TODO:consumption speed idk
                 if (playerShip.useTank(this.fuelType,(this.consumptionFuel[1]*size)/gameFPS)) {
                     this.rx[0] += size
-                    this.receiveArray.push({size: size, address: address, port: port, data: data})
+                    this.receiveArray.push({size: size, address: address, port: port, data: data, senderAddress:senderAddress})
                     return true
                 }
             }

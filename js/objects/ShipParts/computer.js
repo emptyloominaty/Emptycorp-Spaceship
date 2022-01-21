@@ -7,7 +7,6 @@ class Computer extends Part {
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0}
 
     //network
-    myAddress = 1
     listeningPort = []
     receivedData = new Array(65536).fill([])
 
@@ -58,7 +57,7 @@ class Computer extends Part {
 
     functions = {
         receiveTime: ()=> {
-            this.comm.transmitData([0.002, 2, 2, {data:"time", senderAddress:this.myAddress}])
+            this.comm.transmitData([0.002, 2, 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(2)
         },
 
@@ -146,6 +145,7 @@ class Computer extends Part {
                 this.display.drawText(80, 200, this.data.cooling.toFixed(1)+"% ("+((this.data.cooling/100)*playerShip.lifeSupport[1].coldConsumption*1000).toFixed(1)+"kW)", font1, colorCold, 'left')
 
                 this.display.drawRect(250,250,50,50,"#77f2ff") //UPDATE TIME
+                this.display.drawRect(350,250,50,50,"#77f2ff") //UPDATE POSITION
 
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
@@ -277,6 +277,7 @@ class Computer extends Part {
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
 
             {x1:250, y1:250,x2:300,y2:300,function: () => {this.functions.receiveTime()}},
+            {x1:350, y1:250,x2:400,y2:300,function: () => {this.nav.start.recalcPosition()}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]

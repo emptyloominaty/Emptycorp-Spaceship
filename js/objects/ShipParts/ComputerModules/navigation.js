@@ -3,6 +3,7 @@ class NavigationModule {
     on = 1
     distanceTraveled = 0
     position = {x:0,y:0}
+    vars = {recalcPosition:{time:0,timeNeed:5,running:1,func:()=>{this.recalcPosition()},consumption:0.00085}}
 
     run() {
         let speed = playerShip.speed/8765.812756 //ly/h
@@ -11,6 +12,23 @@ class NavigationModule {
         playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.direction)
         playerShip.computers[0].data.speed = playerShip.speed
         playerShip.computers[0].data.targetSpeed = playerShip.targetSpeed
+
+        Object.keys(this.vars).forEach((key)=> {
+            if(this.vars[key].running===1) {
+                if (playerShip.usePower(this.vars[key].consumption/gameFPS, "computer")) {
+                    this.vars[key].time += 1 / gameFPS
+                    if (this.vars[key].timeNeed < this.vars[key].time) {
+                        this.vars[key].func()
+                        this.vars[key].running = 0
+                        this.vars[key].time = 0
+                    }
+                }
+            }
+        })
+    }
+
+    start = {
+        recalcPosition: ()=>{this.vars.recalcPosition.running=1}
     }
 
     calcPosition() {
@@ -24,7 +42,6 @@ class NavigationModule {
         this.position.y += vy
     }
 
-    //TODO:
     recalcPosition() {
         this.position.x = playerShip.position.x
         this.position.y = playerShip.position.y

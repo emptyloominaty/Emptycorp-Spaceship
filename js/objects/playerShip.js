@@ -1,4 +1,5 @@
 class Ship {
+    myAddress = 1
     //---------------------------------------------
     crew = [{name:"Empty",status:"alive",dying:0}]
     baseWeight = 5500 //kg
@@ -103,7 +104,9 @@ class Ship {
         this.computers[0].data.engineThrottle = 0
         if (this.propulsion==="on") {
             for(let i = 0; i<this.engines.length; i++) {
-                if (this.engines[i].on===1 && this.engines[i].type===this.speedMode && (this.engines[i].minSpeed+1)<this.targetSpeed) {
+
+                if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
+                    console.log(this.speedMode)
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
                     this.thrust += thrust
                     //------------------------------------------
@@ -624,9 +627,9 @@ let shipDefaultParts = {
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
     generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
-    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:1.4 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
-        {weight:320, fuelType:"fuel1", type:"Sublight", maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
-        {weight:80, fuelType:"fuel1", type:"RCS", maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
+    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:50 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
+        {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
+        {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
     shields: [{capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},

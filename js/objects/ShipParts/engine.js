@@ -7,16 +7,15 @@ class Engine extends Part {
         if(p>1) {p = 1}
         if (this.type==="FTL") {
             if (this.maxFTLThrust<1) {
-                this.maxFTLThrust+=0.01
+                this.maxFTLThrust+=0.1
                 if (this.maxFTLThrust>1) {
                     this.maxFTLThrust=1
                 }
             }
-            this.maxFTLThrust=1
         }
 
 
-        if (targetSpeed>speed) {
+        if (targetSpeed>speed && this.minSpeed<targetSpeed) {
             if (this.type === "Sublight") {
                 //-----------------------------------------------------------SUBLIGHT
                 let thrust = this.thrust*(this.maxSpeed/(speed+0.1))
