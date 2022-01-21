@@ -229,7 +229,7 @@ class Computer extends Part {
 
 
         //TODO:FIX
-        for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
+  /*      for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
             let x = i*this.mapScaling+(pos.x*this.mapScaling)
             this.display.drawLine(x,0,x,this.display.resolution.h-bottom,1,colorMap)
 
@@ -243,8 +243,46 @@ class Computer extends Part {
 
             let yval = Math.floor(((((posR.y))+((this.display.resolution.h-bottom)/this.mapScaling)/2))-i)
             this.display.drawText(599,y,yval,font,colorMapText,'right')
+        }*/
+
+
+
+        let drawLineGrid = (x1,x2,y1,y2) => {
+            let xx1 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
+            let xx2 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x2*this.mapScaling)
+            let yy1 = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(y1*this.mapScaling)
+            let yy2 = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(y2*this.mapScaling)
+            this.display.drawLine(xx1,yy1,xx2,yy2,1,colorMap)
         }
 
+        let vLines = Math.ceil((this.display.resolution.w/this.mapScaling)*1.5)
+        if (vLines%2!==0) {vLines++} //odd->even
+        let hLines = Math.ceil((this.display.resolution.h/this.mapScaling)*1.5)
+        if (hLines%2!==0) {hLines++} //odd->even
+
+        for (let i = 0; i<vLines; i++) {
+            let px = Math.floor(posR.x)
+            let py = Math.floor(posR.y)
+            let x1 = i+px-((vLines/2))
+            let x2 = i+px-((vLines/2))
+            let y1 = py-(hLines/2)
+            let y2 = py+(hLines/2)
+            drawLineGrid(x1,x2,y1,y2)
+            let txtX = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
+            this.display.drawText(txtX,this.display.resolution.h-bottom,x1,font,colorMapText,'center')
+        }
+
+        for (let i = 0; i<hLines; i++) {
+            let px = Math.floor(posR.x)
+            let py = Math.floor(posR.y)
+            let x1 = px-(vLines/2)
+            let x2 = px+(vLines/2)
+            let y1 = i+py-(hLines/2)
+            let y2 = i+py-(hLines/2)
+            drawLineGrid(x1,x2,y1,y2)
+            let txtY = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(y1*this.mapScaling)
+            this.display.drawText(599,txtY,y1,font,colorMapText,'right')
+        }
 
         //----------------------------------------------------TEST
         let scaling = this.mapScaling/60

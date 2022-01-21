@@ -104,9 +104,7 @@ class Ship {
         this.computers[0].data.engineThrottle = 0
         if (this.propulsion==="on") {
             for(let i = 0; i<this.engines.length; i++) {
-
                 if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
-                    console.log(this.speedMode)
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
                     this.thrust += thrust
                     //------------------------------------------

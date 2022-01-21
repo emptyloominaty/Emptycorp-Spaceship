@@ -22,8 +22,19 @@ class Antenna extends Part {
                     //transmit
                     if (this.transmitArray.length > 0) {
                         let transmitData = this.transmitArray[0]
-                        this.transmit(transmitData.size, transmitData.address, transmitData.port, transmitData.data, transmitData.senderAddress)
-                        this.transmitArray.shift()
+                        let transmitSuccess = this.transmit(transmitData.size, transmitData.address, transmitData.port, transmitData.data, transmitData.senderAddress)
+                        if (transmitSuccess) {
+                            this.transmitArray.shift()
+                        } else {
+                            if (this.transmitArray.failure===undefined) {
+                                this.transmitArray.failure = 0
+                            }
+                            this.transmitArray.failure++
+                            if (this.transmitArray.failure>60) {
+                                this.transmitArray.shift()
+                            }
+                        }
+
                     }
                 } else {
                     this.on = 0
@@ -44,8 +55,11 @@ class Antenna extends Part {
                 if (playerShip.useTank(this.fuelType,(this.consumptionFuel[1]*size)/gameFPS)) {
                     this.tx[0] += size
                     mainServer.sendData(size,address,port,data,senderAddress)
+                    return true
                 }
             }
+        } else {
+            return false
         }
     }
 
