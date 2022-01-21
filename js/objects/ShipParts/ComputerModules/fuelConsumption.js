@@ -45,7 +45,7 @@ class FuelConsumptionModule {
         }
 
 
-        if (this.partsActivated.calcRange===1 || speed !== 0 ||  this.fuelConsumptionAvg !== 0) {
+        if (this.partsActivated.calcRange===1 || playerShip.speed !== 0 ||  this.fuelConsumptionAvg !== 0) {
             let speed = playerShip.speed/8765.812756 //ly/h
             let fuelTimeLeft = ((this.fuelB*1000)/this.fuelConsumptionAvg)*3600 //seconds
             this.range = speed*(fuelTimeLeft/3600) //ly range
