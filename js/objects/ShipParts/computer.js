@@ -173,7 +173,10 @@ class Computer extends Part {
                     this.display.drawText(25, 40, this.nav.position.y.toFixed(2) + "ly", font1, color4, 'left')
                     this.display.drawText(5, 60, "d: ", font1, color1, 'left')
                     this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color4, 'left')
-
+                    //map zoom
+                    this.display.drawText(10, 170, "↑", font1, color1, 'left')
+                    this.display.drawText(5, 185, this.mapScaling, font1, color1, 'left')
+                    this.display.drawText(10, 200, "↓", font1, color1, 'left')
 
                 } else {
                     this.display.drawText(5,20,"Off",font1,colorError,'left')
@@ -214,7 +217,7 @@ class Computer extends Part {
         let pos = {x: playerShip.computers[0].nav.position.x % 1, y: playerShip.computers[0].nav.position.y % 1}
         let posR = {x: playerShip.computers[0].nav.position.x, y: playerShip.computers[0].nav.position.y}
 
-        let topLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
+      /*  let topLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
             y: posR.y+(((this.display.resolution.h-bottom)/this.mapScaling)/2)
         } //ly
         let topRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
@@ -225,27 +228,7 @@ class Computer extends Part {
         } //ly
         let bottomRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
             y: posR.y-(((this.display.resolution.h-bottom)/this.mapScaling)/2)
-        }  //ly
-
-
-        //TODO:FIX
-  /*      for(let i = 0; i<((this.display.resolution.w)/this.mapScaling); i++) {
-            let x = i*this.mapScaling+(pos.x*this.mapScaling)
-            this.display.drawLine(x,0,x,this.display.resolution.h-bottom,1,colorMap)
-
-            let xval =  Math.floor((((posR.x))+(this.display.resolution.w/this.mapScaling)/2)-i)
-            this.display.drawText(x,this.display.resolution.h-bottom,xval,font,colorMapText,'center')
-        }
-
-        for(let i = 0; i<((this.display.resolution.h-bottom)/this.mapScaling); i++) {
-            let y = i*this.mapScaling+(pos.y*this.mapScaling)
-            this.display.drawLine(0,y,this.display.resolution.w,y,1,colorMap)
-
-            let yval = Math.floor(((((posR.y))+((this.display.resolution.h-bottom)/this.mapScaling)/2))-i)
-            this.display.drawText(599,y,yval,font,colorMapText,'right')
-        }*/
-
-
+        }  //ly*/
 
         let drawLineGrid = (x1,x2,y1,y2) => {
             let xx1 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
@@ -269,7 +252,7 @@ class Computer extends Part {
             let y2 = py+(hLines/2)
             drawLineGrid(x1,x2,y1,y2)
             let txtX = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
-            this.display.drawText(txtX,this.display.resolution.h-bottom,x1,font,colorMapText,'center')
+            this.display.drawText(txtX,this.display.resolution.h-bottom-5,x1,font,colorMapText,'center')
         }
 
         for (let i = 0; i<hLines; i++) {
@@ -308,14 +291,27 @@ class Computer extends Part {
    /* this.display.drawRect(10,110,30,30,color1)
     this.display.drawRect(50,110,30,30,color1)*/
 
+   incMapScaling() {
+      this.mapScaling+=10
+   }
+
+   decMapScaling() {
+       if (this.mapScaling>10) {
+           this.mapScaling-=10
+       }
+   }
+
     touchScreen(x,y) {
         let buttons = [
             {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
 
-            {x1:250, y1:250,x2:300,y2:300,function: () => {this.functions.receiveTime()}},
-            {x1:350, y1:250,x2:400,y2:300,function: () => {this.nav.start.recalcPosition()}},
+            {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.incMapScaling()}}},
+            {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.decMapScaling()}}},
+
+            {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
+            {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
         ]
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
