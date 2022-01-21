@@ -10,7 +10,7 @@ class MainServer {
     }
 
     sendData(size,address,port,data) {
-        this.addressList[address].object.receive(size,address,port,data)
+       return this.addressList[address].object.receive(size,address,port,data)
     }
 
     run() {

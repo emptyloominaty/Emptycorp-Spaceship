@@ -12,6 +12,7 @@ class Engine extends Part {
                     this.maxFTLThrust=1
                 }
             }
+            this.maxFTLThrust=1
         }
 
 

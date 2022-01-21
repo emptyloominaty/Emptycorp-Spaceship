@@ -308,6 +308,9 @@ class Ship {
         } else if (this.propulsion==="on") {
             elements.btn_turnOffEngines.style.backgroundColor = "#4bd44f"
         }
+        //fuel
+        this.computers[0].data.fuelConsumptionAvg  = this.computers[0].fuelCons.fuelConsumptionAvg
+        this.computers[0].data.fuelRange  = this.computers[0].fuelCons.range
     }
 
 //------------------------------------------------------------------------------------------------------------------
@@ -609,7 +612,7 @@ class Ship {
 
 
 let shipDefaultParts = {
-    antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.00003, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
+    antennas: [{weight:4.7, maxSpeed:100 /* mbit */, consumptionPower:[0.00005, 0.0008, 0.0048]/* MW */, consumptionFuel:[0.000001, 0.000034, 0.010]/* kg/hour*/,name:"Antenna 100Mbit Mk1", fuelType:"fuel1"}],
     batteries: [{weight:350, capacity: 0.1, /* MWh */maxDischarge:0.5 /* MWh */,name:"Battery 0.1MWh",},],
     computers: [{weight:150, memory:512 /* TB */ , cpu:{cores:256, speed:6/* GhZ */}, consumption:[0.0003,0.0018] /* MWh */,name:"Computer A100", modules:["memory","communication","fuelConsumption","navigation","display"]}],
     capacitors: [{weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"lifeSupport"},

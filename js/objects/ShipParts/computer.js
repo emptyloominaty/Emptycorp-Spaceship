@@ -4,7 +4,7 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, }
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0}
 
     //network
     myAddress = 1
@@ -119,13 +119,13 @@ class Computer extends Part {
                 //Fuel Consumption Tab
                 if (this.fuelCons.on===1) {
                     this.display.drawText(5,60,"Fuel Consumption: ",font1,color1,'left')
-                    if (this.fuelCons.fuelConsumptionAvgPrecise<1000) {
-                        this.display.drawText(160,60,this.fuelCons.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
+                    if (this.fuelCons.fuelConsumptionAvg<1000) {
+                        this.display.drawText(160,60,this.data.fuelConsumptionAvg.toFixed(1)+"g/h",font1,color4,'left')
                     } else {
-                        this.display.drawText(160,60,(this.fuelCons.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
+                        this.display.drawText(160,60,(this.data.fuelConsumptionAvg/1000).toFixed(1)+"kg/h",font1,color4,'left')
                     }
                     this.display.drawText(5,80,"Range: ",font1,color1,'left')
-                    this.display.drawText(160,80,this.fuelCons.range.toFixed(1)+"ly",font1,color4,'left')
+                    this.display.drawText(160,80,this.data.fuelRange.toFixed(1)+"ly",font1,color4,'left')
                 } else {
                     this.display.drawText(5,60,"Off",font1,colorError,'left')
                 }

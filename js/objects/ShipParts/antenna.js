@@ -39,9 +39,9 @@ class Antenna extends Part {
     }
 
     transmit(size,address,port,data) {
-        if (this.tx[0]<this.tx[1]) {
-            if (playerShip.usePower(this.consumptionPower[1]/gameFPS,this.group)) { //TODO:consumption speed idk
-                if (playerShip.useTank(this.fuelType,this.consumptionFuel[1]/gameFPS)) {
+        if (this.tx[0]+size<this.tx[1]) {
+            if (playerShip.usePower((this.consumptionPower[1]*size)/gameFPS,this.group)) { //TODO:consumption speed idk
+                if (playerShip.useTank(this.fuelType,(this.consumptionFuel[1]*size)/gameFPS)) {
                     this.tx[0] += size
                     mainServer.sendData(size,address,port,data)
                 }
@@ -50,9 +50,9 @@ class Antenna extends Part {
     }
 
     receive(size,address,port,data) {
-        if (this.rx[0]<this.rx[1]) {
-            if (playerShip.usePower(this.consumptionPower[1]/gameFPS,this.group)) { //TODO:consumption speed idk
-                if (playerShip.useTank(this.fuelType,this.consumptionFuel[1]/gameFPS)) {
+        if (this.rx[0]+size<this.rx[1]) {
+            if (playerShip.usePower((this.consumptionPower[1]*size)/gameFPS,this.group)) { //TODO:consumption speed idk
+                if (playerShip.useTank(this.fuelType,(this.consumptionFuel[1]*size)/gameFPS)) {
                     this.rx[0] += size
                     this.receiveArray.push({size: size, address: address, port: port, data: data})
                     return true

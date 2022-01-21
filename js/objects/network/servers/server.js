@@ -2,7 +2,7 @@ class Server {
     receiveArray = []
 
     transmit(size,address,port,data) {
-        mainServer.sendData(size,address,port,data)
+        return mainServer.sendData(size,address,port,data)
     }
 
     receive(size,address,port,data) {

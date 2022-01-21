@@ -8,7 +8,6 @@ class NavigationModule {
         let speed = playerShip.speed/8765.812756 //ly/h
         this.distanceTraveled+=(speed/3600)/gameFPS
         this.calcPosition()
-        //TODO:download position if needed or get idk
         playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.direction)
         playerShip.computers[0].data.speed = playerShip.speed
         playerShip.computers[0].data.targetSpeed = playerShip.targetSpeed
@@ -23,6 +22,12 @@ class NavigationModule {
         let vy = Math.cos(angleInRadian) * speed
         this.position.x += vx
         this.position.y += vy
+    }
+
+    //TODO:
+    recalcPosition() {
+        this.position.x = playerShip.position.x
+        this.position.y = playerShip.position.y
     }
 
     getDirection360(direction) {
