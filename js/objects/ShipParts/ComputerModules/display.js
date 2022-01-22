@@ -6,7 +6,22 @@ class DisplayModule {
     canvasElement = document.getElementById("computerDisplay")
     canvas = this.canvasElement.getContext("2d")
 
-    //TODO: OPTIMIZE THIS MEME
+    //TODO: OPTIMIZE THIS MEME?
+
+    drawPlayerShipDirection(x,y,length = 10,width,color,direction) {
+        this.canvas.save()
+        this.canvas.beginPath()
+        this.canvas.translate( this.resolution.w/2, (this.resolution.h-40)/2)
+        this.canvas.rotate(((360-direction)+225) * Math.PI / 180)
+        this.canvas.moveTo(x, y)
+        this.canvas.lineTo(x+length, y+length)
+        this.canvas.lineWidth = width
+        this.canvas.strokeStyle = color
+        this.canvas.stroke()
+        this.canvas.closePath()
+        this.canvas.restore()
+
+    }
 
     drawRect(x,y,w,h,color) {
         this.canvas.fillStyle = color
@@ -37,7 +52,6 @@ class DisplayModule {
         this.canvas.stroke()
         this.canvas.closePath()
     }
-
 
     cursorPosition(event) {
         let rect = this.canvasElement.getBoundingClientRect()

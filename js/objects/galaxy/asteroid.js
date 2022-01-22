@@ -1,0 +1,3 @@
+class Asteroid  extends CelestialBody {
+
+}

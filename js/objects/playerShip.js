@@ -312,6 +312,9 @@ class Ship {
         //fuel
         this.computers[0].data.fuelConsumptionAvg  = this.computers[0].fuelCons.fuelConsumptionAvg
         this.computers[0].data.fuelRange  = this.computers[0].fuelCons.range
+
+        //THIS SHOULD NOT BE HERE XD
+        updateToggles()
     }
 
 //------------------------------------------------------------------------------------------------------------------

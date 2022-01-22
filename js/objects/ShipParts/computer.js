@@ -165,7 +165,8 @@ class Computer extends Part {
                     //map
                     this.drawMap()
                     //ship
-                    this.display.drawCircle(300, 180, 5, colorShip)
+                    this.display.drawCircle(300, 180, 8, colorShip)
+                    this.display.drawPlayerShipDirection(0,0,6,3,"#2beeff",this.data.shipDirection)
                     //x,y,distance
                     this.display.drawText(5, 20, "x: ", font1, color1, 'left')
                     this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color4, 'left')

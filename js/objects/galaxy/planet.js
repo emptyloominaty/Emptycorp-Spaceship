@@ -1,0 +1,3 @@
+class Planet extends CelestialBody {
+
+}

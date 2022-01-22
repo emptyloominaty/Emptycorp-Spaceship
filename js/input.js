@@ -102,24 +102,26 @@ let inputFunctions = {
     }
 }
 
-inputFunctions.toggleButtonText( document.getElementById("btn_rcs"),playerShip.rcs)
-inputFunctions.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
-inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
-inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
-inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
-inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
-inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
-if (playerShip.propulsion==="off") {
-    document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
-} else {
-    document.getElementById("btn_turnOffEngines").style.backgroundColor = "#4bd44f"
+let updateToggles = function() {
+    inputFunctions.toggleButtonText( document.getElementById("btn_rcs"),playerShip.rcs)
+    inputFunctions.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
+    inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
+    inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
+    inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
+    inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
+    inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
+    if (playerShip.propulsion==="off") {
+        document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
+    } else {
+        document.getElementById("btn_turnOffEngines").style.backgroundColor = "#4bd44f"
+    }
+
+    for (let i = 0; i<playerShip.antennas.length; i++) {
+        inputFunctions.toggleButtonText( document.getElementById("btn_antenna"+i),playerShip.antennas[i].on)
+    }
+    for (let i = 0; i<playerShip.generators.length; i++) {
+        inputFunctions.toggleButtonText(document.getElementById("btn_generator" + i), playerShip.generators[i].on)
+    }
 }
 
-
-
-for (let i = 0; i<playerShip.antennas.length; i++) {
-    inputFunctions.toggleButtonText( document.getElementById("btn_antenna"+i),playerShip.antennas[i].on)
-}
-for (let i = 0; i<playerShip.generators.length; i++) {
-    inputFunctions.toggleButtonText(document.getElementById("btn_generator" + i), playerShip.generators[i].on)
-}
+updateToggles()
