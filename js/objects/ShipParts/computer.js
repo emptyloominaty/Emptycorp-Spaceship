@@ -294,7 +294,7 @@ class Computer extends Part {
         let testt = {x:0.7,y:0.7}
         let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
         let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
-        if (testx>-300 && testx<(this.display.resolution.w+this.mapScaling) && testy>-180 && testy<((this.display.resolution.h-bottom)+this.mapScaling)) {
+        if (testx>-300-this.mapScaling && testx<(this.display.resolution.w+this.mapScaling) && testy>-180-this.mapScaling && testy<((this.display.resolution.h-bottom)+this.mapScaling)) {
             this.display.drawCircle(testx,testy,15*scaling,colorMap)
         }
 

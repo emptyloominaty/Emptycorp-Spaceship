@@ -13,8 +13,8 @@ class CelestialBody {
         this.atmospherePressure = atmoshperePressure //bar
         this.atmosphereHeight = atmosphereHeight //km
         this.atmosphereTemperature = atmosphereTemperature //C (average)
-        this.atmosphereGasses = atmosphereGasses // array [{name:"Oxygen",percent:5}]
+        this.atmosphereGasses = atmosphereGasses // array {oxygen:5}
         this.gravity = gravity //m/s
-        this.orbitHeight = orbitHeight
+        this.orbitHeight = orbitHeight //km
     }
 }

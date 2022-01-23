@@ -8,7 +8,7 @@ elements.antennasControl.innerHTML = antennasHTML
 //GENERATE GENERATORS----------------------------------------------------------------------------------------------
 let generatorsHTML = ""
 for (let i = 0; i<playerShip.generators.length; i++) {
-    generatorsHTML += "<p>Generator["+i+"]: <button id='btn_generator"+i+"' onclick='inputFunctions.toggleGenerator("+i+")'></button> "+parseFloat((playerShip.generators[i].output*1000).toFixed(2))+"kW</p>"
+    generatorsHTML += "<p><button id='btn_generator"+i+"' onclick='inputFunctions.toggleGenerator("+i+")'></button> "+parseFloat((playerShip.generators[i].output*1000).toFixed(2))+"kW "+playerShip.generators[i].type+"</p>"
 }
 elements.generatorsControl.innerHTML = generatorsHTML
 //GENERATE CAPACITORS----------------------------------------------------------------------------------------------
