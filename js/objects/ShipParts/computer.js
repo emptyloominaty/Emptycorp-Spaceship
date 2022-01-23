@@ -245,12 +245,12 @@ class Computer extends Part {
             this.display.drawLine(xx1,yy1,xx2,yy2,1,colorMap)
         }
 
+        //--------------------------------------------GRID--------------------------------------------
         //1Line = 1 LightYear
         let gridLy = 1
         if (this.mapScaling<21) {
             gridLy = 10
         }
-
         if (this.mapScaling>2 && this.gridEnabled) {
             let vLines = Math.ceil((this.display.resolution.w / this.mapScaling) * 1.5)
             if (vLines % 2 !== 0) {vLines++} //odd->even
@@ -281,21 +281,19 @@ class Computer extends Part {
                 this.display.drawText(599, txtY, y1, font, colorMapText, 'right')
             }
         }
-
+        //------------------------------------------------------------------------------------------
 
 
 
         //----------------------------------------------------TEST
         let scaling = this.mapScaling/60
-        let testt = {x:2.5,y:1.5}
+        let testt = {x:0.7,y:0.7}
         let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
         let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
-        if (testx>0 && testx<this.display.resolution.w && testy>0 && testy<this.display.resolution.h-bottom) {
+        if (testx>-300 && testx<(this.display.resolution.w+this.mapScaling) && testy>-180 && testy<((this.display.resolution.h-bottom)+this.mapScaling)) {
             this.display.drawCircle(testx,testy,15*scaling,colorMap)
         }
-        /*this.display.drawText(300,50,testx,font,colorMapText,'center')
-        this.display.drawText(300,70,testy,font,colorMapText,'center')*/
-        //--------------------------------------------------------
+
 
         //x:0 y:0
         /*let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)

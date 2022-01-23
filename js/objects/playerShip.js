@@ -576,7 +576,7 @@ class Ship {
         }
         for (let i = 0 ; i < parts.generators.length ; i++) {
             let part = parts.generators[i]
-            this.generators.push(new Generator(i,part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn))
+            this.generators.push(new Generator(i,part.weight || 0,part.name || "name", part.type, part.output, part.defaultOn, part.efficiency))
         }
         for (let i = 0 ; i < parts.tanks.length ; i++) {
             let part = parts.tanks[i]
@@ -627,8 +627,8 @@ let shipDefaultParts = {
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"weapon"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"engine"},
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
-    generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0},
-        {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0},], //
+    generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0,efficiency:80},
+        {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0,efficiency:85}], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:50 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
         {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],

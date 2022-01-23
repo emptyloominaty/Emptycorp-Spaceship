@@ -39,20 +39,24 @@ class Generator extends Part {
     }
 
 
-    constructor(id,weight,name,type,output,defaultOn) {
+    constructor(id,weight,name,type,output,defaultOn,efficiency = 100) {
         super(weight,name,"generator",id)
         this.type = type
         this.output = output
         if (type === "H2FuelCell") {
-            this.consumption = ((output/1000)/0.0000033) // l/hour   (3.3Wh per L)
+            this.consumption = ((output/1000)/(0.0000033*(efficiency/100))) // l/hour   (3.3Wh per L)
             this.generatorFuelType = "O2"
             this.generatorFuelType2 = "H2"
             this.ratio = 2 //2:1
             this.startingTime = 0.5
         } else if (type === "UraniumReactor") {
-            this.consumption = ((output/1000)/22) // kg/hour  (22gW per kg
+            this.consumption = ((output/1000)/(22.3944*(efficiency/100))) // kg/hour  (22.3944gW per kg)
             this.generatorFuelType = "uranium"
-            this.startingTime = 10
+            this.startingTime = 50
+        } else if (type === "FussionReactor") {
+            this.consumption = ((output/1000)/(158.6618772*(efficiency/100))) // kg/hour  (158.6618772gW per kg)
+            this.generatorFuelType = "deuterium"
+            this.startingTime = 20
         }
         this.on = defaultOn
     }
