@@ -72,5 +72,8 @@ class DisplayModule {
         this.canvasElement.addEventListener('mousedown', (e) => {
             this.cursorPosition(e)
         })
+        this.canvasElement.addEventListener('mousemove', (e) => {
+            console.log(e.layerX," - "+e.layerY) //TODO:
+        })
     }
 }

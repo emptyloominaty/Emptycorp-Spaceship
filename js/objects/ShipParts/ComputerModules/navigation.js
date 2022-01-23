@@ -2,7 +2,7 @@ class NavigationModule {
     consumption = 0.0009
     on = 1
     distanceTraveled = 0
-    position = {x:0,y:0}
+    position = {x:1,y:1}
     vars = {recalcPosition:{time:0,timeNeed:5,running:1,func:()=>{this.recalcPosition()},consumption:0.00085}}
 
     run() {
@@ -12,6 +12,12 @@ class NavigationModule {
         playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.direction)
         playerShip.computers[0].data.speed = playerShip.speed
         playerShip.computers[0].data.targetSpeed = playerShip.targetSpeed
+
+        if (this.vars.recalcPosition.running!==1) {
+            if (Math.round(playerShip.position.x)!==Math.round(playerShip.position.x) || Math.round(playerShip.position.y)!==Math.round(this.position.y)) {
+                this.start.recalcPosition()
+            }
+        }
 
         Object.keys(this.vars).forEach((key)=> {
             if(this.vars[key].running===1) {

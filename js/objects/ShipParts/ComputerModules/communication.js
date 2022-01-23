@@ -1,6 +1,8 @@
 class CommunicationModule {
     consumption = 0.00012
     on = 1
+    servers = {time:[2]}
+
     run() {
 
     }

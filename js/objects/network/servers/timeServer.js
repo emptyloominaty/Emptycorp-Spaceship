@@ -1,4 +1,3 @@
-
 class TimeServer extends Server {
     time = 0
     run() {
@@ -9,5 +8,5 @@ class TimeServer extends Server {
         }
     }
 }
-
-let timeServer = new TimeServer(2)
+//(myAddress,name,run, x = 0,y = 0)
+let timeServer = new TimeServer(1,"Time Server(Sol)",1,"time",0,0)

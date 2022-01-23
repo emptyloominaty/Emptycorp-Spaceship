@@ -1,12 +1,12 @@
 class Server {
     receiveArray = []
-    position = {x:1,y:1}
+    position = {x:0,y:0}
     myAddress = 0
 
-    constructor(myAddress, x = 1,y = 1) {
+    constructor(myAddress,name,run,type, x = 0,y = 0) {
         this.position.x = x
         this.position.y = y
-        this.myAddress = myAddress
+        this.myAddress = mainServer.addAddress(name,this,"Server",run,type)
     }
 
     transmit(size,address,port,data) {
@@ -18,11 +18,3 @@ class Server {
         return true
     }
 }
-
-
-class TestServer extends Server {
-
-}
-
-
-let testServer = new TestServer(0)

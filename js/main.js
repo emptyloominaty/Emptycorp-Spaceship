@@ -1,7 +1,8 @@
+let debug = {performance:true,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
+
 let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
-
 
 let inputRange_speed = 0
 let inputNumber_speed = 0
@@ -36,11 +37,15 @@ let elements = {
     throttleBar8: document.getElementById("throttleBar8"),
     throttleBar9: document.getElementById("throttleBar9"),
     throttleBar10: document.getElementById("throttleBar10"),
+    debug123: document.getElementById("debug123"),
 }
 
 
 let speedInc = 1
 function update(progress) {
+    if (debug.performance) {
+        debug.timeA = performance.now()
+    }
 
     gameFPS = (1/progress*1000)/speedInc
 
@@ -58,6 +63,11 @@ function update(progress) {
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
     throttleBar()
+    if (debug.performance) {
+        debug.timeC = performance.now()
+        elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"
+        debug.timeD = performance.now()
 
+    }
 }
 

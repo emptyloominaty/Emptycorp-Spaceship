@@ -4,14 +4,17 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
+        lastPing:0, lastPingServerName:"",}
 
     //network
-    listeningPort = []
+    listeningPort = [0]
     receivedData = new Array(65536).fill([])
 
     //display
-    mapScaling = 60 //px per ly  SUPPORTED(3.75, 7.5, 15, 30, 60) //TODO FIX
+    mapScaling = 60 //px per ly
+    gridEnabled = true
+
 
     run() {
         if(this.on===1) {
@@ -27,6 +30,8 @@ class Computer extends Part {
                 this.time += 1000 / gameFPS
             }
             //network
+
+            this.listeningPort.push(0)
             if (this.listeningPort.length>0) {
                 for (let i = 0; i<this.listeningPort.length; i++) {
                     if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
@@ -36,10 +41,16 @@ class Computer extends Part {
                                 //time
                                 if (data.data.var==="time") {
                                     this.time = data.data.time
+                                } else if (data.data.var==="ping") {
+                                    this.data.lastPing = data.data.ping
+                                } else if (data.data.var==="pingServerName") {
+                                    this.data.lastPingServerName = data.data.name
                                 }
                                 //....
                             }
-                            this.receivedData[this.listeningPort[i]].shift()
+                            if (this.listeningPort[i]!==0) {
+                                this.receivedData[this.listeningPort[i]].shift()
+                            }
                         }
                     }
                 }
@@ -57,7 +68,7 @@ class Computer extends Part {
 
     functions = {
         receiveTime: ()=> {
-            this.comm.transmitData([0.002, 2, 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+            this.comm.transmitData([0.002, this.comm.servers.time[0], 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(2)
         },
 
@@ -149,10 +160,11 @@ class Computer extends Part {
 
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
+                this.display.drawText(10, 260, "Ping:"+(this.data.lastPing).toFixed(0)+"ms ("+this.data.lastPingServerName+")", font1, color1, 'left')
                 //DEBUG
-                this.display.drawText(10, 290, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
-                this.display.drawText(10, 310, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
-                this.display.drawText(10, 330, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 300, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
+                this.display.drawText(10, 320, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
+                this.display.drawText(10, 340, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
@@ -169,18 +181,25 @@ class Computer extends Part {
                     this.display.drawPlayerShipDirection(0,0,6,3,"#2beeff",this.data.shipDirection)
                     //x,y,distance
                     this.display.drawText(5, 20, "x: ", font1, color1, 'left')
-                    this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color4, 'left')
+                    this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color5, 'left')
                     this.display.drawText(5, 40, "y: ", font1, color1, 'left')
-                    this.display.drawText(25, 40, this.nav.position.y.toFixed(2) + "ly", font1, color4, 'left')
+                    this.display.drawText(25, 40, this.nav.position.y.toFixed(2) + "ly", font1, color5, 'left')
                     this.display.drawText(5, 60, "d: ", font1, color1, 'left')
-                    this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color4, 'left')
+                    this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color5, 'left')
+                    this.display.drawText(5, 80, "grid: ", font1, color1, 'left')
+                    if (this.gridEnabled) {
+                        this.display.drawText(55, 80, "on", font1, color4, 'left')
+                    } else {
+                        this.display.drawText(55, 80, "off", font1, colorError, 'left')
+                    }
+
                     //map zoom
                     this.display.drawText(10, 170, "↑", font1, color1, 'left')
                     this.display.drawText(5, 185, this.mapScaling, font1, color1, 'left')
                     this.display.drawText(10, 200, "↓", font1, color1, 'left')
 
                 } else {
-                    this.display.drawText(5,20,"Off",font1,colorError,'left')
+                        this.display.drawText(5,20,"Off",font1,colorError,'left')
                 }
             }
 
@@ -218,19 +237,6 @@ class Computer extends Part {
         let pos = {x: playerShip.computers[0].nav.position.x % 1, y: playerShip.computers[0].nav.position.y % 1}
         let posR = {x: playerShip.computers[0].nav.position.x, y: playerShip.computers[0].nav.position.y}
 
-      /*  let topLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y+(((this.display.resolution.h-bottom)/this.mapScaling)/2)
-        } //ly
-        let topRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y+(((this.display.resolution.h-bottom)/this.mapScaling)/2)
-        }  //ly
-        let bottomLeft = {x: posR.x+((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y-(((this.display.resolution.h-bottom)/this.mapScaling)/2)
-        } //ly
-        let bottomRight = {x: posR.x-((this.display.resolution.w/this.mapScaling)/2),
-            y: posR.y-(((this.display.resolution.h-bottom)/this.mapScaling)/2)
-        }  //ly*/
-
         let drawLineGrid = (x1,x2,y1,y2) => {
             let xx1 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
             let xx2 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x2*this.mapScaling)
@@ -239,34 +245,45 @@ class Computer extends Part {
             this.display.drawLine(xx1,yy1,xx2,yy2,1,colorMap)
         }
 
-        let vLines = Math.ceil((this.display.resolution.w/this.mapScaling)*1.5)
-        if (vLines%2!==0) {vLines++} //odd->even
-        let hLines = Math.ceil((this.display.resolution.h/this.mapScaling)*1.5)
-        if (hLines%2!==0) {hLines++} //odd->even
-
-        for (let i = 0; i<vLines; i++) {
-            let px = Math.floor(posR.x)
-            let py = Math.floor(posR.y)
-            let x1 = i+px-((vLines/2))
-            let x2 = i+px-((vLines/2))
-            let y1 = py-(hLines/2)
-            let y2 = py+(hLines/2)
-            drawLineGrid(x1,x2,y1,y2)
-            let txtX = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(x1*this.mapScaling)
-            this.display.drawText(txtX,this.display.resolution.h-bottom-5,x1,font,colorMapText,'center')
+        //1Line = 1 LightYear
+        let gridLy = 1
+        if (this.mapScaling<21) {
+            gridLy = 10
         }
 
-        for (let i = 0; i<hLines; i++) {
-            let px = Math.floor(posR.x)
-            let py = Math.floor(posR.y)
-            let x1 = px-(vLines/2)
-            let x2 = px+(vLines/2)
-            let y1 = i+py-(hLines/2)
-            let y2 = i+py-(hLines/2)
-            drawLineGrid(x1,x2,y1,y2)
-            let txtY = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(y1*this.mapScaling)
-            this.display.drawText(599,txtY,y1,font,colorMapText,'right')
+        if (this.mapScaling>2 && this.gridEnabled) {
+            let vLines = Math.ceil((this.display.resolution.w / this.mapScaling) * 1.5)
+            if (vLines % 2 !== 0) {vLines++} //odd->even
+            let hLines = Math.ceil((this.display.resolution.h / this.mapScaling) * 1.5)
+            if (hLines % 2 !== 0) {hLines++} //odd->even
+
+            for (let i = 0; i < vLines; i+=gridLy) {
+                let px = Math.floor(posR.x)
+                let py = Math.floor(posR.y)
+                let x1 = i + px - ((vLines / 2))
+                let x2 = i + px - ((vLines / 2))
+                let y1 = py - (hLines / 2)
+                let y2 = py + (hLines / 2)
+                drawLineGrid(x1, x2, y1, y2)
+                let txtX = (posR.x * this.mapScaling) + ((this.display.resolution.w) / 2) - (x1 * this.mapScaling)
+                this.display.drawText(txtX, this.display.resolution.h - bottom - 5, x1, font, colorMapText, 'center')
+            }
+
+            for (let i = 0; i < hLines; i+=gridLy) {
+                let px = Math.floor(posR.x)
+                let py = Math.floor(posR.y)
+                let x1 = px - (vLines / 2)
+                let x2 = px + (vLines / 2)
+                let y1 = i + py - (hLines / 2)
+                let y2 = i + py - (hLines / 2)
+                drawLineGrid(x1, x2, y1, y2)
+                let txtY = (posR.y * this.mapScaling) + ((this.display.resolution.h - bottom) / 2) - (y1 * this.mapScaling)
+                this.display.drawText(599, txtY, y1, font, colorMapText, 'right')
+            }
         }
+
+
+
 
         //----------------------------------------------------TEST
         let scaling = this.mapScaling/60
@@ -274,7 +291,7 @@ class Computer extends Part {
         let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
         let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
         if (testx>0 && testx<this.display.resolution.w && testy>0 && testy<this.display.resolution.h-bottom) {
-            this.display.drawCircle(testx,testy,10*scaling,colorMap)
+            this.display.drawCircle(testx,testy,15*scaling,colorMap)
         }
         /*this.display.drawText(300,50,testx,font,colorMapText,'center')
         this.display.drawText(300,70,testy,font,colorMapText,'center')*/
@@ -288,20 +305,6 @@ class Computer extends Part {
         return a
     }
 
-
-   /* this.display.drawRect(10,110,30,30,color1)
-    this.display.drawRect(50,110,30,30,color1)*/
-
-   incMapScaling() {
-      this.mapScaling+=10
-   }
-
-   decMapScaling() {
-       if (this.mapScaling>10) {
-           this.mapScaling-=10
-       }
-   }
-
     touchScreen(x,y) {
         let buttons = [
             {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
@@ -310,6 +313,7 @@ class Computer extends Part {
 
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.incMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.decMapScaling()}}},
+            {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
 
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
@@ -323,6 +327,26 @@ class Computer extends Part {
         }
     }
 
+    incMapScaling() {
+        if (this.mapScaling<10) {
+            this.mapScaling+=1
+        } else if (this.mapScaling<100) {
+            this.mapScaling+=10
+        } else {
+            this.mapScaling+=100
+        }
+
+    }
+
+    decMapScaling() {
+        if (this.mapScaling>100) {
+            this.mapScaling-=100
+        } else if (this.mapScaling>10) {
+            this.mapScaling-=10
+        } else if(this.mapScaling>1) {
+            this.mapScaling-=1
+        }
+    }
 
 
     constructor(id,weight,name,modules,consumption,memorySize) {

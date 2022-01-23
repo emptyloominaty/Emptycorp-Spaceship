@@ -1,16 +1,17 @@
 class MainServer {
     //CONFIG
     speedOfData = 20 //ly/s
+    position = {x:0,y:0}
     //-------
 
     /* type: ship,planet,station,server */
-    addressList = [{name:"Test Server", object:testServer, type:"server", address:0, run:0},
-        {name:"Player Ship", object:playerShip, type:"ship", address:1, run:0},
-        {name:"Time Server", object:timeServer, type:"server", address:2, run:1}
-        ]
+    addressList = [{name:"Main Server", object:this, type:"server", address:0, run:0},
+        {name:"Player Ship", object:playerShip, type:"ship", address:1, run:0}
+    ]
 
-    addAddress(name,object,type,run) {
-        this.addressList.push({name:name, object:object, type:type, address:this.addressList.length, run:run})
+    addAddress(name,object,type,run,serverType = "") {
+        this.addressList.push({name:name, object:object, type:type, address:this.addressList.length, run:run, serverType:serverType})
+        return this.addressList.length-1
     }
 
     sendData(size,address,port,data,senderAddress) {
@@ -20,6 +21,10 @@ class MainServer {
         let latency = Math.sqrt( a*a + b*b )/this.speedOfData*1000
         console.log(latency+"ms")
         setTimeout( ()=> {
+            if (address===1) {
+                this.addressList[address].object.receive(0.002,senderAddress,0,{type:"var",var:"ping",ping:latency},0)
+                this.addressList[address].object.receive(0.005,senderAddress,0,{type:"var",var:"pingServerName",name:this.addressList[senderAddress].name},0)
+            }
             return this.addressList[address].object.receive(size,address,port,data,senderAddress)
         },latency)
     }
@@ -31,7 +36,6 @@ class MainServer {
             }
         }
         //
-
     }
 
 }

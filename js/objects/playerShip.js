@@ -8,7 +8,7 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
-    position = {x:0, y:0, direction:0, targetDirection:0, angularSpeed:0}
+    position = {x:1, y:1, direction:0, targetDirection:0, angularSpeed:0}
     weight = this.baseWeight
 
     //radiation heat transfer
@@ -100,6 +100,7 @@ class Ship {
         //Update Weight
         this.updateWeight()
         //propulsion
+        this.computers[0].data.engineThrustString = 0+"N"
         this.computers[0].data.engineThrust = 0
         this.computers[0].data.engineThrottle = 0
         if (this.propulsion==="on") {
