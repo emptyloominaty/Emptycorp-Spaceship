@@ -28,37 +28,41 @@ class Computer extends Part {
                 }
                 this.drawUi()
                 this.time += 1000 / gameFPS
-            }
+
             //network
 
-            this.listeningPort.push(0)
-            if (this.listeningPort.length>0) {
-                for (let i = 0; i<this.listeningPort.length; i++) {
-                    if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
-                        for (let j = 0; j<this.receivedData[this.listeningPort[i]].length; j++) {
-                            let data = this.receivedData[this.listeningPort[i]][0]
-                            if (data.data.type==="var") {
-                                //time
-                                if (data.data.var==="time") {
-                                    this.time = data.data.time
-                                } else if (data.data.var==="ping") {
-                                    this.data.lastPing = data.data.ping
-                                } else if (data.data.var==="pingServerName") {
-                                    this.data.lastPingServerName = data.data.name
+                this.listeningPort.push(0)
+                if (this.listeningPort.length>0) {
+                    for (let i = 0; i<this.listeningPort.length; i++) {
+                        if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
+                            for (let j = 0; j<this.receivedData[this.listeningPort[i]].length; j++) {
+                                let data = this.receivedData[this.listeningPort[i]][0]
+                                if (data.data.type==="var") {
+                                    //time
+                                    if (data.data.var==="time") {
+                                        this.time = data.data.time
+                                    } else if (data.data.var==="ping") {
+                                        this.data.lastPing = data.data.ping
+                                    } else if (data.data.var==="pingServerName") {
+                                        this.data.lastPingServerName = data.data.name
+                                    }
+                                    //....
                                 }
-                                //....
-                            }
-                            if (this.listeningPort[i]!==0) {
-                                this.receivedData[this.listeningPort[i]].shift()
+                                if (this.listeningPort[i]!==0) {
+                                    this.receivedData[this.listeningPort[i]].shift()
+                                }
                             }
                         }
                     }
                 }
-            }
-            this.data.antennaRX = playerShip.antennas[0].rx[0]
-            this.data.antennaTX = playerShip.antennas[0].tx[0]
-            //-----
+                this.data.antennaRX = playerShip.antennas[0].rx[0]
+                this.data.antennaTX = playerShip.antennas[0].tx[0]
+                //-----
         //OFF
+            } else {
+                this.on = 0
+            }
+
         } else {
             if (this.display) {
                 this.display.reset()
@@ -221,7 +225,7 @@ class Computer extends Part {
             this.display.drawText(450,height-15,this.tab,font2,color2,'center')
             this.display.drawLine(500,height-40,500,height,2,color1)
             this.display.drawText(550,height-10,"Time:"+this.getTimeString(this.time),font3,color3,'center')
-            this.display.drawText(550,height-25,"Fps:"+gameFPS.toFixed(0)+"FPS",font3,color3,'center')
+            this.display.drawText(550,height-25,"Fps:"+(gameFPS*speedInc).toFixed(0)+"FPS",font3,color3,'center')
 
         }
     }
@@ -330,14 +334,18 @@ class Computer extends Part {
             this.mapScaling+=1
         } else if (this.mapScaling<100) {
             this.mapScaling+=10
-        } else {
+        } else if (this.mapScaling<1000) {
             this.mapScaling+=100
+        } else {
+            this.mapScaling+=1000
         }
 
     }
 
     decMapScaling() {
-        if (this.mapScaling>100) {
+        if (this.mapScaling>1000) {
+            this.mapScaling-=1000
+        } else if (this.mapScaling>100) {
             this.mapScaling-=100
         } else if (this.mapScaling>10) {
             this.mapScaling-=10

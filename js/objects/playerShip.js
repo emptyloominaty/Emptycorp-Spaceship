@@ -476,6 +476,7 @@ class Ship {
                 chargeArray[i] = this.capacitors[i].maxCharge-this.capacitors[i].charge
             }
         }
+
         for (let i = 0; i<this.batteries.length; i++) {
             if (this.batteries[i].charge>chargeNeeded) {
                 if ( this.batteries[i].maxDischargeSec > chargeNeeded) {
@@ -492,9 +493,17 @@ class Ship {
                 }
                 chargeAvailable += a
                 this.batteries[i].charge -= a
-
             }
         }
+
+        //Charge All capacitors
+        if (chargeNeeded>chargeAvailable) {
+            let ratio = chargeNeeded/chargeAvailable
+            for (let i = 0; i<chargeArray.length; i++) {
+                chargeArray[i]=chargeArray[i]/ratio
+            }
+        }
+
         for (let i = 0; i<this.capacitors.length; i++) {
             if (this.capacitors[i].charge<this.capacitors[i].maxCharge) {
                 if (chargeArray[i]<=chargeAvailable) {
@@ -506,7 +515,6 @@ class Ship {
                     this.capacitors[i].chargedPerSec += chargeAvailable
                     chargeAvailable = 0
                 }
-
             }
         }
     }

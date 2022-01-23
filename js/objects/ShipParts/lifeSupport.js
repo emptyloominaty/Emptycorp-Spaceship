@@ -45,6 +45,8 @@ class AtmosphereControl extends Part {
                 if (playerShip.atmosphere.carbonDioxideVolume<0) {playerShip.atmosphere.carbonDioxideVolume=0}
                 if (playerShip.atmosphere.oxygenVolume<0) {playerShip.atmosphere.oxygenVolume=0}
                 if (playerShip.atmosphere.nitrogenVolume<0) {playerShip.atmosphere.nitrogenVolume=0}
+            } else {
+                this.on = 0
             }
         }
     }
@@ -89,6 +91,8 @@ class TemperatureControl extends Part {
                         playerShip.atmosphere.temperature += inc /(gameFPS/60)
                     }
                 }
+            } else {
+                this.on = 0
             }
         }
     }

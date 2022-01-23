@@ -18,7 +18,7 @@ class MainServer {
         console.log(senderAddress," -> ",address)
         let a = this.addressList[senderAddress].object.position.x - this.addressList[address].object.position.x //x1 - x2
         let b = this.addressList[senderAddress].object.position.y - this.addressList[address].object.position.y //y1 - y2
-        let latency = Math.sqrt( a*a + b*b )/this.speedOfData*1000
+        let latency = (Math.sqrt( a*a + b*b )/this.speedOfData*1000)*2
         console.log(latency+"ms")
         setTimeout( ()=> {
             if (address===1) {
