@@ -10,9 +10,9 @@ let moons = {}
 let asteroids = {}
 */
 
-let starSystems = {}
+let starSystems = []
 
-starSystems["Sol System"] = new StarSystem(
+starSystems.push (new StarSystem(
     [
         new Star("Sol",0,0,0,"star",695700,1988500000000000000000000000,false,0,6000,{},0,274,0,"Terran")],
     [
@@ -24,5 +24,8 @@ starSystems["Sol System"] = new StarSystem(
     "Terran",
     {
         O2:0.0004,N2:0.0002,H2:0.005, //Gas (Litres)
-        deuterium:1250,fuel1:10,uranium:5000,} //Liquids,Solid (kg)
-)
+        deuterium:1250,fuel1:10,uranium:5000,}, //Liquids,Solid (kg)
+    "Sol System",
+    {x:0,y:0,z:0},
+    15,
+))

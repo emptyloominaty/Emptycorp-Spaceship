@@ -14,6 +14,8 @@ class Computer extends Part {
     //display
     mapScaling = 60 //px per ly
     gridEnabled = true
+    starSystems = []
+    nav2PlanetView = ""
 
 
     run() {
@@ -194,7 +196,7 @@ class Computer extends Part {
                     if (this.gridEnabled) {
                         this.display.drawText(55, 80, "on", font1, color4, 'left')
                     } else {
-                        this.display.drawText(55, 80, "off", font1, colorError, 'left')
+                        this.display.drawText(55, 80, "off", font1, colorBtnText, 'left')
                     }
 
                     //map zoom
@@ -205,6 +207,15 @@ class Computer extends Part {
                 } else {
                         this.display.drawText(5,20,"Off",font1,colorError,'left')
                 }
+            } else if (this.tab==="nav2") {
+                this.display.drawText(5, 20, "System: ", font1, color1, 'left')
+                this.display.drawText(75, 20, starSystems[this.nav2PlanetView].name, font1, color5, 'left')
+
+                let a = starSystems[this.nav2PlanetView].position.x - this.nav.position.x //x1 - x2
+                let b = starSystems[this.nav2PlanetView].position.y -this.nav.position.y //y1 - y2
+                let d = Math.sqrt( a*a + b*b )
+                this.display.drawText(5, 40, "Distance: ", font1, color1, 'left')
+                this.display.drawText(85, 40, d.toFixed(2)+"ly", font1, color5, 'left')
             }
 
 
@@ -234,10 +245,10 @@ class Computer extends Part {
         //map
         let colorMap = "#a1a1a1"
         let colorMapText = "#b4b169"
+        let colorSystemText = "#ffffff"
         let font = "12px Consolas"
         let bottom = 40 //px
 
-        let a = []
         let pos = {x: playerShip.computers[0].nav.position.x % 1, y: playerShip.computers[0].nav.position.y % 1}
         let posR = {x: playerShip.computers[0].nav.position.x, y: playerShip.computers[0].nav.position.y}
 
@@ -286,32 +297,34 @@ class Computer extends Part {
             }
         }
         //------------------------------------------------------------------------------------------
-
-
-
-        //----------------------------------------------------TEST
         let scaling = this.mapScaling/60
-        let testt = {x:0.7,y:0.7}
-        let testx = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)-(testt.x*this.mapScaling)
-        let testy = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)-(testt.y*this.mapScaling)
-        if (testx>-300-this.mapScaling && testx<(this.display.resolution.w+this.mapScaling) && testy>-180-this.mapScaling && testy<((this.display.resolution.h-bottom)+this.mapScaling)) {
-            this.display.drawCircle(testx,testy,15*scaling,colorMap)
+        let varX = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
+        let varY = (posR.y*this.mapScaling)+((this.display.resolution.h-bottom)/2)
+        let drawPlanet = (xx,yy,colorP,size,name,id) => {
+            let x = varX-(xx*this.mapScaling)
+            let y = varY-(yy*this.mapScaling)
+            let sizeMap = (size*scaling)
+            if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
+                this.display.drawCircle(x,y,sizeMap,colorP)
+                //text
+                if (this.mapScaling>20) {
+                    this.display.drawText(x,y+sizeMap,name,font,colorSystemText,"center")
+                }
+               this.starSystems.push({x1:x-sizeMap, y1:y-sizeMap,x2:x+sizeMap,y2:y+sizeMap,function: () => {this.tab = "nav2";this.nav2PlanetView=id;this.starSystems = []}})
+            }
         }
 
-
-        //x:0 y:0
-        /*let x0 = (posR.x*this.mapScaling)+((this.display.resolution.w)/2)
-        let y0 = (posR.y*this.mapScaling)+(((this.display.resolution.h-40))/2)*/
-        //this.display.drawCircle(x0,y0,5,"#b47ca0")
-
-        return a
+        for (let i = 0; i<starSystems.length; i++) {
+            let ss = starSystems[i]
+            drawPlanet(ss.position.x,ss.position.y,ss.factionColor,ss.mapSize,ss.name,i)
+        }
     }
 
     touchScreen(x,y) {
         let buttons = [
-            {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main"}},
-            {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav"}},
-            {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm"}},
+            {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main";this.starSystems = []}},
+            {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav";this.starSystems = []}},
+            {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm";this.starSystems = []}},
 
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.incMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.decMapScaling()}}},
@@ -327,6 +340,28 @@ class Computer extends Part {
                 break
             }
         }
+        for (let i = 0; i<this.starSystems.length; i++) {
+            let b = this.starSystems[i]
+            if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {
+                b.function()
+                break
+            }
+        }
+    }
+
+
+    mouseOverScreen(x,y) {
+        let elements = [
+        ]
+
+        for (let i = 0; i<elements.length; i++) {
+            let b = elements[i]
+            if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {
+                b.function()
+                break
+            }
+        }
+
     }
 
     incMapScaling() {

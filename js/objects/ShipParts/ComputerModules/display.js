@@ -73,7 +73,7 @@ class DisplayModule {
             this.cursorPosition(e)
         })
         this.canvasElement.addEventListener('mousemove', (e) => {
-            console.log(e.layerX," - "+e.layerY) //TODO:
+            playerShip.computers[0].mouseOverScreen(e.layerX,e.layerY)
         })
     }
 }
