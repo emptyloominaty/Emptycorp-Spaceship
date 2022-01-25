@@ -218,6 +218,7 @@ class Computer extends Part {
                 let a = ss.position.x - this.nav.position.x //x1 - x2
                 let b = ss.position.y -this.nav.position.y //y1 - y2
                 let d = Math.sqrt( a*a + b*b )
+
                 this.display.drawText(5, 40, "Distance: ", font1, color1, 'left')
                 this.display.drawText(85, 40, d.toFixed(2)+"ly", font1, color5, 'left')
 
@@ -357,8 +358,8 @@ class Computer extends Part {
             {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
             //target
             {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView]}}},
-            //autopilot 100,325,100,20,
-            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot }}},
+            //autopilot
+            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot;this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
 
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},

@@ -31,6 +31,34 @@ class NavigationModule {
                 }
             }
         })
+
+        //autopilot
+        if (playerShip.computers[0].autopilot===1 && playerShip.computers[0].target!=="") {
+            let a = playerShip.computers[0].targetObj.position.x - this.position.x //x1 - x2
+            let b = playerShip.computers[0].targetObj.position.y - this.position.y //y1 - y2
+            let distanceToObject = Math.sqrt( a*a + b*b )
+
+            let angle = ((((Math.atan2( this.position.y - playerShip.computers[0].targetObj.position.y, this.position.x - playerShip.computers[0].targetObj.position.x ) * 180)) / Math.PI)-270)
+            angle = angle*(-1)
+            angle = angle % 360
+            if (angle < 0) {
+                angle += 360
+            }
+
+            playerShip.position.targetDirection = angle
+            playerShip.targetSpeed = playerShip.maxSpeed
+            playerShip.propulsion = "on"
+
+            if (distanceToObject<0.25) {
+                playerShip.computers[0].autopilot=0
+                playerShip.targetSpeed = 0
+                playerShip.propulsion = "off"
+            }
+        } else if (playerShip.computers[0].autopilot===1) {
+            playerShip.computers[0].autopilot=0
+            playerShip.targetSpeed = 0
+            playerShip.propulsion = "off"
+        }
     }
 
     start = {

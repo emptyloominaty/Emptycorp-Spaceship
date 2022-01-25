@@ -169,7 +169,6 @@ class Ship {
                     } else {
                         this.computers[0].data.rcsRThrust += (t/this.engines[i].thrust)
                     }
-                console.log(this.computers[0].data.rcsLThrust," - ",this.computers[0].data.rcsRThrust)
 
 
                 }
@@ -179,11 +178,23 @@ class Ship {
 
         //direction
         this.position.direction += (this.position.angularSpeed*57.2957795)/fps
-        if (this.position.direction>720) {
+        if (this.position.direction>1080) {
             this.position.direction = 0
-        } else if (this.position.direction<-360) {
+        } else if (this.position.direction<-720) {
             this.position.direction = 0
         }
+
+       /* YIKES (input.js)
+        if (this.position.targetDirection-this.position.direction>190) { //0->190  //50->320
+            console.log(this.position.targetDirection+" S")
+            this.position.targetDirection-=360
+            console.log(this.position.targetDirection+" E")
+        } else if (this.position.direction-this.position.targetDirection>190) {
+            console.log(this.position.targetDirection+" S2")
+            this.position.targetDirection+=360
+            console.log(this.position.targetDirection+" E2")
+        }*/
+
 
         let maxERCSThrust = 0.002
         let maxERCSThrustNeg = -0.002
@@ -280,7 +291,7 @@ class Ship {
             }
         }
         }
-        //------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
