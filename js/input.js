@@ -99,6 +99,10 @@ let inputFunctions = {
     },
     setTime() {
         speedInc =  +(document.getElementById("inputRange_time").value)
+    },
+    toggleAutopilot() {
+        playerShip.computers[0].autopilot = 1 - playerShip.computers[0].autopilot
+        this.toggleButtonText( document.getElementById("btn_autopilot"),playerShip.computers[0].autopilot)
     }
 }
 
@@ -110,6 +114,7 @@ let updateToggles = function() {
     inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
+    inputFunctions.toggleButtonText( document.getElementById("btn_autopilot"),playerShip.computers[0].autopilot)
     if (playerShip.propulsion==="off") {
         document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
     } else {

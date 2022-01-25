@@ -41,6 +41,11 @@ let elements = {
     navControl: document.getElementById("navControl"),
 }
 
+for (let i = 0; i<11; i++) {
+    elements["rcsBar"+i] = document.getElementById("rcsBar"+i)
+    elements["rcs2Bar"+i] = document.getElementById("rcs2Bar"+i)
+}
+
 
 let speedInc = 1
 function update(progress) {
@@ -63,8 +68,9 @@ function update(progress) {
      inputNumber_speed = elements.inputNumber_speed.value
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
-    throttleBar()
-
+    throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
+    throttleBar(playerShip.computers[0].data.rcsRThrust*100,"rcsBar",0,0.2,0.5,1,5,10,25,50,75,90) //right
+    throttleBar(playerShip.computers[0].data.rcsLThrust*100,"rcs2Bar",0,0.2,0.5,1,5,10,25,50,75,90) //left
     if (debug.performance) {
         debug.timeC = performance.now()
         elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"

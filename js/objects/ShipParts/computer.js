@@ -5,7 +5,7 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"",}
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0}
 
     //network
     listeningPort = [0]

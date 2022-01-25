@@ -50,10 +50,10 @@ for (let i = 0; i<playerShip.tanks.length; i++) {
 elements.navControl.innerHTML = "<div id='navControlScreen'>" +
     "x: <span id='navControlX'></span> y: <span id='navControlY'></span> <br>" +
     "Direction: <span id='navControlDir'></span><hr>" +
+    "Autopilot: <button id='btn_autopilot' onclick='inputFunctions.toggleAutopilot()'></button><br>" +
     "Target: <span id='navControlTarget'></span> <button onclick='playerShip.computers[0].resetTarget()'></button> <br>" +
     "Target Distance: <span id='navControlDistance'></span><br>" +
     "Target Angle: <span id='navControlAngle'></span>" +
-//Autopilot  on/off button toggle
     "</div>"
 elements.navControlScreen = document.getElementById("navControlScreen")
 elements.navControlX = document.getElementById("navControlX")

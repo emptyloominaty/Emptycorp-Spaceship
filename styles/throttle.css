@@ -1,4 +1,4 @@
-#throttleBar {
+#throttleBar,#rcsBar {
     display:flex;
 }
 
@@ -7,5 +7,19 @@
     height:12px;
     border:1px solid #000;
     background-color:#333;
+    margin-right:2px;
+}
+
+.rcsBar {
+    width:3px;
+    height:12px;
+    background-color:#333;
+    margin-right:2px;
+}
+
+.vline {
+    background-color:#FFF;
+    width:1px;
+    height:12px;
     margin-right:2px;
 }

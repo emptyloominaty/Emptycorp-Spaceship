@@ -157,12 +157,21 @@ class Ship {
 
 
 
-        //------------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------------------------RCS
         let getRcsThrust = (targetDirection,direction,p) => {
             let t = 0
             for(let i = 0; i<this.engines.length; i++) {
                 if (this.engines[i].on===1 && this.engines[i].type==="RCS") {
+
                     t += this.engines[i].run(p, fps, targetDirection, direction, this.position.angularSpeed)
+                    if (targetDirection<direction) {
+                        this.computers[0].data.rcsLThrust += (t/this.engines[i].thrust)*(-1)
+                    } else {
+                        this.computers[0].data.rcsRThrust += (t/this.engines[i].thrust)
+                    }
+                console.log(this.computers[0].data.rcsLThrust," - ",this.computers[0].data.rcsRThrust)
+
+
                 }
             }
             return t
@@ -175,6 +184,9 @@ class Ship {
         } else if (this.position.direction<-360) {
             this.position.direction = 0
         }
+
+        let maxERCSThrust = 0.002
+        let maxERCSThrustNeg = -0.002
 
         if (this.position.targetDirection-0.01>this.position.direction || this.position.targetDirection+0.01<this.position.direction) {
             let thrust = 0
@@ -213,8 +225,8 @@ class Ship {
                 }
                 thrust = thrust*tBoost
                 let powerNeed = 0.00001
-                if (thrust>0.002) {thrust=0.002}
-                if (thrust<-0.002) {thrust=-0.002}
+                if (thrust>maxERCSThrust) {thrust=maxERCSThrust}
+                if (thrust<maxERCSThrustNeg) {thrust=maxERCSThrustNeg}
                 if (thrust>0) {
                     powerNeed = thrust*(this.weight/75)
                 } else if (thrust<0) {
@@ -224,7 +236,15 @@ class Ship {
                 if (!playerShip.usePower(powerNeed/gameFPS,"engine")) {
                     thrust = 0
                 }
+
+                if (targetDirection>this.position.direction) {
+                    this.computers[0].data.rcsLThrust = thrust/maxERCSThrust
+                } else {
+                    this.computers[0].data.rcsRThrust = (thrust*(-1))/maxERCSThrust
+                }
             }
+
+
             let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
             let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
             let acceleration = torque / shipInertia //(radians/s2)
@@ -324,6 +344,8 @@ class Ship {
         this.powerOutput = 0
         this.powerOutput2 = 0
         this.thrust = 0
+        this.computers[0].data.rcsLThrust = 0
+        this.computers[0].data.rcsRThrust = 0
     }
     resetWarpEngines() {
         for(let i = 0; i<this.engines.length; i++) {
