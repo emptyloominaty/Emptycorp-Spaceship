@@ -6,26 +6,18 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/throttle.css">
+    <link rel="stylesheet" type="text/css" href="styles/navControl.css">
     <!-- START -->
     <script src="js/functions.js" defer></script>
     <script src="js/main.js" defer></script>
-    <!-- -->
-    <script src="js/objects/galaxy/faction.js" defer></script>
-    <script src="js/objects/galaxy/celestialbody.js" defer></script>
-    <script src="js/objects/galaxy/star.js" defer></script>
-    <script src="js/objects/galaxy/planet.js" defer></script>
-    <script src="js/objects/galaxy/moon.js" defer></script>
-    <script src="js/objects/galaxy/asteroid.js" defer></script>
-    <script src="js/objects/galaxy/starSystem.js" defer></script>
-    <script src="js/objects/galaxy/mainGalaxy.js" defer></script>
-    <!-- -->
+    <!-- Part -->
     <script src="js/objects/ShipParts/part.js" defer></script>
-    <!-- -->
+    <!-- Computer Modules -->
     <script src="js/objects/ShipParts/ComputerModules/communication.js" defer></script>
     <script src="js/objects/ShipParts/ComputerModules/fuelConsumption.js" defer></script>
     <script src="js/objects/ShipParts/ComputerModules/navigation.js" defer></script>
     <script src="js/objects/ShipParts/ComputerModules/display.js" defer></script>
-    <!-- -->
+    <!-- Ship Parts -->
     <script src="js/objects/ShipParts/antenna.js" defer></script>
     <script src="js/objects/ShipParts/battery.js" defer></script>
     <script src="js/objects/ShipParts/capacitor.js" defer></script>
@@ -36,15 +28,23 @@
     <script src="js/objects/ShipParts/shield.js" defer></script>
     <script src="js/objects/ShipParts/tank.js" defer></script>
     <script src="js/objects/ShipParts/weapon.js" defer></script>
-    <!-- -->
+    <!-- Ship & Servers -->
     <script src="js/objects/playerShip.js" defer></script>
     <script src="js/objects/network/mainServer.js" defer></script>
     <script src="js/objects/network/servers/server.js" defer></script>
     <script src="js/objects/network/servers/timeServer.js" defer></script>
-
-    <!-- -->
+    <!-- Galaxy -->
+    <script src="js/objects/galaxy/faction.js" defer></script>
+    <script src="js/objects/galaxy/celestialbody.js" defer></script>
+    <script src="js/objects/galaxy/star.js" defer></script>
+    <script src="js/objects/galaxy/planet.js" defer></script>
+    <script src="js/objects/galaxy/moon.js" defer></script>
+    <script src="js/objects/galaxy/asteroid.js" defer></script>
+    <script src="js/objects/galaxy/starSystem.js" defer></script>
+    <script src="js/objects/galaxy/mainGalaxy.js" defer></script>
+    <!-- Canvas -->
     <script src="js/DrawGalaxy/canvasMain.js" defer></script>
-    <!-- -->
+    <!-- Other -->
     <script src="js/draw.js" defer></script>
     <script src="js/loopInit.js" defer></script>
     <script src="js/input.js" defer></script>
@@ -152,6 +152,9 @@
             <div class="throttleBar" id="throttleBar9"></div>
             <div class="throttleBar" id="throttleBar10"></div>
         </div>
+    </div>
+
+    <div id="navControl">
     </div>
 
     <div>

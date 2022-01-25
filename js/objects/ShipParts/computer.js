@@ -17,6 +17,11 @@ class Computer extends Part {
     starSystems = []
     nav2PlanetView = ""
 
+    //autopilot
+    target = ""
+    targetObj = {}
+    autopilot = 0
+
 
     run() {
         if(this.on===1) {
@@ -32,8 +37,6 @@ class Computer extends Part {
                 this.time += 1000 / gameFPS
 
             //network
-
-                this.listeningPort.push(0)
                 if (this.listeningPort.length>0) {
                     for (let i = 0; i<this.listeningPort.length; i++) {
                         if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
@@ -126,7 +129,7 @@ class Computer extends Part {
 
 
             if (this.tab==="main") {
-                //------------------------------------------------------------------------Main Tab
+                //--------------------------------------------------------------------------------------------------------------------------Main Tab
                 //thrust and throttle
                 this.display.drawText(5, 20, "Thrust: ", font1, color1, 'left')
                 this.display.drawText(90, 20, this.data.engineThrustString, font1, colorTT, 'left')
@@ -178,7 +181,7 @@ class Computer extends Part {
                 this.display.drawRect(100,100,50,50,"#00ff00") //test
 
             } else if (this.tab==="nav") {
-                //------------------------------------------------------------------------Navigation Tab
+                //--------------------------------------------------------------------------------------------------------------------Navigation Tab
                 if (this.nav.on===1) {
                     //map
                     this.drawMap()
@@ -207,19 +210,42 @@ class Computer extends Part {
                 } else {
                         this.display.drawText(5,20,"Off",font1,colorError,'left')
                 }
-            } else if (this.tab==="nav2") {
+            } else if (this.tab==="nav2") { //---------------------------------------------------------------------------------------Star System View
+                let ss = starSystems[this.nav2PlanetView]
                 this.display.drawText(5, 20, "System: ", font1, color1, 'left')
-                this.display.drawText(75, 20, starSystems[this.nav2PlanetView].name, font1, color5, 'left')
+                this.display.drawText(75, 20, ss.name, font1, color5, 'left')
 
-                let a = starSystems[this.nav2PlanetView].position.x - this.nav.position.x //x1 - x2
-                let b = starSystems[this.nav2PlanetView].position.y -this.nav.position.y //y1 - y2
+                let a = ss.position.x - this.nav.position.x //x1 - x2
+                let b = ss.position.y -this.nav.position.y //y1 - y2
                 let d = Math.sqrt( a*a + b*b )
                 this.display.drawText(5, 40, "Distance: ", font1, color1, 'left')
                 this.display.drawText(85, 40, d.toFixed(2)+"ly", font1, color5, 'left')
+
+                this.display.drawText(5, 60, "Faction: ", font1, color1, 'left')
+                this.display.drawText(85, 60, ss.faction+" ("+factionList[ss.faction].playerRelations+")", font1, ss.factionColor, 'left')
+                this.display.drawText(5, 80, "Population: ", font1, color1, 'left')
+                this.display.drawText(105, 80, ss.totalPopulation, font1, color5, 'left')
+
+                this.display.drawText(5, 100, "Planets: ", font1, color1, 'left')
+                this.display.drawText(85, 100, ss.planets.length, font1, color5, 'left')
+
+                this.display.drawText(5, 120, "Prices: ", font1, color1, 'left')
+                let ii = 0
+                Object.keys(ss.prices).forEach((key)=> {
+                    let prices = key+": "+ss.prices[key]
+                    this.display.drawText(85, 120+(ii*15), prices, font1, color5, 'left')
+                    ii++
+                })
+
+
+                this.display.drawRect(15,325,70,20,"#494949") //test
+                this.display.drawText(50, 340, "Target", font1, color1, 'center')
+                this.display.drawRect(100,325,100,20,"#494949") //test
+                this.display.drawText(150, 340, "Autopilot", font1, color1, 'center')
             }
 
 
-            //bottom
+            //-----------------------------------------------------------------------------------------------------------------bottom
             this.display.drawRect(0,height-40,width,height,"#000000") //test
             this.display.drawLine(0,height-40,width,height-40,2,color1)
             this.display.drawText(50,height-15,"Main",font1,color1,'center')
@@ -242,7 +268,7 @@ class Computer extends Part {
     }
 
     drawMap() {
-        //map
+        //--------------------------------------------------------------------------------------------------------------------------map
         let colorMap = "#a1a1a1"
         let colorMapText = "#b4b169"
         let colorSystemText = "#ffffff"
@@ -329,6 +355,10 @@ class Computer extends Part {
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.incMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.decMapScaling()}}},
             {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
+            //target
+            {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView]}}},
+            //autopilot 100,325,100,20,
+            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot }}},
 
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},

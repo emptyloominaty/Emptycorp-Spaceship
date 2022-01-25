@@ -1,4 +1,4 @@
-let debug = {performance:true,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
+let debug = {performance:false,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
 
 let lastRender = 0
 let progress = 16.666666666666666666666666666667
@@ -38,6 +38,7 @@ let elements = {
     throttleBar9: document.getElementById("throttleBar9"),
     throttleBar10: document.getElementById("throttleBar10"),
     debug123: document.getElementById("debug123"),
+    navControl: document.getElementById("navControl"),
 }
 
 

@@ -8,5 +8,5 @@ class TimeServer extends Server {
         }
     }
 }
-//(myAddress,name,run, x = 0,y = 0)
-let timeServer = new TimeServer(1,"Time Server(Sol)",1,"time",0,0)
+
+//let timeServer = new TimeServer(1,"Time Server(Sol)",1,"time",0,0)

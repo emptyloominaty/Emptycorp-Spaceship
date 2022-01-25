@@ -1,0 +1,17 @@
+#navControl {
+    background-color:#000;
+    border:2px solid #333;
+    border-radius:2px;
+    position:absolute;
+    right:0;
+    top:150px;
+    width:230px;
+    height:150px;
+    overflow-y: hidden;
+}
+
+#navControlScreen {
+    padding:3px;
+    background-color:#000;
+    height:150px;
+}

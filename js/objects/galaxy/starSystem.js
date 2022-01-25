@@ -21,5 +21,14 @@ class StarSystem {
         this.name = name
         this.mapSize = mapSize
         this.position = position
+        for (let i = 0; i<planets.length; i++) {
+            this.totalPopulation += planets[i].population
+            for (let j = 0; j<planets[i].moons.length; j++) {
+                this.totalPopulation += planets[i].moons[j].population
+            }
+        }
+        for (let i = 0; i<asteroids.length; i++) {
+            this.totalPopulation+=asteroids[i].population
+        }
     }
 }
