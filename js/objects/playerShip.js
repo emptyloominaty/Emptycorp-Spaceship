@@ -485,7 +485,7 @@ class Ship {
 
     generatePower(val) { //MW
         this.powerInput += val*gameFPS
-        this.atmosphere.temperature += (val*10 / this.atmosphere.volume)/gameFPS
+        this.atmosphere.temperature += (val*10 / this.atmosphere.volume)/12
         for (let i = 0; i<this.batteries.length; i++) {
             this.batteries[i].charge+=val/60/60
             val=0
@@ -559,7 +559,7 @@ class Ship {
                 if (this.capacitors[i].charge >= val / 3600) {
                     this.capacitors[i].charge -= val / 3600
                     this.powerOutput2 += val*gameFPS
-                    this.atmosphere.temperature += (val*10 / this.atmosphere.volume)/gameFPS
+                    this.atmosphere.temperature += (val / this.atmosphere.volume)/12
                     return true
                 }/* else {
                     this.powerOutput2 += this.capacitors[i].charge
