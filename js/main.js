@@ -49,7 +49,7 @@ function update(progress) {
     }
 
     gameFPS = (1/progress*1000)/speedInc
-
+    keyLoop() //keyboard inputs
     playerShip.everyFrame(gameFPS)
     mainServer.run()
 
@@ -64,6 +64,7 @@ function update(progress) {
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
     throttleBar()
+
     if (debug.performance) {
         debug.timeC = performance.now()
         elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"

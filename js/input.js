@@ -125,3 +125,34 @@ let updateToggles = function() {
 }
 
 updateToggles()
+
+//-------------------------------Keyboard
+let keyPressed = {}
+let keyLoop = () => {
+    let val = 30/gameFPS
+    if (keyPressed["KeyA"]) {
+        playerShip.position.targetDirection+=val
+    } else if (keyPressed["KeyD"]) {
+        playerShip.position.targetDirection-=val
+    }
+
+    if (playerShip.position.targetDirection<0) {
+        playerShip.position.targetDirection=360
+    } else if (playerShip.position.targetDirection>360) {
+        playerShip.position.targetDirection=0
+    }
+}
+
+let keyup= (e)=> {
+    keyPressed[e.code]=false
+}
+let keydown= (e)=> {
+    keyPressed[e.code]=true
+}
+document.addEventListener('keydown', keydown)
+document.addEventListener('keyup', keyup)
+
+
+
+
+

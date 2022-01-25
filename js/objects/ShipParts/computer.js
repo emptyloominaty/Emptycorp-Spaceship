@@ -394,6 +394,11 @@ class Computer extends Part {
 
     }
 
+    resetTarget() {
+        this.target = ''
+        this.targetObj = {}
+    }
+
     incMapScaling() {
         if (this.mapScaling<10) {
             this.mapScaling+=1

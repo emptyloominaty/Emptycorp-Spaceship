@@ -45,10 +45,12 @@ for (let i = 0; i<playerShip.tanks.length; i++) {
     elements["tankText2" + i] = document.getElementById("tankText2" + i)
 }
 //----------------------------------------Nav------------------------------------------------------
+
+
 elements.navControl.innerHTML = "<div id='navControlScreen'>" +
     "x: <span id='navControlX'></span> y: <span id='navControlY'></span> <br>" +
     "Direction: <span id='navControlDir'></span><hr>" +
-    "Target: <span id='navControlTarget'></span> <button onclick='"+(()=>{playerShip.computers[0].target="";playerShip.computers[0].targetObj={}})+"'></button> <br>" +
+    "Target: <span id='navControlTarget'></span> <button onclick='playerShip.computers[0].resetTarget()'></button> <br>" +
     "Target Distance: <span id='navControlDistance'></span><br>" +
     "Target Angle: <span id='navControlAngle'></span>" +
 //Autopilot  on/off button toggle
