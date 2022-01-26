@@ -3,7 +3,7 @@ class CanvasMain {
     constructor() {
         //TEST
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(90, 1900 / 550, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(100, 1900 / 550, 1, 2000);
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } )
 
         this.geometry = new THREE.SphereGeometry(3, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
@@ -18,7 +18,7 @@ class CanvasMain {
         this.scene.add(this.sphere[1]);
         this.scene.add(this.sphere[2]);
 
-        this.camera.position.z = 50;
+        this.camera.position.z = 150;
 
 
         this.hex = "0x" + "000000".replace(/0/g, function() {
@@ -40,8 +40,11 @@ class CanvasMain {
         this.render();
 
     }
-
+    run() {
+        //this.camera.position.z = 50+playerShip.position.x
+        this.camera.rotation.y = (playerShip.position.direction/58.909090909090) //?????????????????? xDDDDddD fix?
+    }
 
 }
 
-let screen3D = new CanvasMain
+let shipWindow3D = new CanvasMain

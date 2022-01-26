@@ -76,5 +76,7 @@ function update(progress) {
         elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"
         debug.timeD = performance.now()
     }
+
+    shipWindow3D.run()
 }
 
