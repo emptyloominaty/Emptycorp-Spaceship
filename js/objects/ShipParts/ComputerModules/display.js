@@ -6,8 +6,6 @@ class DisplayModule {
     canvasElement = document.getElementById("computerDisplay")
     canvas = this.canvasElement.getContext("2d")
 
-    //TODO: OPTIMIZE THIS MEME?
-
     drawPlayerShipDirection(x,y,length = 10,width,color,direction) {
         this.canvas.save()
         this.canvas.beginPath()
@@ -33,6 +31,15 @@ class DisplayModule {
         this.canvas.fillStyle = color
         this.canvas.arc(x, y, radius, 0, 2 * Math.PI, false)
         this.canvas.fill()
+        this.canvas.closePath()
+    }
+
+    drawCircleStroke(x,y,radius,color,lineWidth = 1) {
+        this.canvas.beginPath()
+        this.canvas.strokeStyle = color
+        this.canvas.lineWidth = lineWidth
+        this.canvas.arc(x, y, radius, 0, 2 * Math.PI, false)
+        this.canvas.stroke()
         this.canvas.closePath()
     }
 

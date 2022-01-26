@@ -37,6 +37,7 @@ button {
     display: inline-block;
     width:16px;
     height:16px;
+    transition: all 100ms ease-in;
 }
 
 #btn_speedMode {
@@ -176,6 +177,7 @@ input[type=number] {
     background-color: #9099c8;
     border-radius: 15px 0 0 15px;
     position:absolute;
+    transition: width 0.1s linear;
 }
 #speedText {
     padding-left:10px;

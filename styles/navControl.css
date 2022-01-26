@@ -14,4 +14,5 @@
     padding:3px;
     background-color:#000;
     height:150px;
+    transition: opacity 100ms ease-in;
 }

@@ -212,6 +212,8 @@ class Computer extends Part {
                 }
             } else if (this.tab==="nav2") { //---------------------------------------------------------------------------------------Star System View
                 let ss = starSystems[this.nav2PlanetView]
+                this.drawSystem(ss)
+
                 this.display.drawText(5, 20, "System: ", font1, color1, 'left')
                 this.display.drawText(75, 20, ss.name, font1, color5, 'left')
 
@@ -225,19 +227,18 @@ class Computer extends Part {
                 this.display.drawText(5, 60, "Faction: ", font1, color1, 'left')
                 this.display.drawText(85, 60, ss.faction+" ("+factionList[ss.faction].playerRelations+")", font1, ss.factionColor, 'left')
                 this.display.drawText(5, 80, "Population: ", font1, color1, 'left')
-                this.display.drawText(105, 80, ss.totalPopulation, font1, color5, 'left')
+                this.display.drawText(105, 80, (ss.totalPopulation/1000000).toFixed(0)+"M", font1, color5, 'left')
 
                 this.display.drawText(5, 100, "Planets: ", font1, color1, 'left')
                 this.display.drawText(85, 100, ss.planets.length, font1, color5, 'left')
 
-                this.display.drawText(5, 120, "Prices: ", font1, color1, 'left')
+                this.display.drawText(5, 120, "Trade: ", font1, color1, 'left')
                 let ii = 0
                 Object.keys(ss.prices).forEach((key)=> {
                     let prices = key+": "+ss.prices[key]
-                    this.display.drawText(85, 120+(ii*15), prices, font1, color5, 'left')
+                    this.display.drawText(65, 120+(ii*15), prices, font1, color5, 'left')
                     ii++
                 })
-
 
                 this.display.drawRect(15,325,70,20,"#494949") //test
                 this.display.drawText(50, 340, "Target", font1, color1, 'center')
@@ -264,6 +265,37 @@ class Computer extends Part {
             this.display.drawLine(500,height-40,500,height,2,color1)
             this.display.drawText(550,height-10,"Time:"+this.getTimeString(this.time),font3,color3,'center')
             this.display.drawText(550,height-25,"Fps:"+(gameFPS*speedInc).toFixed(0)+"FPS",font3,color3,'center')
+
+        }
+    }
+
+    drawSystem(ss) {
+        let maxOrbit = 0
+        for (let i = 0; i<ss.planets.length; i++) {
+            if (ss.planets[i].orbitHeight>maxOrbit) {
+                maxOrbit = ss.planets[i].orbitHeight
+            }
+        }
+        let orbitScaling = maxOrbit/335
+
+        //star
+        let starSize = ss.stars[0].radius/100000 // /100000
+        this.display.drawCircle(400,350,starSize,"#FFFF00")
+
+        let leftRight = 0
+        //planets
+        for (let i = 0; i<ss.planets.length; i++) {
+            let orbitH = (ss.planets[i].orbitHeight/orbitScaling)+starSize //5000000
+            let size = ss.planets[i].radius/20000 //2000
+            this.display.drawCircleStroke(400,350,orbitH,"#989898")
+            this.display.drawCircle(400,350-(orbitH),size,"#FFFFFF")
+            if (leftRight){
+                leftRight = 0
+                this.display.drawText(425,353-(orbitH),ss.planets[i].name,"12px Consolas","#FFF","left")
+            } else {
+                leftRight = 1
+                this.display.drawText(375,353-(orbitH),ss.planets[i].name,"12px Consolas","#FFF","right")
+            }
 
         }
     }

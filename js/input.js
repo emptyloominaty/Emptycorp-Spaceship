@@ -134,13 +134,31 @@ updateToggles()
 //-------------------------------Keyboard
 let keyPressed = {}
 let keyLoop = () => {
-    let val = 30/gameFPS
+    let val = gameFPS/120
+    let valSpeed = 1
+    if (playerShip.speedMode==="FTL") {
+        valSpeed = 50*gameFPS
+    } else {
+        valSpeed = 0.00000001*gameFPS
+    }
+
     if (keyPressed["KeyA"]) {
         playerShip.position.targetDirection+=val
     } else if (keyPressed["KeyD"]) {
         playerShip.position.targetDirection-=val
+    } else if (keyPressed["KeyW"]) {
+        playerShip.targetSpeed+=valSpeed
+    } else if (keyPressed["KeyS"]) {
+        playerShip.targetSpeed-=valSpeed
     }
 
+    //Speed
+    if (playerShip.targetSpeed<0) {
+        playerShip.targetSpeed=0
+    } else if (playerShip.targetSpeed>playerShip.maxSpeed) {
+        playerShip.targetSpeed=playerShip.maxSpeed
+    }
+    //Direction
     if (playerShip.position.targetDirection<0) {
         playerShip.position.targetDirection=360
     } else if (playerShip.position.targetDirection>360) {

@@ -31,7 +31,7 @@ class FuelConsumptionModule {
         this.fuelConsumptionAvg = (cons/this.fuelArray.length)*gameFPS*3600000//g/h
 
         //fuel consumption (10sec avg)
-        if (this.partsActivated.preciseConsumption===1 && playerShip.usePower(this.partsConsumption.preciseConsumption,"computer")) {
+        if (this.partsActivated.preciseConsumption===1 && playerShip.usePower(this.partsConsumption.preciseConsumption/gameFPS,"computer")) {
             if (this.fuelArrayPrecise.length>=600) {
                 this.fuelArrayPrecise.shift()
             }
@@ -45,7 +45,7 @@ class FuelConsumptionModule {
         }
 
 
-        if (this.partsActivated.calcRange===1 && playerShip.speed !== 0 &&  this.fuelConsumptionAvg !== 0 && playerShip.usePower(this.partsConsumption.calcRange,"computer")) {
+        if (this.partsActivated.calcRange===1 && playerShip.speed !== 0 &&  this.fuelConsumptionAvg !== 0 && playerShip.usePower(this.partsConsumption.calcRange/gameFPS,"computer")) {
             let speed = playerShip.speed/8765.812756 //ly/h
             let fuelTimeLeft = ((this.fuelB*1000)/this.fuelConsumptionAvg)*3600 //seconds
             this.range = speed*(fuelTimeLeft/3600) //ly range

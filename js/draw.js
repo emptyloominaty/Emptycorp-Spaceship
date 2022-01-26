@@ -140,8 +140,13 @@ function draw(progress) {
         if (elements.navControlScreen.style.display!=="block") {
             elements.navControlScreen.style.display="block"
         }
+        //if (elements.navControlScreen.style.opacity!=="1") {
+        //    elements.navControlScreen.style.opacity="1"
+        //}
+
     } else {
-        elements.navControlScreen.style.display="none"
+        //elements.navControlScreen.style.opacity="0"
+        setTimeout(()=>{elements.navControlScreen.style.display="none"},100)
     }
 
 

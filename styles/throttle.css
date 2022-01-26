@@ -2,6 +2,10 @@
     display:flex;
 }
 
+.throttleBar,.rcsBar {
+    transition: all 100ms ease-out;
+}
+
 .throttleBar {
     width:6px;
     height:12px;
