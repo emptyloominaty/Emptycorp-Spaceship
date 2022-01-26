@@ -3,7 +3,7 @@ class CanvasMain {
     constructor() {
         //TEST
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(90, 1900 / 550, 1, 1000);
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } )
 
         this.geometry = new THREE.SphereGeometry(3, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
@@ -18,7 +18,7 @@ class CanvasMain {
         this.scene.add(this.sphere[1]);
         this.scene.add(this.sphere[2]);
 
-        this.camera.position.z = 10;
+        this.camera.position.z = 50;
 
 
         this.hex = "0x" + "000000".replace(/0/g, function() {
@@ -32,7 +32,7 @@ class CanvasMain {
         this.sphere[2].material.color.setHex(this.hex);
 
 
-        this.render = function() {
+        this.render = ()=> {
             requestAnimationFrame(this.render);
             this.renderer.render(this.scene, this.camera);
         };
