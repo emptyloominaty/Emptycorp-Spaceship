@@ -8,7 +8,7 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
-    position = {x:1, y:1, yaw: {direction:0, targetDirection:0, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
+    position = {x:1, y:1, z:0, yaw: {direction:0, targetDirection:0, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
     weight = this.baseWeight
 
     //radiation heat transfer
@@ -277,14 +277,21 @@ class Ship {
         return weight
     }
     move() {
-        let speedInlyh = this.speed/8765.812756  //lyh
+        let speedInlyh = this.speed/8765.812756
         let speed = speedInlyh/3600/gameFPS
 
-        let angleInRadian = (this.position.yaw.direction*Math.PI) / 180
-        let vx = Math.sin(angleInRadian) * speed
-        let vy = Math.cos(angleInRadian) * speed
+        let angleInRadianYaw = (playerShip.position.yaw.direction*Math.PI) / 180
+        let angleInRadianPitch = ((playerShip.position.pitch.direction-180)*Math.PI) / 180
+
+        let theta = angleInRadianYaw
+        let phi = Math.PI/2-angleInRadianPitch
+
+        let vx = (Math.sin(theta)*Math.cos(phi) )* speed    //3d x
+        let vy = (Math.cos(theta)*Math.sin(phi) )* speed    //3d z
+        let vz = (Math.cos(phi))* speed                  //3d y
         this.position.x += vx
         this.position.y += vy
+        this.position.z += vz
     }
     doLights() {
         if (this.lights.insideOn===1) {

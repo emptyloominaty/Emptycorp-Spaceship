@@ -189,8 +189,10 @@ class Computer extends Part {
                     this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color5, 'left')
                     this.display.drawText(5, 40, "y: ", font1, color1, 'left')
                     this.display.drawText(25, 40, this.nav.position.y.toFixed(2) + "ly", font1, color5, 'left')
-                    this.display.drawText(5, 60, "d: ", font1, color1, 'left')
-                    this.display.drawText(25, 60, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color5, 'left')
+                    this.display.drawText(5, 60, "z: ", font1, color1, 'left')
+                    this.display.drawText(25, 60, this.nav.position.z.toFixed(2) + "ly", font1, color5, 'left')
+                    this.display.drawText(5, 340, "d: ", font1, color1, 'left')
+                    this.display.drawText(25, 340, this.nav.distanceTraveled.toFixed(1) + "ly", font1, color5, 'left')
                     this.display.drawText(5, 80, "grid: ", font1, color1, 'left')
                     if (this.gridEnabled) {
                         this.display.drawText(55, 80, "on", font1, color4, 'left')
@@ -215,7 +217,9 @@ class Computer extends Part {
 
                 let a = ss.position.x - this.nav.position.x //x1 - x2
                 let b = ss.position.y -this.nav.position.y //y1 - y2
+                let c = ss.position.z -this.nav.position.z //z1 - z2
                 let d = Math.sqrt( a*a + b*b )
+
 
                 this.display.drawText(5, 40, "Distance: ", font1, color1, 'left')
                 this.display.drawText(85, 40, d.toFixed(2)+"ly", font1, color5, 'left')

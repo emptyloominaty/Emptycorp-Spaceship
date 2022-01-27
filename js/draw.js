@@ -48,7 +48,7 @@ for (let i = 0; i<playerShip.tanks.length; i++) {
 
 
 elements.navControl.innerHTML = "<div id='navControlScreen'>" +
-    "x: <span id='navControlX'></span> y: <span id='navControlY'></span> <br>" +
+    "x: <span id='navControlX'></span> y: <span id='navControlY'></span> z: <span id='navControlZ'></span> <br>" +
     "Yaw: <span id='navControlDirYaw'></span><br>" +
     "Pitch: <span id='navControlDirPitch'></span><hr>" +
     "Autopilot: <button id='btn_autopilot' onclick='inputFunctions.toggleAutopilot()'></button><br>" +
@@ -59,6 +59,7 @@ elements.navControl.innerHTML = "<div id='navControlScreen'>" +
 elements.navControlScreen = document.getElementById("navControlScreen")
 elements.navControlX = document.getElementById("navControlX")
 elements.navControlY = document.getElementById("navControlY")
+elements.navControlZ = document.getElementById("navControlZ")
 elements.navControlDirYaw = document.getElementById("navControlDirYaw")
 elements.navControlDirPitch = document.getElementById("navControlDirPitch")
 
@@ -135,6 +136,7 @@ function draw(progress) {
         }
         elements.navControlX.textContent = nav.position.x.toFixed(2)
         elements.navControlY.textContent = nav.position.y.toFixed(2)
+        elements.navControlZ.textContent = nav.position.z.toFixed(2)
         elements.navControlDirYaw.textContent = playerShip.position.yaw.direction.toFixed(0)+"° / "+playerShip.position.yaw.targetDirection.toFixed(0)+"°"
         elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
