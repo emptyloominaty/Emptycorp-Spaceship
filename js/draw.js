@@ -54,7 +54,7 @@ elements.navControl.innerHTML = "<div id='navControlScreen'>" +
     "Autopilot: <button id='btn_autopilot' onclick='inputFunctions.toggleAutopilot()'></button><br>" +
     "Target: <span id='navControlTarget'></span> <button onclick='playerShip.computers[0].resetTarget()'></button> <br>" +
     "Target Distance: <span id='navControlDistance'></span><br>" +
-    "Target Angle: <span id='navControlAngle'></span>" +
+    "Target Angle: <span id='navControlAngleYaw'></span> |  <span id='navControlAnglePitch'></span>"
     "</div>"
 elements.navControlScreen = document.getElementById("navControlScreen")
 elements.navControlX = document.getElementById("navControlX")
@@ -65,8 +65,8 @@ elements.navControlDirPitch = document.getElementById("navControlDirPitch")
 
 elements.navControlTarget = document.getElementById("navControlTarget")
 elements.navControlDistance = document.getElementById("navControlDistance")
-elements.navControlAngle = document.getElementById("navControlAngle")
-
+elements.navControlAngleYaw = document.getElementById("navControlAngleYaw")
+elements.navControlAnglePitch = document.getElementById("navControlAnglePitch")
 //----------------------------------------------------------------------------------------------
 
 
@@ -121,11 +121,14 @@ function draw(progress) {
         let d = ""
         let ss = comp.targetObj
         let angle = ""
+        let anglePitch = ""
         if (ss.position!==undefined){
+            //distance
             let a = ss.position.x - nav.position.x //x1 - x2
             let b = ss.position.y - nav.position.y //y1 - y2
-            d = Math.sqrt( a*a + b*b ).toFixed(2)+"ly"
-
+            let c = ss.position.z - nav.position.z //z1 - z2
+            d = Math.sqrt( a*a + b*b ).toFixed(2)+"ly" //TODO:3D
+            //yaw
             angle = ((((Math.atan2( nav.position.y - ss.position.y, nav.position.x - ss.position.x ) * 180)) / Math.PI)-270)
             angle = angle*(-1)
             angle = angle % 360
@@ -133,6 +136,9 @@ function draw(progress) {
                 angle += 360
             }
             angle = angle.toFixed(0)+"°"
+            //pitch
+            anglePitch = Math.atan2(c,Math.sqrt(b * b + a * a))
+            anglePitch = ((anglePitch*57.2957795)).toFixed(0)+"°"
         }
         elements.navControlX.textContent = nav.position.x.toFixed(2)
         elements.navControlY.textContent = nav.position.y.toFixed(2)
@@ -141,7 +147,8 @@ function draw(progress) {
         elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
         elements.navControlDistance.textContent = d
-        elements.navControlAngle.textContent = angle
+        elements.navControlAngleYaw.textContent = angle
+        elements.navControlAnglePitch.textContent = anglePitch
         if (elements.navControlScreen.style.display!=="block") {
             elements.navControlScreen.style.display="block"
         }

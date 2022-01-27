@@ -68,7 +68,34 @@ starSystems.push (new StarSystem(
         O2:0.0004,N2:0.0002,H2:0.005, //Gas (Litres)
         deuterium:1250,fuel1:10,uranium:5000,}, //Liquids,Solid (kg)
     "Obsidium",
-    {x:6.5,y:2.3,z:0.5},
+    {x:6.3,y:2.5,z:0.5},
     15,
+))
 
+starSystems.push (new StarSystem(
+    [
+        new Star("Test",6.5,2.3,0.5,"star",548300,1652400000000000000000000000,false,0,5000,{},0,250,0,"Terran","Class K")],
+    [],
+    [],
+    "Terran",
+    {
+        O2:0.0004,N2:0.0002,H2:0.005, //Gas (Litres)
+        deuterium:1250,fuel1:10,uranium:5000,}, //Liquids,Solid (kg)
+    "Test",
+    {x:-2,y:-1,z:1},
+    15,
+))
+
+starSystems.push (new StarSystem(
+    [
+        new Star("Test2",6.5,2.3,0.5,"star",548300,1652400000000000000000000000,false,0,5000,{},0,250,0,"Terran","Class K")],
+    [],
+    [],
+    "Terran",
+    {
+        O2:0.0004,N2:0.0002,H2:0.005, //Gas (Litres)
+        deuterium:1250,fuel1:10,uranium:5000,}, //Liquids,Solid (kg)
+    "Test2",
+    {x:4,y:4,z:0.5},
+    15,
 ))

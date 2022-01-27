@@ -38,6 +38,7 @@ class NavigationModule {
         if (playerShip.computers[0].autopilot===1 && playerShip.computers[0].target!=="") {
             let a = playerShip.computers[0].targetObj.position.x - this.position.x //x1 - x2
             let b = playerShip.computers[0].targetObj.position.y - this.position.y //y1 - y2
+            let c = playerShip.computers[0].targetObj.position.z - this.position.z //y1 - y2
             let distanceToObject = Math.sqrt( a*a + b*b )
 
             let angleYaw = ((((Math.atan2( this.position.y - playerShip.computers[0].targetObj.position.y, this.position.x - playerShip.computers[0].targetObj.position.x ) * 180)) / Math.PI)-270)
@@ -46,15 +47,18 @@ class NavigationModule {
             if (angleYaw < 0) {
                 angleYaw += 360
             }
-            //todo: pitch angle??
+            //pitch
+            let anglePitch = Math.atan2(c,Math.sqrt(b * b + a * a))
+            anglePitch = ((anglePitch*57.2957795))
 
             playerShip.position.yaw.targetDirection = angleYaw
+            playerShip.position.pitch.targetDirection = anglePitch+180
             playerShip.targetSpeed = playerShip.maxSpeed
             playerShip.propulsion = "on"
 
             if (distanceToObject<0.25) {
                 playerShip.computers[0].autopilot=0
-                playerShip.position.pitch.targetDirection = 0
+                playerShip.position.pitch.targetDirection = 180 //180=0
                 playerShip.targetSpeed = 0
                 playerShip.propulsion = "off"
             }

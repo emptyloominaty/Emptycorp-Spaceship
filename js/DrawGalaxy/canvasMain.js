@@ -10,13 +10,17 @@ class CanvasMain {
         this.geometry = new THREE.SphereGeometry(30, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
         this.material1 = new THREE.MeshBasicMaterial()
         this.material2 = new THREE.MeshBasicMaterial()
-        this.sphere = [new THREE.Mesh(this.geometry, this.material1), new THREE.Mesh(this.geometry, this.material2)]
+        this.sphere = [new THREE.Mesh(this.geometry, this.material1), new THREE.Mesh(this.geometry, this.material2), new THREE.Mesh(this.geometry, this.material2), new THREE.Mesh(this.geometry, this.material2)]
 
-        this.sphere[0].position.set(0, 0, 0)
+        this.sphere[0].position.set(0, 0, 0) //x z y
         this.sphere[1].position.set(6500, 500, 2300)
+        this.sphere[2].position.set(-2000, 1000 , -1000)
+        this.sphere[3].position.set(4000, 500, 4000)
 
         this.scene.add(this.sphere[0])
         this.scene.add(this.sphere[1])
+        this.scene.add(this.sphere[2])
+        this.scene.add(this.sphere[3])
 
         this.camera.position.z = 1000
         this.camera.position.x = 1000
@@ -36,7 +40,8 @@ class CanvasMain {
     run() {
         this.camera.position.x = playerShip.position.x*1000
         this.camera.position.z = playerShip.position.y*1000
-
+        this.camera.position.y = playerShip.position.z*1000
+        
         this.camera.rotation.y = ((playerShip.position.yaw.direction-180)/57.295779487363233601652280409982) //degrees -> radians
         this.camera.rotation.x = ((playerShip.position.pitch.direction-180)/57.295779487363233601652280409982) //degrees -> radians
     }
