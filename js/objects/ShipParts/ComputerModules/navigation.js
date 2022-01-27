@@ -3,14 +3,12 @@ class NavigationModule {
     on = 1
     distanceTraveled = 0
     position = {x:1,y:1,z:0}
-    position3D = {x:1,y:1,z:0}
     vars = {recalcPosition:{time:0,timeNeed:5,running:1,func:()=>{this.recalcPosition()},consumption:0.00085}}
 
     run() {
         let speed = playerShip.speed/8765.812756 //ly/h
         this.distanceTraveled+=(speed/3600)/gameFPS
         this.calcPosition()
-        console.log("x: ",this.position3D.x," | y: ",this.position3D.y," | z: ",this.position3D.z)
         playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.yaw.direction)
         playerShip.computers[0].data.shipDirectionPitch = playerShip.position.pitch.direction-180
 
@@ -92,8 +90,8 @@ class NavigationModule {
         let theta = angleInRadianYaw
         let phi = Math.PI/2-angleInRadianPitch
 
-        let vx = (Math.sin(phi)*Math.cos(theta) )* speed
-        let vy = (Math.cos(phi)*Math.sin(theta) )* speed
+        let vx = (Math.sin(phi)*Math.sin(theta) )* speed
+        let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
         this.position.x += vx
         this.position.y += vy
