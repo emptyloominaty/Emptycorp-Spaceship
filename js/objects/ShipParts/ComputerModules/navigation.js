@@ -58,7 +58,7 @@ class NavigationModule {
 
             if (distanceToObject<0.25) {
                 playerShip.computers[0].autopilot=0
-                playerShip.position.pitch.targetDirection = 180 //180=0
+                //playerShip.position.pitch.targetDirection = 180 //180=0
                 playerShip.targetSpeed = 0
                 playerShip.propulsion = "off"
             }
