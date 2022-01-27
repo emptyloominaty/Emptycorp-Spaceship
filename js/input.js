@@ -95,7 +95,7 @@ let inputFunctions = {
         this.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
     },
     setDirection() {
-        playerShip.position.targetDirection =  +(document.getElementById("inputRange_direction").value)
+        playerShip.position.yaw.targetDirection =  +(document.getElementById("inputRange_direction").value)
     },
     setTime() {
         speedInc =  +(document.getElementById("inputRange_time").value)
@@ -143,14 +143,20 @@ let keyLoop = () => {
     }
 
     if (keyPressed["KeyA"]) {
-        playerShip.position.targetDirection+=val
+        playerShip.position.yaw.targetDirection+=val
     } else if (keyPressed["KeyD"]) {
-        playerShip.position.targetDirection-=val
+        playerShip.position.yaw.targetDirection-=val
     } else if (keyPressed["KeyW"]) {
-        playerShip.targetSpeed+=valSpeed
+        playerShip.position.pitch.targetDirection+=val
     } else if (keyPressed["KeyS"]) {
+        playerShip.position.pitch.targetDirection-=val
+    } else if (keyPressed["ShiftLeft"]) {
+        playerShip.targetSpeed+=valSpeed
+    } else if (keyPressed["ControlLeft"]) {
         playerShip.targetSpeed-=valSpeed
     }
+
+
 
     //Speed
     if (playerShip.targetSpeed<0) {
@@ -159,10 +165,16 @@ let keyLoop = () => {
         playerShip.targetSpeed=playerShip.maxSpeed
     }
     //Direction
-    if (playerShip.position.targetDirection<0) {
-        playerShip.position.targetDirection=360
-    } else if (playerShip.position.targetDirection>360) {
-        playerShip.position.targetDirection=0
+    if (playerShip.position.yaw.targetDirection<0) {
+        playerShip.position.yaw.targetDirection=360
+    } else if (playerShip.position.yaw.targetDirection>360) {
+        playerShip.position.yaw.targetDirection=0
+    }
+
+    if (playerShip.position.pitch.targetDirection<90) {
+        playerShip.position.pitch.targetDirection=90
+    } else if (playerShip.position.pitch.targetDirection>270) {
+        playerShip.position.pitch.targetDirection=270
     }
 }
 

@@ -4,8 +4,8 @@ class Computer extends Part {
     memorySize = 4
     time = 0
     tab = "main"
-    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0}
+    data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, }
 
     //network
     listeningPort = [0]
@@ -150,7 +150,7 @@ class Computer extends Part {
                 }
                 //Direction Tab
                 this.display.drawText(5, 100, "Direction: ", font1, color1, 'left')
-                this.display.drawText(100, 100, this.data.shipDirection.toFixed(1)+"°", font1, color5, 'left')
+                this.display.drawText(100, 100, this.data.shipDirection.toFixed(1)+"° | "+this.data.shipDirectionPitch.toFixed(1)+"°", font1, color5, 'left')
                 //Speed Tab
                 this.display.drawText(5, 120, "Speed: ", font1, color1, 'left')
                 this.display.drawText(130, 120, getSpeedText(this.data.speed), font1, colorSpeed, 'left')
@@ -170,10 +170,6 @@ class Computer extends Part {
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 260, "Ping:"+(this.data.lastPing).toFixed(0)+"ms ("+this.data.lastPingServerName+")", font1, color1, 'left')
-                //DEBUG
-                this.display.drawText(10, 300, "DEBUG: dir:"+playerShip.position.direction.toFixed(8)+"°", font1, color1, 'left')
-                this.display.drawText(10, 320, "DEBUG: t:"+playerShip.position.targetDirection.toFixed(8)+"", font1, color1, 'left')
-                this.display.drawText(10, 340, "DEBUG: as:"+playerShip.position.angularSpeed.toFixed(8)+"", font1, color1, 'left')
 
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------

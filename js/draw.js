@@ -49,7 +49,8 @@ for (let i = 0; i<playerShip.tanks.length; i++) {
 
 elements.navControl.innerHTML = "<div id='navControlScreen'>" +
     "x: <span id='navControlX'></span> y: <span id='navControlY'></span> <br>" +
-    "Direction: <span id='navControlDir'></span><hr>" +
+    "Yaw: <span id='navControlDirYaw'></span><br>" +
+    "Pitch: <span id='navControlDirPitch'></span><hr>" +
     "Autopilot: <button id='btn_autopilot' onclick='inputFunctions.toggleAutopilot()'></button><br>" +
     "Target: <span id='navControlTarget'></span> <button onclick='playerShip.computers[0].resetTarget()'></button> <br>" +
     "Target Distance: <span id='navControlDistance'></span><br>" +
@@ -58,7 +59,8 @@ elements.navControl.innerHTML = "<div id='navControlScreen'>" +
 elements.navControlScreen = document.getElementById("navControlScreen")
 elements.navControlX = document.getElementById("navControlX")
 elements.navControlY = document.getElementById("navControlY")
-elements.navControlDir = document.getElementById("navControlDir")
+elements.navControlDirYaw = document.getElementById("navControlDirYaw")
+elements.navControlDirPitch = document.getElementById("navControlDirPitch")
 
 elements.navControlTarget = document.getElementById("navControlTarget")
 elements.navControlDistance = document.getElementById("navControlDistance")
@@ -133,7 +135,8 @@ function draw(progress) {
         }
         elements.navControlX.textContent = nav.position.x.toFixed(2)
         elements.navControlY.textContent = nav.position.y.toFixed(2)
-        elements.navControlDir.textContent = playerShip.position.direction.toFixed(0)+"° / "+playerShip.position.targetDirection.toFixed(0)+"°"
+        elements.navControlDirYaw.textContent = playerShip.position.yaw.direction.toFixed(0)+"° / "+playerShip.position.yaw.targetDirection.toFixed(0)+"°"
+        elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
         elements.navControlDistance.textContent = d
         elements.navControlAngle.textContent = angle

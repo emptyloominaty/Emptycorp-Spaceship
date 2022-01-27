@@ -44,6 +44,8 @@ let elements = {
 for (let i = 0; i<11; i++) {
     elements["rcsBar"+i] = document.getElementById("rcsBar"+i)
     elements["rcs2Bar"+i] = document.getElementById("rcs2Bar"+i)
+    elements["rcs3Bar"+i] = document.getElementById("rcs3Bar"+i)
+    elements["rcs4Bar"+i] = document.getElementById("rcs4Bar"+i)
 }
 
 
@@ -71,6 +73,11 @@ function update(progress) {
     throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
     throttleBar(playerShip.computers[0].data.rcsRThrust*100,"rcsBar",0,0.2,0.5,1,5,10,25,50,75,90) //right
     throttleBar(playerShip.computers[0].data.rcsLThrust*100,"rcs2Bar",0,0.2,0.5,1,5,10,25,50,75,90) //left
+
+    throttleBar(playerShip.computers[0].data.rcsUThrust*100,"rcs4Bar",0,0.2,0.5,1,5,10,25,50,75,90) //up
+    throttleBar(playerShip.computers[0].data.rcsDThrust*100,"rcs3Bar",0,0.2,0.5,1,5,10,25,50,75,90) //down
+
+
     if (debug.performance) {
         debug.timeC = performance.now()
         elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"

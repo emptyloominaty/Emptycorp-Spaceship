@@ -9,7 +9,9 @@ class NavigationModule {
         let speed = playerShip.speed/8765.812756 //ly/h
         this.distanceTraveled+=(speed/3600)/gameFPS
         this.calcPosition()
-        playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.direction)
+        playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.yaw.direction)
+        playerShip.computers[0].data.shipDirectionPitch = playerShip.position.pitch.direction-180
+
         playerShip.computers[0].data.speed = playerShip.speed
         playerShip.computers[0].data.targetSpeed = playerShip.targetSpeed
 
@@ -45,7 +47,7 @@ class NavigationModule {
                 angle += 360
             }
 
-            playerShip.position.targetDirection = angle
+            playerShip.position.yaw.targetDirection = angle
             playerShip.targetSpeed = playerShip.maxSpeed
             playerShip.propulsion = "on"
 
@@ -69,7 +71,7 @@ class NavigationModule {
         let speedInlyh = playerShip.speed/8765.812756  //lyh
         let speed = speedInlyh/3600/gameFPS
 
-        let angleInRadian = (playerShip.position.direction*Math.PI) / 180
+        let angleInRadian = (playerShip.position.yaw.direction*Math.PI) / 180
         let vx = Math.sin(angleInRadian) * speed
         let vy = Math.cos(angleInRadian) * speed
         this.position.x += vx

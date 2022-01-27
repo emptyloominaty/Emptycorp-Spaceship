@@ -1,8 +1,8 @@
-#throttleBar,#rcsBar {
+#throttleBar,#rcsBar,#rcsBar2V {
     display:flex;
 }
 
-.throttleBar,.rcsBar {
+.throttleBar,.rcsBar,.rcsBarV {
     transition: all 100ms ease-out;
 }
 
@@ -14,7 +14,7 @@
     margin-right:2px;
 }
 
-.rcsBar {
+.rcsBar,.rcsBarV {
     width:3px;
     height:12px;
     background-color:#333;

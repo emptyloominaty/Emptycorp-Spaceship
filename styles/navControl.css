@@ -6,13 +6,14 @@
     right:0;
     top:150px;
     width:230px;
-    height:150px;
+    height:180px;
     overflow-y: hidden;
 }
 
 #navControlScreen {
     padding:3px;
     background-color:#000;
-    height:150px;
+    height:180px;
     transition: opacity 100ms ease-in;
+    overflow-y: hidden;
 }

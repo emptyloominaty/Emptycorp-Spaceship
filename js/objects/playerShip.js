@@ -8,7 +8,7 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
-    position = {x:1, y:1, direction:0, targetDirection:0, angularSpeed:0}
+    position = {x:1, y:1, yaw: {direction:0, targetDirection:0, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
     weight = this.baseWeight
 
     //radiation heat transfer
@@ -155,145 +155,24 @@ class Ship {
             this.speed = 0
         }
 
-
-
-        //------------------------------------------------------------------------------------------------------------------------RCS
-        let getRcsThrust = (targetDirection,direction,p) => {
-            let t = 0
-            for(let i = 0; i<this.engines.length; i++) {
-                if (this.engines[i].on===1 && this.engines[i].type==="RCS") {
-
-                    t += this.engines[i].run(p, fps, targetDirection, direction, this.position.angularSpeed)
-                    if (targetDirection<direction) {
-                        this.computers[0].data.rcsLThrust += (t/this.engines[i].thrust)*(-1)
-                    } else {
-                        this.computers[0].data.rcsRThrust += (t/this.engines[i].thrust)
-                    }
-
-
-                }
-            }
-            return t
+        //------------------------------------------------------------------------------------RCS
+        //------------------------yaw
+        this.position.yaw.direction += (this.position.yaw.angularSpeed*57.2957795)/gameFPS
+        if (this.position.yaw.direction>1080) {
+            this.position.yaw.direction = 0
+        } else if (this.position.yaw.direction<-720) {
+            this.position.yaw.direction = 0
         }
-
-        //direction
-        this.position.direction += (this.position.angularSpeed*57.2957795)/fps
-        if (this.position.direction>1080) {
-            this.position.direction = 0
-        } else if (this.position.direction<-720) {
-            this.position.direction = 0
+        this.position.yaw.angularSpeed = this.shipRCS(this.position.yaw.direction,this.position.yaw.targetDirection,this.position.yaw.angularSpeed,"yaw")
+        //------------------------pitch
+        this.position.pitch.direction += (this.position.pitch.angularSpeed*57.2957795)/gameFPS
+        if (this.position.pitch.direction>1080) {
+            this.position.pitch.direction = 0
+        } else if (this.position.pitch.direction<-720) {
+            this.position.pitch.direction = 0
         }
-
-       /* YIKES (input.js)
-        if (this.position.targetDirection-this.position.direction>190) { //0->190  //50->320
-            console.log(this.position.targetDirection+" S")
-            this.position.targetDirection-=360
-            console.log(this.position.targetDirection+" E")
-        } else if (this.position.direction-this.position.targetDirection>190) {
-            console.log(this.position.targetDirection+" S2")
-            this.position.targetDirection+=360
-            console.log(this.position.targetDirection+" E2")
-        }*/
-
-
-        let maxERCSThrust = 0.002
-        let maxERCSThrustNeg = -0.002
-
-        if (this.position.targetDirection-0.01>this.position.direction || this.position.targetDirection+0.01<this.position.direction) {
-            let thrust = 0
-            let p = 100
-            let targetDirection = this.position.targetDirection
-            let timeUntil = 10
-            if (this.position.angularSpeed!==0) {
-                timeUntil = ((this.position.targetDirection-this.position.direction)/(this.position.angularSpeed*57.2957795))
-            }
-            if (this.rcs===1) {
-                //RCS
-                if (timeUntil<5) {
-                    targetDirection = this.position.direction-0.01
-                }
-                if (timeUntil<0.5) {
-                    targetDirection = (this.position.targetDirection+this.position.direction)/2
-                }
-                thrust = getRcsThrust(targetDirection,this.position.direction,p)
-            } else if (this.eRcs===1){
-                let tBoost = 1
-                //Reaction Wheel
-                if (timeUntil<10) {
-                    targetDirection = this.position.direction-0.01
-                }
-                if (timeUntil<0.2) {
-                    targetDirection = (this.position.targetDirection+this.position.direction)/2
-                }
-                if (timeUntil<-0.2) {
-                    tBoost = 10
-                }
-
-                if (targetDirection>this.position.direction) {
-                    thrust = 0.0003*((targetDirection-this.position.direction)/30)
-                } else {
-                    thrust = 0.0003*((this.position.direction-targetDirection)/30)*(-1)
-                }
-                thrust = thrust*tBoost
-                let powerNeed = 0.00001
-                if (thrust>maxERCSThrust) {thrust=maxERCSThrust}
-                if (thrust<maxERCSThrustNeg) {thrust=maxERCSThrustNeg}
-                if (thrust>0) {
-                    powerNeed = thrust*(this.weight/75)
-                } else if (thrust<0) {
-                    powerNeed = (thrust*(-1))*(this.weight/75)
-                }
-
-                if (!playerShip.usePower(powerNeed/gameFPS,"engine")) {
-                    thrust = 0
-                }
-
-                if (targetDirection>this.position.direction) {
-                    this.computers[0].data.rcsLThrust = thrust/maxERCSThrust
-                } else {
-                    this.computers[0].data.rcsRThrust = (thrust*(-1))/maxERCSThrust
-                }
-            }
-
-
-            let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
-            let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
-            let acceleration = torque / shipInertia //(radians/s2)
-            this.position.angularSpeed+= acceleration/fps
-
-        } else if (this.position.angularSpeed>0.000001 || this.position.angularSpeed<-0.000001 && (this.position.targetDirection-0.005>this.position.direction || this.position.targetDirection+0.005<this.position.direction)){
-            if (this.eRcs===1){
-            //REACTION WHEEL
-            let powerNeed = this.position.angularSpeed*(this.weight/10000)
-            if ((this.position.angularSpeed<0.000001 && this.position.angularSpeed>0) || (this.position.angularSpeed>-0.000001 && this.position.angularSpeed<0)) {
-            } else if (playerShip.usePower(powerNeed/gameFPS,"engine")) {
-                let thrust = 0
-                let targetDirection = this.position.targetDirection
-                let timeUntil = 10
-                if (this.position.angularSpeed!==0) {
-                    timeUntil = ((this.position.targetDirection-this.position.direction)/(this.position.angularSpeed*57.2957795))
-                }
-                if (timeUntil<5) {
-                    targetDirection = this.position.direction-0.01
-                }
-                if (timeUntil<0.5) {
-                    targetDirection = (this.position.targetDirection+this.position.direction)/2
-                }
-                if (targetDirection>this.position.direction) {
-                    thrust = 0.0001*((targetDirection-this.position.direction)/30)
-                } else {
-                    thrust = 0.0001*((this.position.direction-targetDirection)/30)*(-1)
-                }
-                let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
-                let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
-                let acceleration = torque / shipInertia //(radians/s2)
-                this.position.angularSpeed+= acceleration/fps
-            }
-        }
-        }
-        //-------------------------------------------------------------------------------------------------------------------------------------------------
-
-
+        this.position.pitch.angularSpeed = this.shipRCS(this.position.pitch.direction,this.position.pitch.targetDirection,this.position.pitch.angularSpeed,"pitch")
+        //------------------------------------------------------------------------------------
 
         //computers
         for(let i = 0; i<this.computers.length; i++) {
@@ -357,6 +236,8 @@ class Ship {
         this.thrust = 0
         this.computers[0].data.rcsLThrust = 0
         this.computers[0].data.rcsRThrust = 0
+        this.computers[0].data.rcsUThrust = 0
+        this.computers[0].data.rcsDThrust = 0
     }
     resetWarpEngines() {
         for(let i = 0; i<this.engines.length; i++) {
@@ -399,7 +280,7 @@ class Ship {
         let speedInlyh = this.speed/8765.812756  //lyh
         let speed = speedInlyh/3600/gameFPS
 
-        let angleInRadian = (this.position.direction*Math.PI) / 180
+        let angleInRadian = (this.position.yaw.direction*Math.PI) / 180
         let vx = Math.sin(angleInRadian) * speed
         let vy = Math.cos(angleInRadian) * speed
         this.position.x += vx
@@ -596,6 +477,153 @@ class Ship {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    shipRCS(dir,targetDir,angularSpeed,axis) {
+        //------------------------------------------------------------------------------------------------------------------------RCS
+        let getRcsThrust = (targetDirection,direction,p,angularSpeed) => {
+            let t = 0
+            for(let i = 0; i<this.engines.length; i++) {
+                if (this.engines[i].on===1 && this.engines[i].type==="RCS") {
+
+                    t += this.engines[i].run(p, gameFPS, targetDirection, direction, angularSpeed)
+                    if (axis==="yaw") {
+                        if (targetDirection<direction) {
+                            this.computers[0].data.rcsLThrust += (t/this.engines[i].thrust)*(-1)
+                        } else {
+                            this.computers[0].data.rcsRThrust += (t/this.engines[i].thrust)
+                        }
+                    } else if (axis==="pitch") {
+                        if (targetDirection<direction) {
+                            this.computers[0].data.rcsUThrust += (t/this.engines[i].thrust)*(-1)
+                        } else {
+                            this.computers[0].data.rcsDThrust += (t/this.engines[i].thrust)
+                        }
+                    }
+                }
+            }
+            return t
+        }
+
+        /* YIKES (input.js)
+         if (targetDir-dir>190) { //0->190  //50->320
+             console.log(targetDir+" S")
+             targetDir-=360
+             console.log(targetDir+" E")
+         } else if (dir-targetDir>190) {
+             console.log(targetDir+" S2")
+             targetDir+=360
+             console.log(targetDir+" E2")
+         }*/
+
+
+        let maxERCSThrust = 0.002
+        let maxERCSThrustNeg = -0.002
+
+        if (targetDir-0.01>dir || targetDir+0.01<dir) {
+            let thrust = 0
+            let p = 100
+            let targetDirection = targetDir
+            let timeUntil = 10
+            if (angularSpeed!==0) {
+                timeUntil = ((targetDir-dir)/(angularSpeed*57.2957795))
+            }
+            if (this.rcs===1) {
+                //RCS
+                if (timeUntil<5) {
+                    targetDirection = dir-0.01
+                }
+                if (timeUntil<0.5) {
+                    targetDirection = (targetDir+dir)/2
+                }
+                thrust = getRcsThrust(targetDirection,dir,p,angularSpeed)
+            } else if (this.eRcs===1){
+                let tBoost = 1
+                //Reaction Wheel
+                if (timeUntil<10) {
+                    targetDirection = dir-0.01
+                }
+                if (timeUntil<0.2) {
+                    targetDirection = (targetDir+dir)/2
+                }
+                if (timeUntil<-0.2) {
+                    tBoost = 10
+                }
+
+                if (targetDirection>dir) {
+                    thrust = 0.0003*((targetDirection-dir)/30)
+                } else {
+                    thrust = 0.0003*((dir-targetDirection)/30)*(-1)
+                }
+                thrust = thrust*tBoost
+                let powerNeed = 0.00001
+                if (thrust>maxERCSThrust) {thrust=maxERCSThrust}
+                if (thrust<maxERCSThrustNeg) {thrust=maxERCSThrustNeg}
+                if (thrust>0) {
+                    powerNeed = thrust*(this.weight/75)
+                } else if (thrust<0) {
+                    powerNeed = (thrust*(-1))*(this.weight/75)
+                }
+
+                if (!playerShip.usePower(powerNeed/gameFPS,"engine")) {
+                    thrust = 0
+                }
+
+                if (axis==="yaw") {
+                    if (targetDirection>dir) {
+                        this.computers[0].data.rcsLThrust += thrust/maxERCSThrust
+                    } else {
+                        this.computers[0].data.rcsRThrust += (thrust*(-1))/maxERCSThrust
+                    }
+                } else if (axis==="pitch") {
+                    if (targetDirection>dir) {
+                        this.computers[0].data.rcsUThrust += thrust/maxERCSThrust
+                    } else {
+                        this.computers[0].data.rcsDThrust += (thrust*(-1))/maxERCSThrust
+                    }
+                }
+
+
+            }
+
+
+            let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
+            let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
+            let acceleration = torque / shipInertia //(radians/s2)
+            angularSpeed+= acceleration/gameFPS
+
+        } else if (angularSpeed>0.000001 || angularSpeed<-0.000001 && (targetDir-0.005>dir || targetDir+0.005<dir)){
+            if (this.eRcs===1){
+                //REACTION WHEEL
+                let powerNeed = angularSpeed*(this.weight/10000)
+                if ((angularSpeed<0.000001 && angularSpeed>0) || (angularSpeed>-0.000001 && angularSpeed<0)) {
+                } else if (playerShip.usePower(powerNeed/gameFPS,"engine")) {
+                    let thrust = 0
+                    let targetDirection = targetDir
+                    let timeUntil = 10
+                    if (angularSpeed!==0) {
+                        timeUntil = ((targetDir-dir)/(angularSpeed*57.2957795))
+                    }
+                    if (timeUntil<5) {
+                        targetDirection = dir-0.01
+                    }
+                    if (timeUntil<0.5) {
+                        targetDirection = (targetDir+dir)/2
+                    }
+                    if (targetDirection>dir) {
+                        thrust = 0.0001*((targetDirection-dir)/30)
+                    } else {
+                        thrust = 0.0001*((dir-targetDirection)/30)*(-1)
+                    }
+                    let shipInertia = 0.0833*this.weight*Math.pow(this.size.l,2) //(kg∙m2)
+                    let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
+                    let acceleration = torque / shipInertia //(radians/s2)
+                    angularSpeed+= acceleration/gameFPS
+                }
+            }
+        }
+        return angularSpeed
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+    }
+
 
     constructor(parts) {
         let maxSpeed = 0
