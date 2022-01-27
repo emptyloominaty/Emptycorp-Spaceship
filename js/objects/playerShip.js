@@ -286,8 +286,8 @@ class Ship {
         let theta = angleInRadianYaw
         let phi = Math.PI/2-angleInRadianPitch
 
-        let vx = (Math.sin(phi)*Math.cos(theta) )* speed
-        let vy = (Math.cos(phi)*Math.sin(theta) )* speed
+        let vx = (Math.sin(phi)*Math.sin(theta) )* speed
+        let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
         this.position.x += vx
         this.position.y += vy
