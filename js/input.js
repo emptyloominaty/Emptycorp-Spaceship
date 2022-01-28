@@ -95,7 +95,7 @@ let inputFunctions = {
         this.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
     },
     setDirection() {
-        playerShip.position.yaw.targetDirection =  +(document.getElementById("inputRange_direction").value)
+        playerShip.position.yaw.targetDirection =  +(document.getElementById("inputRange_direction").value)+360
     },
     setTime() {
         speedInc =  +(document.getElementById("inputRange_time").value)
@@ -165,10 +165,10 @@ let keyLoop = () => {
         playerShip.targetSpeed=playerShip.maxSpeed
     }
     //Direction
-    if (playerShip.position.yaw.targetDirection<0) {
+    if (playerShip.position.yaw.targetDirection<360) {
+        playerShip.position.yaw.targetDirection=720
+    } else if (playerShip.position.yaw.targetDirection>720) {
         playerShip.position.yaw.targetDirection=360
-    } else if (playerShip.position.yaw.targetDirection>360) {
-        playerShip.position.yaw.targetDirection=0
     }
 
     if (playerShip.position.pitch.targetDirection<90) {

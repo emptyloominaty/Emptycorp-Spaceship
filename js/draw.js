@@ -2,7 +2,7 @@
 //GENERATE ANTENNAS----------------------------------------------------------------------------------------------
 let antennasHTML = ""
 for (let i = 0; i<playerShip.antennas.length; i++) {
-    antennasHTML += "Antenna["+i+"]: <button id='btn_antenna"+i+"' onclick='inputFunctions.toggleAntenna("+i+")'></button><br>"
+    antennasHTML += "Antenna: <button id='btn_antenna"+i+"' onclick='inputFunctions.toggleAntenna("+i+")'></button><br>"
 }
 antennasHTML += "TX: <span id='antennaTx'></span><br>"
 antennasHTML += "RX: <span id='antennaRx'></span>"
@@ -150,7 +150,7 @@ function draw(progress) {
         elements.navControlX.textContent = nav.position.x.toFixed(2)
         elements.navControlY.textContent = nav.position.y.toFixed(2)
         elements.navControlZ.textContent = nav.position.z.toFixed(2)
-        elements.navControlDirYaw.textContent = playerShip.position.yaw.direction.toFixed(0)+"° / "+playerShip.position.yaw.targetDirection.toFixed(0)+"°"
+        elements.navControlDirYaw.textContent = (playerShip.position.yaw.direction-360).toFixed(0)+"° / "+(playerShip.position.yaw.targetDirection-360).toFixed(0)+"°"
         elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
         elements.navControlDistance.textContent = d

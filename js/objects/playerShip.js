@@ -8,7 +8,7 @@ class Ship {
 
     //---------------------------------------------
     speed = 0 //c
-    position = {x:1, y:1, z:0, yaw: {direction:0, targetDirection:0, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
+    position = {x:1, y:1, z:0, yaw: {direction:360, targetDirection:360, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
     weight = this.baseWeight
 
     //radiation heat transfer
@@ -158,18 +158,18 @@ class Ship {
         //------------------------------------------------------------------------------------RCS
         //------------------------yaw
         this.position.yaw.direction += (this.position.yaw.angularSpeed*57.2957795)/gameFPS
-        if (this.position.yaw.direction>1080) {
-            this.position.yaw.direction = 0
-        } else if (this.position.yaw.direction<-720) {
-            this.position.yaw.direction = 0
+        if (this.position.yaw.direction>1440) {
+            this.position.yaw.direction = 360
+        } else if (this.position.yaw.direction<-360) {
+            this.position.yaw.direction = 360
         }
         this.position.yaw.angularSpeed = this.shipRCS(this.position.yaw.direction,this.position.yaw.targetDirection,this.position.yaw.angularSpeed,"yaw")
         //------------------------pitch
         this.position.pitch.direction += (this.position.pitch.angularSpeed*57.2957795)/gameFPS
-        if (this.position.pitch.direction>1080) {
-            this.position.pitch.direction = 0
-        } else if (this.position.pitch.direction<-720) {
-            this.position.pitch.direction = 0
+        if (this.position.pitch.direction>1440) {
+            this.position.pitch.direction = 360
+        } else if (this.position.pitch.direction<-360) {
+            this.position.pitch.direction = 360
         }
         this.position.pitch.angularSpeed = this.shipRCS(this.position.pitch.direction,this.position.pitch.targetDirection,this.position.pitch.angularSpeed,"pitch")
         //------------------------------------------------------------------------------------

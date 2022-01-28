@@ -51,7 +51,7 @@ class NavigationModule {
             let anglePitch = Math.atan2(c,Math.sqrt(b * b + a * a))
             anglePitch = ((anglePitch*57.2957795))
 
-            playerShip.position.yaw.targetDirection = angleYaw
+            playerShip.position.yaw.targetDirection = angleYaw+360
             playerShip.position.pitch.targetDirection = anglePitch+180
             playerShip.targetSpeed = playerShip.maxSpeed
             playerShip.propulsion = "on"

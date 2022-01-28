@@ -395,7 +395,6 @@ class Computer extends Part {
                        } else {
                            serverAddress="Abort"
                        }
-
                        this.functions.receivePriceData(serverAddress)
                }})
             }
