@@ -2,9 +2,13 @@
 //GENERATE ANTENNAS----------------------------------------------------------------------------------------------
 let antennasHTML = ""
 for (let i = 0; i<playerShip.antennas.length; i++) {
-    antennasHTML += "Antenna["+i+"]: <button id='btn_antenna"+i+"' onclick='inputFunctions.toggleAntenna("+i+")'></button>"
+    antennasHTML += "Antenna["+i+"]: <button id='btn_antenna"+i+"' onclick='inputFunctions.toggleAntenna("+i+")'></button><br>"
 }
+antennasHTML += "TX: <span id='antennaTx'></span><br>"
+antennasHTML += "RX: <span id='antennaRx'></span>"
 elements.antennasControl.innerHTML = antennasHTML
+elements.antennaRx = document.getElementById("antennaRx")
+elements.antennaTx = document.getElementById("antennaTx")
 //GENERATE GENERATORS----------------------------------------------------------------------------------------------
 let generatorsHTML = ""
 for (let i = 0; i<playerShip.generators.length; i++) {
@@ -114,6 +118,9 @@ function draw(progress) {
             elements["tankText2" + i].innerHTML = playerShip.tanks[i].capacity.toFixed(0)+"/"+playerShip.tanks[i].maxCapacity.toFixed(0)+" kg"
         }
     }
+    //Antenna
+    elements.antennaRx.textContent = (playerShip.antennas[0].rx[0]*1000).toFixed(0)+" kB/s"
+    elements.antennaTx.textContent = (playerShip.antennas[0].tx[0]*1000).toFixed(0)+" kB/s"
     //Nav
     if (playerShip.computers[0].nav.on===1 && playerShip.computers[0].on===1) {
         let comp = playerShip.computers[0]

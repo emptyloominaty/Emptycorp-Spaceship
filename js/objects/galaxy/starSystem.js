@@ -3,6 +3,7 @@ class StarSystem {
     stars = []
     planets = []
     asteroids = []
+    servers = []
     prices = {}
     mapSize = 15
     position = {x:0,y:0,z:0}
@@ -10,10 +11,11 @@ class StarSystem {
     totalPopulation = 0
     faction = ""
     factionColor = "#999999"
-    constructor(stars,planets,asteroids,faction,prices,name,position,mapSize = 15) {
+    constructor(stars,planets,asteroids,faction,prices,name,position,servers,mapSize = 15) {
         this.stars = stars
         this.planets = planets
         this.asteroids = asteroids
+        this.servers = servers
 
         this.faction = faction
         this.factionColor = factionList[faction].color

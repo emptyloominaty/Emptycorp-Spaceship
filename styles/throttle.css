@@ -1,6 +1,11 @@
-#throttleBar,#rcsBar,#rcsBar2V {
+#throttleBar,#rcsBar,.rcsBar2V {
     display:flex;
 }
+
+.rcsBar2V {
+    flex-direction:column;
+}
+
 
 .throttleBar,.rcsBar,.rcsBarV {
     transition: all 100ms ease-out;
@@ -14,16 +19,34 @@
     margin-right:2px;
 }
 
-.rcsBar,.rcsBarV {
+.rcsBar {
     width:3px;
     height:12px;
     background-color:#333;
     margin-right:2px;
 }
 
+.rcsBarV {
+    width:12px;
+    height:3px;
+    background-color:#333;
+    margin-bottom:2px;
+    margin-left:41%;
+}
+
+
 .vline {
     background-color:#FFF;
     width:1px;
     height:12px;
     margin-right:2px;
+}
+
+
+.hline {
+    background-color:#FFF;
+    width:12px;
+    height:1px;
+    margin-bottom:2px;
+    margin-left:41%;
 }

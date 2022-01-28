@@ -1,7 +1,7 @@
 class MainServer {
     //CONFIG
     speedOfData = 20 //ly/s
-    position = {x:0,y:0}
+    position = {x:0,y:0,z:0}
     //-------
 
     /* type: ship,planet,station,server */

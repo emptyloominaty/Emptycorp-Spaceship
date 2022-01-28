@@ -5,7 +5,7 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, }
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}}
 
     //network
     listeningPort = [0]
@@ -44,12 +44,14 @@ class Computer extends Part {
                                 let data = this.receivedData[this.listeningPort[i]][0]
                                 if (data.data.type==="var") {
                                     //time
-                                    if (data.data.var==="time") {
+                                    if (data.data.var==="time") {                   //port:2
                                         this.time = data.data.time
-                                    } else if (data.data.var==="ping") {
+                                    } else if (data.data.var==="ping") {            //port:0
                                         this.data.lastPing = data.data.ping
-                                    } else if (data.data.var==="pingServerName") {
+                                    } else if (data.data.var==="pingServerName") {  //port:0
                                         this.data.lastPingServerName = data.data.name
+                                    } else if (data.data.var==="tradeData") {       //port:3
+                                        this.data.priceData = data.data.trade
                                     }
                                     //....
                                 }
@@ -80,7 +82,15 @@ class Computer extends Part {
             this.comm.transmitData([0.002, this.comm.servers.time[0], 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(2)
         },
-
+        receivePriceData: (id)=> {
+            if (id==="Abort") {
+                this.data.priceData={"Cant download data ":"","from this system. ":""}
+                return false
+            }
+            this.comm.transmitData([0.004, id, 3, {data:"trade", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+            this.listeningPort.push(3)
+            this.data.priceData={"Downloading Data...":""}
+        }
     }
 
 
@@ -234,8 +244,8 @@ class Computer extends Part {
 
                 this.display.drawText(5, 120, "Trade: ", font1, color1, 'left')
                 let ii = 0
-                Object.keys(ss.prices).forEach((key)=> {
-                    let prices = key+": "+ss.prices[key]
+                Object.keys(this.data.priceData).forEach((key)=> {
+                    let prices = key+": "+this.data.priceData[key]
                     this.display.drawText(65, 120+(ii*15), prices, font1, color5, 'left')
                     ii++
                 })
@@ -369,7 +379,25 @@ class Computer extends Part {
                 if (this.mapScaling>20) {
                     this.display.drawText(x,y+sizeMap,name,font,colorSystemText,"center")
                 }
-               this.starSystems.push({x1:x-sizeMap, y1:y-sizeMap,x2:x+sizeMap,y2:y+sizeMap,function: () => {this.tab = "nav2";this.nav2PlanetView=id;this.starSystems = []}})
+               this.starSystems.push({x1:x-sizeMap, y1:y-sizeMap,x2:x+sizeMap,y2:y+sizeMap,function: () => {
+                       this.tab = "nav2"
+                       this.nav2PlanetView=id
+                       this.starSystems = []
+                       let serverAddress = 0
+                       if (starSystems[id].servers.length>0) {
+                           serverAddress = starSystems[id].servers.find(o => o.type === 'trade')
+                           console.log(serverAddress)
+                           if (serverAddress!==undefined) {
+                               serverAddress = serverAddress.myAddress
+                           } else {
+                               serverAddress="Abort"
+                           }
+                       } else {
+                           serverAddress="Abort"
+                       }
+
+                       this.functions.receivePriceData(serverAddress)
+               }})
             }
         }
 
