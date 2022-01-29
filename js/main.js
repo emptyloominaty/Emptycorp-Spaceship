@@ -39,6 +39,7 @@ let elements = {
     throttleBar10: document.getElementById("throttleBar10"),
     debug123: document.getElementById("debug123"),
     navControl: document.getElementById("navControl"),
+    shieldCharge: document.getElementById("shieldCharge"),
 }
 
 for (let i = 0; i<11; i++) {

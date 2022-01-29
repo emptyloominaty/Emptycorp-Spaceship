@@ -121,6 +121,8 @@ function draw(progress) {
     //Antenna
     elements.antennaRx.textContent = (playerShip.antennas[0].rx[0]*1000).toFixed(0)+" kB/s"
     elements.antennaTx.textContent = (playerShip.antennas[0].tx[0]*1000).toFixed(0)+" kB/s"
+    //Shield
+    elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)
     //Nav
     if (playerShip.computers[0].nav.on===1 && playerShip.computers[0].on===1) {
         let comp = playerShip.computers[0]
@@ -150,7 +152,7 @@ function draw(progress) {
         elements.navControlX.textContent = nav.position.x.toFixed(2)
         elements.navControlY.textContent = nav.position.y.toFixed(2)
         elements.navControlZ.textContent = nav.position.z.toFixed(2)
-        elements.navControlDirYaw.textContent = (playerShip.position.yaw.direction-360).toFixed(0)+"° / "+(playerShip.position.yaw.targetDirection-360).toFixed(0)+"°"
+        elements.navControlDirYaw.textContent = getDirection360(playerShip.position.yaw.direction).toFixed(0)+"° / "+(playerShip.position.yaw.targetDirection-360).toFixed(0)+"°"
         elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
         elements.navControlDistance.textContent = d

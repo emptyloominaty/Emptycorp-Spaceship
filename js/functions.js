@@ -16,6 +16,13 @@ let linearInterpolation = function(x,stepX,array) {
     return c
 }
 
+let getDirection360 = function(direction) {
+    direction = direction % 360
+    if (direction < 0) {
+        direction += 360
+    }
+    return direction
+}
 
 let getSpeedText = function(speed) {
     let ret

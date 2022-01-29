@@ -190,6 +190,10 @@ class Ship {
         for(let i = 0; i<this.capacitors.length; i++) {
             this.capacitors[i].run()
         }
+        //shields
+        for(let i = 0; i<this.shields.length; i++) {
+            this.shields[i].run()
+        }
 
 
         //heat transfer radiation
@@ -493,13 +497,13 @@ class Ship {
 
                     t += this.engines[i].run(p, gameFPS, targetDirection, direction, angularSpeed)
                     if (axis==="yaw") {
-                        if (targetDirection<direction) {
+                        if (t<0) {
                             this.computers[0].data.rcsLThrust += (t/this.engines[i].thrust)*(-1)
                         } else {
                             this.computers[0].data.rcsRThrust += (t/this.engines[i].thrust)
                         }
                     } else if (axis==="pitch") {
-                        if (targetDirection<direction) {
+                        if (t<0) {
                             this.computers[0].data.rcsUThrust += (t/this.engines[i].thrust)*(-1)
                         } else {
                             this.computers[0].data.rcsDThrust += (t/this.engines[i].thrust)
@@ -510,16 +514,13 @@ class Ship {
             return t
         }
 
-        /* YIKES (input.js)
+/*
          if (targetDir-dir>190) { //0->190  //50->320
-             console.log(targetDir+" S")
              targetDir-=360
-             console.log(targetDir+" E")
          } else if (dir-targetDir>190) {
-             console.log(targetDir+" S2")
              targetDir+=360
-             console.log(targetDir+" E2")
-         }*/
+         }
+*/
 
 
         let maxERCSThrust = 0.002
@@ -575,13 +576,13 @@ class Ship {
                 }
 
                 if (axis==="yaw") {
-                    if (targetDirection>dir) {
+                    if (thrust>0) {
                         this.computers[0].data.rcsLThrust += thrust/maxERCSThrust
                     } else {
                         this.computers[0].data.rcsRThrust += (thrust*(-1))/maxERCSThrust
                     }
                 } else if (axis==="pitch") {
-                    if (targetDirection>dir) {
+                    if (thrust>0) {
                         this.computers[0].data.rcsUThrust += thrust/maxERCSThrust
                     } else {
                         this.computers[0].data.rcsDThrust += (thrust*(-1))/maxERCSThrust
@@ -658,6 +659,14 @@ class Ship {
             let part = parts.tanks[i]
             this.tanks.push(new Tank(i,part.weight || 0,part.name || "name", part.tankType, part.type, part.fuelWeight || 0, part.volume || 0, part.pressure || 0))
         }
+        for (let i = 0 ; i < parts.shields.length ; i++) {
+            let part = parts.shields[i]
+            this.shields.push(new Shield(i,part.weight || 0,part.name || "name", part.capacity, part.rechargeRate, part.consumption))
+        }
+        for (let i = 0 ; i < parts.weapons.length ; i++) {
+            let part = parts.weapons[i]
+            this.weapons.push(new Weapon(i,part.weight || 0,part.name || "name", part.type, part.damageData))
+    }
         for (let i = 0 ; i < parts.engines.length ; i++) {
             let part = parts.engines[i]
             this.engines.push(new Engine(i,part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
@@ -708,7 +717,7 @@ let shipDefaultParts = {
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:50 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
         {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
-    shields: [{weight:15 ,capacity:1000, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.8] /*MWh 0-maintaining 1-charging*/}],
+    shields: [{weight:15 ,capacity:350, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.2] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
         {weight:100,tankType:"gas",type:"H2",volume:80 ,pressure:680 },
@@ -719,7 +728,7 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
-    weapons: [{weight:150 ,type:"laser", power:20/* MW */, length:0.1 /*seconds*/}]
+    weapons: [{weight:150 ,type:"laser",damageData:{power:20/* MW */, length:0.1 /*seconds*/} }]
 }
 
 

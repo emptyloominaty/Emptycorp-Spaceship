@@ -103,6 +103,10 @@ let inputFunctions = {
     toggleAutopilot() {
         playerShip.computers[0].autopilot = 1 - playerShip.computers[0].autopilot
         this.toggleButtonText( document.getElementById("btn_autopilot"),playerShip.computers[0].autopilot)
+    },
+    toggleShield() {
+        playerShip.shields[0].on = 1 - playerShip.shields[0].on
+        this.toggleButtonText( document.getElementById("btn_shield"),playerShip.shields[0].on)
     }
 }
 
@@ -115,6 +119,7 @@ let updateToggles = function() {
     inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_autopilot"),playerShip.computers[0].autopilot)
+    inputFunctions.toggleButtonText( document.getElementById("btn_shield"),playerShip.shields[0].on)
     if (playerShip.propulsion==="off") {
         document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
     } else {
@@ -146,11 +151,13 @@ let keyLoop = () => {
         playerShip.position.yaw.targetDirection+=val
     } else if (keyPressed["KeyD"]) {
         playerShip.position.yaw.targetDirection-=val
-    } else if (keyPressed["KeyW"]) {
+    }
+    if (keyPressed["KeyW"]) {
         playerShip.position.pitch.targetDirection+=val
     } else if (keyPressed["KeyS"]) {
         playerShip.position.pitch.targetDirection-=val
-    } else if (keyPressed["ShiftLeft"]) {
+    }
+    if (keyPressed["ShiftLeft"]) {
         playerShip.targetSpeed+=valSpeed
     } else if (keyPressed["ControlLeft"]) {
         playerShip.targetSpeed-=valSpeed

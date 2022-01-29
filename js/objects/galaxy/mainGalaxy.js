@@ -68,7 +68,8 @@ starSystems.push (new StarSystem(
         deuterium:1250,fuel1:10,uranium:5000,}, //Liquids,Solid (kg)
     "Obsidium",
     {x:6.3,y:2.5,z:0.5},
-    [new TimeServer(1,"Time Server(Obsidium)",1,"time",6.5,2.3,0.5,"Sol")],
+    [new TimeServer(1,"Time Server(Obsidium)",1,"time",6.5,2.3,0.5,"Obsidium"),
+        new TradeServer(1,"Trade Server(Obsidium)",1,"trade",6.5,2.3,0.5,"Obsidium"),],
     15,
 ))
 

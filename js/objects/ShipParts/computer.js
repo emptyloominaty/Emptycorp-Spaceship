@@ -386,7 +386,6 @@ class Computer extends Part {
                        let serverAddress = 0
                        if (starSystems[id].servers.length>0) {
                            serverAddress = starSystems[id].servers.find(o => o.type === 'trade')
-                           console.log(serverAddress)
                            if (serverAddress!==undefined) {
                                serverAddress = serverAddress.myAddress
                            } else {

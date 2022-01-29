@@ -9,7 +9,7 @@ class NavigationModule {
         let speed = playerShip.speed/8765.812756 //ly/h
         this.distanceTraveled+=(speed/3600)/gameFPS
         this.calcPosition()
-        playerShip.computers[0].data.shipDirection = this.getDirection360(playerShip.position.yaw.direction)
+        playerShip.computers[0].data.shipDirection = getDirection360(playerShip.position.yaw.direction)
         playerShip.computers[0].data.shipDirectionPitch = playerShip.position.pitch.direction-180
 
         playerShip.computers[0].data.speed = playerShip.speed
@@ -107,12 +107,6 @@ class NavigationModule {
         this.position.y = playerShip.position.y
     }
 
-    getDirection360(direction) {
-        direction = direction % 360
-        if (direction < 0) {
-            direction += 360
-        }
-        return direction
-    }
+
 
 }

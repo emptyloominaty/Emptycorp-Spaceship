@@ -3,7 +3,7 @@ class CanvasMain {
 
         //TEST
         this.scene = new THREE.Scene()
-        this.camera = new THREE.PerspectiveCamera(60, 1900 / 550, 0.1, 200000)
+        this.camera = new THREE.PerspectiveCamera(50, 1900 / 550, 0.1, 200000)
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } )
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 

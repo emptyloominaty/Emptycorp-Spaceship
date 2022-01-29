@@ -35,6 +35,11 @@
     <script src="js/objects/network/servers/server.js" defer></script>
     <script src="js/objects/network/servers/timeServer.js" defer></script>
     <script src="js/objects/network/servers/tradeServer.js" defer></script>
+    <!-- Weapons -->
+    <script src="js/objects/projectiles/projectile.js" defer></script>
+    <script src="js/objects/projectiles/laser.js" defer></script>
+    <script src="js/objects/projectiles/plasma.js" defer></script>
+    <script src="js/objects/projectiles/missile.js" defer></script>
     <!-- Galaxy -->
     <script src="js/objects/galaxy/faction.js" defer></script>
     <script src="js/objects/galaxy/celestialbody.js" defer></script>
@@ -89,7 +94,8 @@
             </div>
          </div>
         <div id="ShieldsControl" class="paddingDiv">
-            Shields: Off
+            <label class="flex-row">Shield: <button id="btn_shield"  onclick="inputFunctions.toggleShield()" ></button></label>
+            <span id="shieldCharge"></span>
         </div>
     </div>
 
