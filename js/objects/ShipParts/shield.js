@@ -22,13 +22,6 @@ class Shield extends Part {
         }
     }
 
-    doDamage(power) {
-        this.charged-=power
-        if (this.charged<0) {
-            this.charged = 0
-        }
-    }
-
     charge() {
         this.charged+=this.rechargeRate/gameFPS
         if (this.charged>this.maxCharge) {

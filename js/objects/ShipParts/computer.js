@@ -181,6 +181,11 @@ class Computer extends Part {
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 260, "Ping:"+(this.data.lastPing).toFixed(0)+"ms ("+this.data.lastPingServerName+")", font1, color1, 'left')
 
+                /*this.display.drawText(5, 300, "AS yaw:"+playerShip.position.yaw.angularSpeed, font1, color1, 'left')
+                this.display.drawText(5, 320, "AS pitch:"+playerShip.position.pitch.angularSpeed, font1, color1, 'left')
+                this.display.drawText(5, 340, "Dir Yaw:"+playerShip.position.yaw.direction, font1, color1, 'left')
+                this.display.drawText(300, 340, "Dir Pitch:"+playerShip.position.pitch.direction, font1, color1, 'left')*/
+
             } else if (this.tab==="2") {
                 //------------------------------------------------------------------------
 

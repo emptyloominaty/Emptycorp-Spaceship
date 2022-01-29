@@ -157,6 +157,11 @@ let keyLoop = () => {
     } else if (keyPressed["KeyS"]) {
         playerShip.position.pitch.targetDirection-=val
     }
+
+    if(keyPressed["KeyF"]) { //TEST
+        playerShip.weapons[0].doDamage(0,0,0)
+    }
+
     if (keyPressed["ShiftLeft"]) {
         playerShip.targetSpeed+=valSpeed
     } else if (keyPressed["ControlLeft"]) {

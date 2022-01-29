@@ -194,7 +194,10 @@ class Ship {
         for(let i = 0; i<this.shields.length; i++) {
             this.shields[i].run()
         }
-
+        //weapons
+        for(let i = 0; i<this.weapons.length; i++) {
+            this.weapons[i].run()
+        }
 
         //heat transfer radiation
         let heatTransfer = (((this.surfaceArea * this.emissivityCoefficient)/this.weight)*Math.pow((this.atmosphere.temperature/293),1.75))*2 //bullshit but idc
@@ -526,7 +529,7 @@ class Ship {
         let maxERCSThrust = 0.002
         let maxERCSThrustNeg = -0.002
 
-        if (targetDir-0.01>dir || targetDir+0.01<dir) {
+        if (targetDir-0.06>dir || targetDir+0.06<dir) {
             let thrust = 0
             let p = 100
             let targetDirection = targetDir
@@ -598,7 +601,7 @@ class Ship {
             let acceleration = torque / shipInertia //(radians/s2)
             angularSpeed+= acceleration/gameFPS
 
-        } else if (angularSpeed>0.000001 || angularSpeed<-0.000001 && (targetDir-0.005>dir || targetDir+0.005<dir)){
+        } else if (angularSpeed>0.000001 || angularSpeed<-0.000001 && (targetDir-0.05>dir || targetDir+0.05<dir)){
             if (this.eRcs===1){
                 //REACTION WHEEL
                 let powerNeed = angularSpeed*(this.weight/10000)
@@ -625,11 +628,42 @@ class Ship {
                     let torque = (thrust*1000000) * (this.size.l/2) //(N∙m)
                     let acceleration = torque / shipInertia //(radians/s2)
                     angularSpeed+= acceleration/gameFPS
+                   /* if ((angularSpeed<0.002 && angularSpeed>0) || (angularSpeed>-0.002 && angularSpeed<0)) {
+                        angularSpeed = 0
+                    }*/
                 }
             }
         }
         return angularSpeed
-//-------------------------------------------------------------------------------------------------------------------------------------------------
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------------
+    getDamage(damage,shieldDmgBonus,ignoreShield = false) {
+        //shields
+        if (!ignoreShield) {
+            for (let i = 0; i<this.shields.length; i++) {
+                if(this.shields[i].charged>damage) {
+                    damage = 0
+                    this.shields[i].charged -= damage
+                } else {
+                    damage -= this.shields[i].charged
+                    this.shields[i].charged = 0
+                }
+            }
+        }
+
+        //armor
+        if(this.armor>damage) {
+            damage = 0
+            this.armor-=damage
+        } else {
+            damage -= this.armor
+            this.armor = 0
+        }
+
+        //TODO: damage parts
+        if(damage>0) {
+
+        }
     }
 
 
@@ -728,7 +762,7 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
-    weapons: [{weight:150 ,type:"laser",damageData:{power:20/* MW */, length:0.1 /*seconds*/} }]
+    weapons: [{weight:150 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 3, speed:1} }]
 }
 
 

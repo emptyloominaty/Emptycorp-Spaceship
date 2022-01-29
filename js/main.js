@@ -55,12 +55,12 @@ function update(progress) {
     if (debug.performance) {
         debug.timeA = performance.now()
     }
-
     gameFPS = (1/progress*1000)/speedInc
+
     keyLoop() //keyboard inputs
     playerShip.everyFrame(gameFPS)
     mainServer.run()
-
+    projectilesRun()
     //speed range<->number
      if (elements.inputRange_speed.value!==inputRange_speed) {
          elements.inputNumber_speed.value = elements.inputRange_speed.value
