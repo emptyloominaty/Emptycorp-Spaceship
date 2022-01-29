@@ -1,31 +1,42 @@
 class Weapon extends Part {
     doDamage(yaw,pitch,speed) {
-        if (this.type==="laser") {
-            if (this.cooldown>=this.maxCooldown) {
-                if (playerShip.usePower((this.power*this.length),this.group)) {
-
-
-
-                    let xyz = this.getStartPosition()
-                    let x = playerShip.position.x + xyz[0]
-                    let y = playerShip.position.y + xyz[1]
-                    let z = playerShip.position.z + xyz[2]
-                    let yaw = playerShip.position.yaw.direction
-                    let pitch = playerShip.position.pitch.direction-180
-                    let speed = playerShip.speed+1000 //+this.damageData.speed
-
-
-
-                    for (let i = 0; i<projectiles.length; i++) {
-                        if (projectiles[i]===undefined) {
-                            projectiles[i] = new Laser(x,y,z,yaw,pitch,speed,"laser",this.damageData.life)
+        if (this.cooldown>=this.maxCooldown) {
+            if (playerShip.usePower((this.power*this.length),this.group)) {
+                let xyz = this.getStartPosition()
+                let x = playerShip.position.x + xyz[0]
+                let y = playerShip.position.y + xyz[1]
+                let z = playerShip.position.z + xyz[2]
+                let yaw = playerShip.position.yaw.direction
+                let pitch = playerShip.position.pitch.direction-180
+                let speed = playerShip.speed+this.damageData.speed
+                if (this.type==="laser") {
+                    for (let i = 0; i < projectiles.length; i++) {
+                        if (projectiles[i] === undefined) {
+                            projectiles[i] = new Laser(x, y, z, yaw, pitch, speed, "laser", this.damageData.life,this.damageData.color)
                             break
                         }
                     }
-                    projectiles.push(new Laser(x,y,z,yaw,pitch,speed,"laser",this.damageData.life))
-                    this.cooldown = 0
+                    projectiles.push(new Laser(x, y, z, yaw, pitch, speed, "laser", this.damageData.life,this.damageData.color))
+                } else if (this.type==="plasma") {
 
+                    for (let i = 0; i < projectiles.length; i++) {
+                        if (projectiles[i] === undefined) {
+                            projectiles[i] = new Plasma(x, y, z, yaw, pitch, speed, "plasma", this.damageData.life,this.damageData.color)
+                            break
+                        }
+                    }
+                    projectiles.push(new Plasma(x, y, z, yaw, pitch, speed, "plasma", this.damageData.life,this.damageData.color))
+                } else if (this.type==="missile") {
+                    for (let i = 0; i < projectiles.length; i++) {
+                        if (projectiles[i] === undefined) {
+                            projectiles[i] = new Missile(x, y, z, yaw, pitch, speed, "missile", this.damageData.life,this.damageData.color,this.damageData.guided = false)
+                            break
+                        }
+                    }
+                    projectiles.push(new Missile(x, y, z, yaw, pitch, speed, "missile", this.damageData.life,this.damageData.color,this.damageData.guided = false))
                 }
+                this.cooldown = 0
+
             }
         }
     }
@@ -58,9 +69,9 @@ class Weapon extends Part {
         this.cooldown = damageData.cd
         this.maxCooldown = damageData.cd
         this.damageData = damageData
-        if (type==="laser") {
-            this.power = damageData.power
-            this.length = damageData.length
-        }
+
+        this.power = damageData.power
+        this.length = damageData.length
+
     }
 }

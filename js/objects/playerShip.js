@@ -54,6 +54,7 @@ class Ship {
     shields = []
     tanks = []
     weapons = []
+    missileCargo = []
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
@@ -638,27 +639,29 @@ class Ship {
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     getDamage(damage,shieldDmgBonus,ignoreShield = false) {
+        shieldDmgBonus = 1+(shieldDmgBonus/100)
         //shields
         if (!ignoreShield) {
             for (let i = 0; i<this.shields.length; i++) {
-                if(this.shields[i].charged>damage) {
+                if(this.shields[i].charged>damage*shieldDmgBonus) {
+                    this.shields[i].charged -= damage*shieldDmgBonus
                     damage = 0
-                    this.shields[i].charged -= damage
-                } else {
-                    damage -= this.shields[i].charged
+                } else if (this.shields[i].charged>0) {
+                    damage -= this.shields[i].charged/shieldDmgBonus
                     this.shields[i].charged = 0
                 }
             }
         }
-
+        console.log(damage)
         //armor
         if(this.armor>damage) {
-            damage = 0
             this.armor-=damage
+            damage = 0
         } else {
             damage -= this.armor
             this.armor = 0
         }
+        console.log(damage)
 
         //TODO: damage parts
         if(damage>0) {
@@ -700,7 +703,11 @@ class Ship {
         for (let i = 0 ; i < parts.weapons.length ; i++) {
             let part = parts.weapons[i]
             this.weapons.push(new Weapon(i,part.weight || 0,part.name || "name", part.type, part.damageData))
-    }
+        }
+        for (let i = 0 ; i < parts.missileCargo.length ; i++) {
+            let part = parts.missileCargo[i]
+            this.missileCargo.push(new MissileCargo(i,part.weight || 0,part.name || "name",part.count,part.maxCount))
+        }
         for (let i = 0 ; i < parts.engines.length ; i++) {
             let part = parts.engines[i]
             this.engines.push(new Engine(i,part.weight || 0,part.name || "name", part.fuelType, part.type, part.minSpeed, part.maxSpeed, part.thrust,
@@ -762,7 +769,11 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
-    weapons: [{weight:150 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 3, speed:1} }]
+    missilesCargo:[{weight:10 ,name:"Missile 1MJ",count:5,maxCount:5,missileWeight:50}],
+    weapons: [{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:100, color: 0x555555,maxSpeed:100000,missileData:{},guided:false}}
+        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 5, speed:2000, color: 0xff0000}}
+//{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,cd:1 /*seconds*/,life: 2, speed:500, color: 0xffaa00}}
+        ]
 }
 
 

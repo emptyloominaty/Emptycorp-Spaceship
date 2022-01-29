@@ -59,8 +59,18 @@ class CanvasMain {
     }
 
     createNewProjectile(id) {
-        let geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.5, 12, 1 )  //0.01, 0.01, 0.1  //0.1, 0.1, 100
-        let material = new THREE.MeshBasicMaterial( {color: 0xff0000} )
+        let color = projectiles[id].color
+        let type = projectiles[id].type
+        let geometry
+        if (type==="laser") {
+            geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.5, 12, 1 )
+        } else if (type==="plasma") {
+            geometry = new THREE.SphereGeometry(0.04, 16, 16, 0, Math.PI * 2, 0, Math.PI * 2)
+        } else if (type==="missile") {
+            geometry = new THREE.CylinderGeometry( 0.001, 0.01, 0.3, 12, 1 )
+        }
+        console.log(color)
+        let material = new THREE.MeshBasicMaterial( {color: color} )
         this.projectiles[id] = new THREE.Mesh( geometry, material )
         this.projectiles[id].position.set(projectiles[id].x*1000000,projectiles[id].z*1000000,projectiles[id].y*1000000)
         this.projectiles[id].rotation.order = 'YXZ'
