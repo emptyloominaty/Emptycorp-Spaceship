@@ -9,8 +9,6 @@ class Weapon extends Part {
                 let yaw = playerShip.position.yaw.direction
                 let pitch = playerShip.position.pitch.direction-180
 
-                console.log(yaw," | ",pitch)
-
                 let speed = playerShip.speed+this.damageData.speed
                 if (this.type==="laser") {
                     for (let i = 0; i < projectiles.length; i++) {

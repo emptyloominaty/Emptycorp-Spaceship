@@ -10,12 +10,11 @@ class Missile extends Projectile {
         }
     }
     run2() {
-        console.log(this.yaw," | ",this.pitch)
         if(this.wait>0) {
             this.wait-=1/gameFPS
         } else {
             if (this.speed<this.missileData.maxSpeed) {
-                this.speed+=1000/gameFPS
+                this.speed+=10000/gameFPS
             }
             if (this.guided) {
                 this.guide()

@@ -786,8 +786,8 @@ let shipDefaultParts = {
     ],
     missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30, speed:100, color: 0x555555, maxSpeed:100000, guided:true}}],
     weapons: [{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
-        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 5, speed:2000, color: 0xff0000},source:playerShip}
-        //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,cd:1 /*seconds*/,life: 2, speed:500, color: 0xffaa00},source:playerShip}
+        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 5, speed:2000, color: 0xff0000}}
+        //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,cd:1 /*seconds*/,life: 2, speed:500, color: 0xffaa00}}
         ]
 }
 
