@@ -24,6 +24,10 @@ let getDirection360 = function(direction) {
     return direction
 }
 
+let calcHitbox = function(x,y,z,size) {
+  return  {x1:x-size,y1:y-size,z1:z-size,x2:x+size,y2:y+size,z2:z+size}
+}
+
 let getSpeedText = function(speed) {
     let ret
     if (speed>10000000) {

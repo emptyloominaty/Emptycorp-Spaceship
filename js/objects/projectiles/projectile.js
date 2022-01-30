@@ -17,8 +17,8 @@ class Projectile {
         //collision
         for (let i = 0; i<aiShips.length; i++) {
             if (aiShips[i]!==undefined) {
-                let objPos = aiShips[i].position
-                if (this.checkCollision(objPos.x-0.0001,objPos.y-0.0001,objPos.z-0.0001,objPos.x+0.0001,objPos.y+0.0001,objPos.z+0.0001)) {
+                let objPos = aiShips[i].hitbox
+                if (this.checkCollision(objPos.x1,objPos.y1,objPos.z1,objPos.x2,objPos.y2,objPos.z2)) {
                     aiShips[i].getDamage(this.damage,this.shieldDmgBonus,this.ignoreShield)
                     return false
                 }

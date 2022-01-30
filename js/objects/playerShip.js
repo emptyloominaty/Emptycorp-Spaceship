@@ -11,6 +11,7 @@ class Ship {
     //---------------------------------------------
     speed = 0 //c
     position = {x:1, y:1, z:0, yaw: {direction:360, targetDirection:360, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
+    hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
     weight = this.baseWeight
 
     //radiation heat transfer
@@ -61,7 +62,7 @@ class Ship {
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
-
+        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,0.0001)
         this.powerInputArray.push(this.powerInput)
         if (this.powerInputArray.length>60) {
             this.powerInputArray.shift()

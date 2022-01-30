@@ -1,5 +1,6 @@
 class AiShip {
     position = {x:0,y:0,z:0}
+    hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
     type = "civilian"
 
     yaw = 0
@@ -34,6 +35,7 @@ class AiShip {
         if (this.destroyed) {
             return false
         }
+        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,0.0001)
         if (this.shield<this.shieldMax) {
             this.shield+=this.shieldRecharge/gameFPS
         }
