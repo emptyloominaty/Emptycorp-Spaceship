@@ -36,12 +36,13 @@ class Shield extends Part {
         }
     }
 
-    constructor(id,weight,name,capacity,rechargeRate,consumption) {
+    constructor(id,weight,name,capacity,efficiency,consumption) {
         super(weight,name,"shield",id)
         this.maxCharge = capacity
         this.setCharge = capacity
-        this.rechargeRate = rechargeRate
-        this.dischargeRate = rechargeRate/2
+        this.efficiency = efficiency
+        this.rechargeRate = consumption[1]*efficiency
+        this.dischargeRate = consumption[1]/2
         this.consumption = consumption
     }
 

@@ -8,35 +8,41 @@ class Weapon extends Part {
                 let z = playerShip.position.z + xyz[2]
                 let yaw = playerShip.position.yaw.direction
                 let pitch = playerShip.position.pitch.direction-180
+
+                console.log(yaw," | ",pitch)
+
                 let speed = playerShip.speed+this.damageData.speed
                 if (this.type==="laser") {
                     for (let i = 0; i < projectiles.length; i++) {
                         if (projectiles[i] === undefined) {
-                            projectiles[i] = new Laser(x, y, z, yaw, pitch, speed, "laser", this.damageData.life,this.damageData.color)
+                            projectiles[i] = new Laser(x, y, z, yaw, pitch, speed, "laser", playerShip, this.damageData.life,this.damageData.color)
                             break
                         }
                     }
-                    projectiles.push(new Laser(x, y, z, yaw, pitch, speed, "laser", this.damageData.life,this.damageData.color))
+                    projectiles.push(new Laser(x, y, z, yaw, pitch, speed, "laser", playerShip, this.damageData.life,this.damageData.color))
                 } else if (this.type==="plasma") {
 
                     for (let i = 0; i < projectiles.length; i++) {
                         if (projectiles[i] === undefined) {
-                            projectiles[i] = new Plasma(x, y, z, yaw, pitch, speed, "plasma", this.damageData.life,this.damageData.color)
+                            projectiles[i] = new Plasma(x, y, z, yaw, pitch, speed, "plasma", playerShip, this.damageData.life,this.damageData.color)
                             break
                         }
                     }
-                    projectiles.push(new Plasma(x, y, z, yaw, pitch, speed, "plasma", this.damageData.life,this.damageData.color))
+                    projectiles.push(new Plasma(x, y, z, yaw, pitch, speed, "plasma", playerShip, this.damageData.life,this.damageData.color))
                 } else if (this.type==="missile") {
-                    for (let i = 0; i < projectiles.length; i++) {
-                        if (projectiles[i] === undefined) {
-                            projectiles[i] = new Missile(x, y, z, yaw, pitch, speed, "missile", this.damageData.life,this.damageData.color,this.damageData.guided = false)
-                            break
+                    if (playerShip.missileCargo[this.missileSelect].count>0) {
+                        let missileD = playerShip.missileCargo[this.missileSelect].missiledata
+                        for (let i = 0; i < projectiles.length; i++) {
+                            if (projectiles[i] === undefined) {
+                                projectiles[i] = new Missile(x, y, z, yaw, pitch, speed, "missile", playerShip, missileD.life,missileD.color,missileD)
+                                break
+                            }
                         }
+                        playerShip.missileCargo[this.missileSelect].count--
+                        projectiles.push(new Missile(x, y, z, yaw, pitch, speed, "missile", playerShip, missileD.life,missileD.color,missileD))
                     }
-                    projectiles.push(new Missile(x, y, z, yaw, pitch, speed, "missile", this.damageData.life,this.damageData.color,this.damageData.guided = false))
                 }
                 this.cooldown = 0
-
             }
         }
     }
@@ -58,12 +64,12 @@ class Weapon extends Part {
         let vx = (Math.sin(phi)*Math.sin(theta) )* speed
         let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
-        console.log(vx," | ",vy," | ",vz)
+        //console.log(vx," | ",vy," | ",vz)
         return [vx,vy,vz]
     }
 
 
-    constructor(id,weight,name,type,damageData) {
+    constructor(id,weight,name,type,damageData,source) {
         super(weight,name,"weapon",id)
         this.type = type
         this.cooldown = damageData.cd
@@ -72,6 +78,9 @@ class Weapon extends Part {
 
         this.power = damageData.power
         this.length = damageData.length
+        if (this.type==="missile") {
+            this.missileSelect = 0
+        }
 
     }
 }

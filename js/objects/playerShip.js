@@ -5,6 +5,8 @@ class Ship {
     baseWeight = 5500 //kg
     armor = 500
     armorMax = 500
+    maxERCSThrust = 0.002
+    maxERCSThrustNeg = -0.002
 
     //---------------------------------------------
     speed = 0 //c
@@ -29,6 +31,7 @@ class Ship {
     powerInput = 0
     powerOutput = 0
     powerOutput2 = 0
+    target = {}
 
     powerInputArray = []
     powerOutputArray = []
@@ -275,6 +278,10 @@ class Ship {
             } else if (tank.tankType==="fuel") {
                 this.weight+=tank.fuelWeight*(tank.capacity/tank.maxCapacity)
             }
+        }
+        //missiles
+        for(let i = 0; i<this.missileCargo.length; i++) {
+            this.weight += this.missileCargo[i].missileWeight * this.missileCargo[i].count
         }
     }
     getWeight(part) {
@@ -527,8 +534,8 @@ class Ship {
 */
 
 
-        let maxERCSThrust = 0.002
-        let maxERCSThrustNeg = -0.002
+        let maxERCSThrust = this.maxERCSThrust
+        let maxERCSThrustNeg = this.maxERCSThrustNeg
 
         if (targetDir-0.06>dir || targetDir+0.06<dir) {
             let thrust = 0
@@ -638,7 +645,7 @@ class Ship {
         return angularSpeed
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------------
-    getDamage(damage,shieldDmgBonus,ignoreShield = false) {
+    getDamage(damage,shieldDmgBonus,ignoreShield = false) {  //damage = MJ
         shieldDmgBonus = 1+(shieldDmgBonus/100)
         //shields
         if (!ignoreShield) {
@@ -670,7 +677,7 @@ class Ship {
     }
 
 
-    constructor(parts) {
+    constructor(parts,stats) {
         let maxSpeed = 0
         for (let i = 0 ; i < parts.antennas.length ; i++) {
             let part = parts.antennas[i]
@@ -698,7 +705,7 @@ class Ship {
         }
         for (let i = 0 ; i < parts.shields.length ; i++) {
             let part = parts.shields[i]
-            this.shields.push(new Shield(i,part.weight || 0,part.name || "name", part.capacity, part.rechargeRate, part.consumption))
+            this.shields.push(new Shield(i,part.weight || 0,part.name || "name", part.capacity, part.efficiency, part.consumption))
         }
         for (let i = 0 ; i < parts.weapons.length ; i++) {
             let part = parts.weapons[i]
@@ -706,7 +713,7 @@ class Ship {
         }
         for (let i = 0 ; i < parts.missileCargo.length ; i++) {
             let part = parts.missileCargo[i]
-            this.missileCargo.push(new MissileCargo(i,part.weight || 0,part.name || "name",part.count,part.maxCount))
+            this.missileCargo.push(new MissileCargo(i,part.weight || 0,part.name || "name",part.count,part.maxCount,part.missileWeight,part.missiledata))
         }
         for (let i = 0 ; i < parts.engines.length ; i++) {
             let part = parts.engines[i]
@@ -723,13 +730,9 @@ class Ship {
                     }
                     break
                 }
-
             }
-
             //if (part.maxSpeed>maxSpeed) {maxSpeed = part.maxSpeed}
         }
-        //this.shields.push
-        //this.weapons.push
         document.getElementById("inputRange_speed").max = maxSpeed
         this.maxSpeed = maxSpeed
         this.capArrayA = []
@@ -738,6 +741,18 @@ class Ship {
             this.capArrayA.push(0)
             this.capArrayB.push(0)
         }
+
+        //stats
+        this.armor = stats.armor
+        this.armorMax = stats.armor
+        this.baseWeight = stats.weight
+
+        this.maxERCSThrust = stats.ercsThrust
+        this.maxERCSThrustNeg = stats.ercsThrust * (-1)
+
+        this.surfaceArea = stats.surfaceArea
+        this.size = stats.size
+
     }
 }
 
@@ -757,8 +772,8 @@ let shipDefaultParts = {
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0,efficiency:85}], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:50 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
-        {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.05 /* MN */, consumptionFuel:[0,0.02,0.05] /* kg/h */ , consumptionPower:[0.00002,0.03] /* MW*/  }],
-    shields: [{weight:15 ,capacity:350, rechargeRate:3.8 /* per sec */, consumption:[0.05,0.2] /*MWh 0-maintaining 1-charging*/}],
+        {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.1 /* MN */, consumptionFuel:[0,0.09,0.15] /* kg/h */ , consumptionPower:[0.00005,0.06] /* MW*/  }],
+    shields: [{weight:15 ,capacity:50, efficiency:0.5 /* per sec */, consumption:[0.05,0.2] /*MWh 0-maintaining 1-charging*/}],
     tanks: [{weight:110,tankType:"gas",type:"N2",volume:200 /* Litres */,pressure:150 /* bar */},
         {weight:110,tankType:"gas",type:"O2",volume:100 /* Litres */,pressure:150 /* bar */},
         {weight:100,tankType:"gas",type:"H2",volume:80 ,pressure:680 },
@@ -769,14 +784,18 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
-    missilesCargo:[{weight:10 ,name:"Missile 1MJ",count:5,maxCount:5,missileWeight:50}],
-    weapons: [{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:100, color: 0x555555,maxSpeed:100000,missileData:{},guided:false}}
-        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 5, speed:2000, color: 0xff0000}}
-//{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,cd:1 /*seconds*/,life: 2, speed:500, color: 0xffaa00}}
+    missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30, speed:100, color: 0x555555, maxSpeed:100000, guided:true}}],
+    weapons: [{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
+        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,cd:0.32 /*seconds*/,life: 5, speed:2000, color: 0xff0000},source:playerShip}
+        //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,cd:1 /*seconds*/,life: 2, speed:500, color: 0xffaa00},source:playerShip}
         ]
 }
 
+let shipStats = {
+    armor:100, weight:5500/*kg*/, ercsThrust: 0.01/*MN*/,
+    surfaceArea:128/*m2*/,size:{l:7,h:3.5,w:3.5}/*m*/ ,
+}
 
 
-let playerShip = new Ship(shipDefaultParts)
+let playerShip = new Ship(shipDefaultParts,shipStats)
 

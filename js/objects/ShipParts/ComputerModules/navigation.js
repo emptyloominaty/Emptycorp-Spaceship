@@ -38,7 +38,7 @@ class NavigationModule {
         if (playerShip.computers[0].autopilot===1 && playerShip.computers[0].target!=="") {
             let a = playerShip.computers[0].targetObj.position.x - this.position.x //x1 - x2
             let b = playerShip.computers[0].targetObj.position.y - this.position.y //y1 - y2
-            let c = playerShip.computers[0].targetObj.position.z - this.position.z //y1 - y2
+            let c = playerShip.computers[0].targetObj.position.z - this.position.z //z1 - z2
             let distanceToObject = Math.sqrt( a*a + b*b )
 
             let angleYaw = ((((Math.atan2( this.position.y - playerShip.computers[0].targetObj.position.y, this.position.x - playerShip.computers[0].targetObj.position.x ) * 180)) / Math.PI)-270)

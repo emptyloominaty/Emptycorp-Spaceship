@@ -65,6 +65,7 @@ class Computer extends Part {
                 this.data.antennaRX = playerShip.antennas[0].rx[0]
                 this.data.antennaTX = playerShip.antennas[0].tx[0]
                 //-----
+                playerShip.target = this.targetObj
         //OFF
             } else {
                 this.on = 0

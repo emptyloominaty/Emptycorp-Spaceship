@@ -122,7 +122,7 @@ function draw(progress) {
     elements.antennaRx.textContent = (playerShip.antennas[0].rx[0]*1000).toFixed(0)+" kB/s"
     elements.antennaTx.textContent = (playerShip.antennas[0].tx[0]*1000).toFixed(0)+" kB/s"
     //Shield
-    elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)
+    elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)+" MJ"
     //Nav
     if (playerShip.computers[0].nav.on===1 && playerShip.computers[0].on===1) {
         let comp = playerShip.computers[0]

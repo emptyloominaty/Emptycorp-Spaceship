@@ -33,7 +33,7 @@ class CanvasMain {
             //TODO MOONS
         }
 
-        let test = []
+        /*let test = []
         if (0===0) {
             let geometry = new THREE.CylinderGeometry( 0.000001, 0.000001, 0.000001, 12, 1 )  //0.01, 0.01, 0.1  //0.1, 0.1, 100
             let material = new THREE.MeshBasicMaterial( {color: 0x222222} )
@@ -42,7 +42,7 @@ class CanvasMain {
             test[0].position.z = 1000000.00001
             test[0].position.y = 0
             this.scene.add(test[0])
-        }
+        }*/
 
 
         this.camera.position.x = 1000000   //x
@@ -72,7 +72,7 @@ class CanvasMain {
         console.log(color)
         let material = new THREE.MeshBasicMaterial( {color: color} )
         this.projectiles[id] = new THREE.Mesh( geometry, material )
-        this.projectiles[id].position.set(projectiles[id].x*1000000,projectiles[id].z*1000000,projectiles[id].y*1000000)
+        this.projectiles[id].position.set(projectiles[id].position.x*1000000,projectiles[id].position.z*1000000,projectiles[id].position.y*1000000)
         this.projectiles[id].rotation.order = 'YXZ'
         this.projectiles[id].rotation.x = ((projectiles[id].pitch-90)/57.295779487363233601652280409982)
         this.projectiles[id].rotation.y = ((projectiles[id].yaw-180)/57.295779487363233601652280409982)
@@ -88,10 +88,11 @@ class CanvasMain {
                     this.createNewProjectile(i)
                 }
                 //TODO:FIX????
-                this.projectiles[i].position.x = projectiles[i].x*1000000
-                this.projectiles[i].position.z = projectiles[i].y*1000000
-                this.projectiles[i].position.y = projectiles[i].z*1000000
-                //TODO:rotation
+                this.projectiles[i].position.x = projectiles[i].position.x*1000000
+                this.projectiles[i].position.z = projectiles[i].position.y*1000000
+                this.projectiles[i].position.y = projectiles[i].position.z*1000000
+                this.projectiles[i].rotation.x = ((projectiles[i].pitch-90)/57.295779487363233601652280409982)
+                this.projectiles[i].rotation.y = ((projectiles[i].yaw-180)/57.295779487363233601652280409982)
                 //console.log(this.projectiles[i].position.x," | ",this.projectiles[i].position.z," | ",this.projectiles[i].position.y)
             }
         }
