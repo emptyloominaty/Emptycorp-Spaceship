@@ -63,11 +63,11 @@ class CanvasMain {
         let type = projectiles[id].type
         let geometry
         if (type==="laser") {
-            geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.5, 12, 1 )
+            geometry = new THREE.CylinderGeometry( 0.2, 0.2, 100, 12, 1 )
         } else if (type==="plasma") {
-            geometry = new THREE.SphereGeometry(0.04, 16, 16, 0, Math.PI * 2, 0, Math.PI * 2)
+            geometry = new THREE.SphereGeometry(0.08, 16, 16, 0, Math.PI * 2, 0, Math.PI * 2)
         } else if (type==="missile") {
-            geometry = new THREE.CylinderGeometry( 0.001, 0.01, 0.3, 12, 1 )
+            geometry = new THREE.CylinderGeometry( 0.01, 0.1, 2, 12, 1 )
         }
         console.log(color)
         let material = new THREE.MeshBasicMaterial( {color: color} )

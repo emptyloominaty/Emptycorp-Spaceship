@@ -16,6 +16,7 @@ class AiShip {
     armorMax = 200
     shield = 100
     shieldMax = 100
+    shieldRecharge = 0.05
 
     rotationSpeed = 60 // °/60 per sec
     accelerationSpeed = 2000 // c/60 per sec
@@ -32,6 +33,9 @@ class AiShip {
     run() {
         if (this.destroyed) {
             return false
+        }
+        if (this.shield<this.shieldMax) {
+            this.shield+=this.shieldRecharge/gameFPS
         }
         let consNow = (this.consumptionC*this.speed/3600)
         this.move()
@@ -51,7 +55,6 @@ class AiShip {
                 this.shield = 0
             }
         }
-        console.log("BEFORE:"+this.armor)
         //armor
         if(this.armor>damage) {
             this.armor-=damage
@@ -60,7 +63,6 @@ class AiShip {
             damage -= this.armor
             this.armor = 0
         }
-        console.log("AFTER:"+this.armor)
         if(damage>0) {
             this.destroyed = true
         }
@@ -84,7 +86,7 @@ class AiShip {
         this.position.z += vz
     }
 
-    constructor(x,y,z,type,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield) {
+    constructor(x,y,z,type,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge ) {
         this.position.x = x
         this.position.y = y
         this.position.z = z
@@ -100,6 +102,7 @@ class AiShip {
         this.armorMax = armor
         this.shield = shield
         this.shieldMax = shield
+        this.shieldRecharge = shieldRecharge
     }
 }
 

@@ -51,7 +51,7 @@ class Weapon extends Part {
     }
 
     getStartPosition() {
-        let speed = 0.0000003 //0.005
+        let speed = 0.000003 //0.005
 
         let angleInRadianYaw = (playerShip.position.yaw.direction*Math.PI) / 180
         let angleInRadianPitch = (((playerShip.position.pitch.direction-45)-180)*Math.PI) / 180
