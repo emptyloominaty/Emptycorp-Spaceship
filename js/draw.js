@@ -136,7 +136,7 @@ function draw(progress) {
             let a = ss.position.x - nav.position.x //x1 - x2
             let b = ss.position.y - nav.position.y //y1 - y2
             let c = ss.position.z - nav.position.z //z1 - z2
-            d = Math.sqrt( a*a + b*b ).toFixed(2)+"ly" //TODO:3D
+            d = Math.sqrt( a*a + b*b + c*c ).toFixed(2)+"ly"
             //yaw
             angle = ((((Math.atan2( nav.position.y - ss.position.y, nav.position.x - ss.position.x ) * 180)) / Math.PI)-270)
             angle = angle*(-1)

@@ -234,7 +234,7 @@ class Computer extends Part {
                 let a = ss.position.x - this.nav.position.x //x1 - x2
                 let b = ss.position.y -this.nav.position.y //y1 - y2
                 let c = ss.position.z -this.nav.position.z //z1 - z2
-                let d = Math.sqrt( a*a + b*b )
+                let d = Math.sqrt( a*a + b*b + c*c )
 
 
                 this.display.drawText(5, 40, "Distance: ", font1, color1, 'left')
@@ -405,6 +405,35 @@ class Computer extends Part {
             }
         }
 
+        //projectiles
+        for (let i = 0; i<projectiles.length; i++) {
+            if (projectiles[i]!==undefined) {
+                let pr = projectiles[i]
+                let xx = pr.position.x
+                let yy = pr.position.y
+                let x = varX-(xx*this.mapScaling)
+                let y = varY-(yy*this.mapScaling)
+                if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
+                    this.display.drawCircle(x,y,2,"#ff88f1")
+                }
+            }
+        }
+
+        //ships
+        for (let i = 0; i<aiShips.length; i++) {
+            if (aiShips[i]!==undefined) {
+                let ai = aiShips[i]
+                let xx = ai.position.x
+                let yy = ai.position.y
+                let x = varX-(xx*this.mapScaling)
+                let y = varY-(yy*this.mapScaling)
+                if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
+                    this.display.drawCircle(x,y,3,"#ffb2b0")
+                }
+            }
+        }
+
+        //star systems
         for (let i = 0; i<starSystems.length; i++) {
             let ss = starSystems[i]
             drawPlanet(ss.position.x,ss.position.y,ss.factionColor,ss.mapSize,ss.name,i)

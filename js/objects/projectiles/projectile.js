@@ -14,9 +14,23 @@ class Projectile {
             return false
         }
         this.move()
-        //checkCollision (if distance<0.0.000000000000105702341) //1km
-        //doDamage
+        //collision
+        for (let i = 0; i<aiShips.length; i++) {
+            if (aiShips[i]!==undefined) {
+                let objPos = aiShips[i].position
+                if (this.checkCollision(objPos.x-0.0001,objPos.y-0.0001,objPos.z-0.0001,objPos.x+0.0001,objPos.y+0.0001,objPos.z+0.0001)) {
+                    aiShips[i].getDamage(this.damage,this.shieldDmgBonus,this.ignoreShield)
+                    return false
+                }
+            }
+        }
         return true
+    }
+
+    checkCollision(x1,y1,z1,x2,y2,z2) {
+        return ((this.position.x >= x1 && this.position.x <= x2) &&
+            (this.position.y >= y1 && this.position.y <= y2) &&
+            (this.position.z >= z1 && this.position.z <= z2))
     }
 
     move() {
@@ -37,15 +51,7 @@ class Projectile {
         this.position.z += vz
     }
 
-    checkCollision(x1,y1,z1,x2,y2,z2) {
-        return (this.position.x >= x1 && this.position.x <= x2) &&
-            (this.position.y >= y1 && this.position.y <= y2) &&
-            (this.position.z >= z1 && this.position.z <= z2)
-    }
-
-
-
-    constructor(x,y,z,yaw,pitch,speed,type,source,maxLife) {
+    constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,damageData) {
         this.position.x = x
         this.position.y = y
         this.position.z = z
@@ -58,6 +64,10 @@ class Projectile {
         this.maxLife = maxLife
         this.life = maxLife
         this.source = source
+
+        this.damage = damageData.damage
+        this.ignoreShield = damageData.ignoreShield
+        this.shieldDmgBonus = damageData.shieldDmgBonus
     }
 }
 

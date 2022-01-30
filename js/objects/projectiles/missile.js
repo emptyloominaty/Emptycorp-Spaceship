@@ -1,6 +1,9 @@
 class Missile extends Projectile {
-    constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,color,missileData) {
-        super(x,y,z,yaw,pitch,speed,type,source,maxLife)
+    constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,color,damageData,missileData) {
+        damageData.damage = missileData.damage
+        damageData.shieldDmgBonus = missileData.shieldDmgBonus
+        damageData.ignoreShield = missileData.ignoreShield
+        super(x,y,z,yaw,pitch,speed,type,source,maxLife,damageData)
         this.guided = missileData.guided
         this.missileData = missileData
         this.color = color

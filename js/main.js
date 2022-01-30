@@ -61,6 +61,7 @@ function update(progress) {
     playerShip.everyFrame(gameFPS)
     mainServer.run()
     projectilesRun()
+    aiShipsRun()
     //speed range<->number
      if (elements.inputRange_speed.value!==inputRange_speed) {
          elements.inputNumber_speed.value = elements.inputRange_speed.value
