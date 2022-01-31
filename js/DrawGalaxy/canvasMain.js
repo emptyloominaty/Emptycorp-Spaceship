@@ -1,10 +1,11 @@
 class CanvasMain {
-    spheresIdx = 0
-    tubesIdx = 0
     materials = {}
 
-    spheres = []
-    beams = []
+    stars = []
+    planets = []
+    moons = []
+
+    ships = []
     projectiles = []
 
     test = []
@@ -26,16 +27,25 @@ class CanvasMain {
             let starColor = starSystems[i].stars[0].starType
             let starSize = starSystems[i].stars[0].radius/50000000
             let geometry = new THREE.SphereGeometry(starSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
-            this.spheres[this.spheresIdx] = new THREE.Mesh(geometry, this.materials[starColor])
-            this.spheres[this.spheresIdx].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
+            this.stars[i] = new THREE.Mesh(geometry, this.materials[starColor])
+            this.stars[i].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
 
-            this.scene.add(this.spheres[this.spheresIdx])
-            this.spheresIdx++
-            //TODO:PLANETS
+            this.scene.add(this.stars[i])
+
+            if (this.planets[i]===undefined) {this.planets[i]=[]}
+            for (let j = 0; j<starSystems[i].planets.length; j++) {
+                let planetColor = 0x666666
+                let planetSize = starSystems[i].planets[j].radius/50000000
+                let planetGeometry = new THREE.SphereGeometry(planetSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
+                this.planets[i][j] = new THREE.Mesh(planetGeometry, new THREE.MeshBasicMaterial({color:planetColor}))
+
+                this.scene.add(this.planets[i][j])
+            }
+
             //TODO MOONS
         }
 
-        let test = this.test
+      /*  let test = this.test
         if (0===0) {
             let geometry = new THREE.CylinderGeometry( 0.0000000000000001, 0.0000000000000001, 0.0000000000000001, 12, 1 )  //0.01, 0.01, 0.1  //0.1, 0.1, 100
             let material = new THREE.MeshBasicMaterial( {color: 0x222222} )
@@ -44,7 +54,7 @@ class CanvasMain {
             test[0].position.z = 0.000000000000001 //9.x mm
             test[0].position.y = 0
             this.scene.add(test[0])
-        }
+        }*/
 
 
         this.camera.position.x = 0   //x
@@ -65,11 +75,11 @@ class CanvasMain {
         let type = projectiles[id].type
         let geometry
         if (type==="laser") {
-            geometry = new THREE.CylinderGeometry( 0.0000000000000002, 0.0000000000000002, 0.000000000000058, 20, 50 ) // 0.0000000000000002, 0.0000000000000002, 0.000000000000058
+            geometry = new THREE.CylinderGeometry( 0.0000000000000002, 0.0000000000000002, 0.000000000000058, 12, 2 ) // 0.0000000000000002, 0.0000000000000002, 0.000000000000058
         } else if (type==="plasma") {
             geometry = new THREE.SphereGeometry(0.0000000000000005, 16, 16, 0, Math.PI * 2, 0, Math.PI * 2)
         } else if (type==="missile") {
-            geometry = new THREE.CylinderGeometry( 0.00000000000000005, 0.0000000000000005, 0.00000000000001, 12, 2 )
+            geometry = new THREE.CylinderGeometry( 0.0000000000002, 0.0000000000002, 0.000000000058, 12, 2 )
         }
         console.log(color)
         let material = new THREE.MeshBasicMaterial( {color: color} )
@@ -86,9 +96,9 @@ class CanvasMain {
         let camHi = {x:playerShip.positionHi.x,y:playerShip.positionHi.z,z:playerShip.positionHi.y}
         let camLo = {x:playerShip.positionLo.x,y:playerShip.positionLo.z,z:playerShip.positionLo.y}
         //test
-        this.test[0].position.x = 1-camHi.x-camLo.x
+        /*this.test[0].position.x = 1-camHi.x-camLo.x
         this.test[0].position.z = 1.000000000000001-camHi.z-camLo.z
-        this.test[0].position.y = 0-camHi.y-camLo.y
+        this.test[0].position.y = 0-camHi.y-camLo.y*/
 
         //projectiles
         for (let i = 0; i<projectiles.length; i++) {
@@ -99,8 +109,6 @@ class CanvasMain {
                 this.projectiles[i].position.x = (projectiles[i].positionHi.x-camHi.x)+(projectiles[i].positionLo.x-camLo.x) //x
                 this.projectiles[i].position.y = (projectiles[i].positionHi.z-camHi.y)+(projectiles[i].positionLo.z-camLo.y) //z
                 this.projectiles[i].position.z = (projectiles[i].positionHi.y-camHi.z)+(projectiles[i].positionLo.y-camLo.z) //y
-
-
                 this.projectiles[i].rotation.x = ((projectiles[i].pitch-90)/57.295779487363233601652280409982)
                 this.projectiles[i].rotation.y = ((projectiles[i].yaw-180)/57.295779487363233601652280409982)
             }
@@ -109,11 +117,20 @@ class CanvasMain {
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
-            this.spheres[i].position.set(
+            this.stars[i].position.set(
                 (starSystems[i].position.x)-camHi.x-camLo.x,
                 (starSystems[i].position.z)-camHi.y-camLo.y,
-                (starSystems[i].position.y)-camHi.z-camLo.z,)
+                (starSystems[i].position.y)-camHi.z-camLo.z,
+                )
 
+            for (let j = 0; j<starSystems[i].planets.length; j++) {
+                let orbitHeight = 0.013914+starSystems[i].planets[j].orbitHeight/7000000000
+                this.planets[i][j].position.set (
+                    (starSystems[i].position.x)-camHi.x-camLo.x,
+                    (starSystems[i].position.z)-camHi.y-camLo.y,
+                    (starSystems[i].position.y+orbitHeight)-camHi.z-camLo.z, //TODO:
+                )
+            }
         }
 
         this.camera.rotation.x = ((playerShip.position.pitch.direction-180)/57.295779487363233601652280409982) //degrees -> radians

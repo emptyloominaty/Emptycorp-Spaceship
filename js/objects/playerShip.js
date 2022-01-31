@@ -801,8 +801,9 @@ let shipDefaultParts = {
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
     missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30,damage:100,shieldDmgBonus:0,ignoreShield:false, speed:0.000001, color: 0x555555, maxSpeed:100000, guided:true}}],
-    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
+    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}},{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
         //{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
+        //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
         //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,damage:4,shieldDmgBonus:0,ignoreShield:false,cd:1 /*seconds*/,life: 5, speed:5000, color: 0xffaa00}}
         ]

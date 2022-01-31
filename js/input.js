@@ -147,6 +147,7 @@ let keyLoop = () => {
         valSpeed = 0.00000001*gameFPS
     }
 
+    //rotation
     if (keyPressed["KeyA"]) {
         playerShip.position.yaw.targetDirection+=val
     } else if (keyPressed["KeyD"]) {
@@ -158,16 +159,35 @@ let keyLoop = () => {
         playerShip.position.pitch.targetDirection-=val
     }
 
-    if(keyPressed["KeyF"]) { //TEST
-        playerShip.weapons[0].doDamage(0,0,0)
+    //weapons
+    if(keyPressed["Digit1"]) {
+        if (playerShip.weapons[0]!==undefined) {
+            playerShip.weapons[0].doDamage(0,0,0)
+        }
+    }
+    if(keyPressed["Digit2"]) {
+        if (playerShip.weapons[1]!==undefined) {
+            playerShip.weapons[1].doDamage(0,0,0)
+        }
+    }
+    if(keyPressed["Digit3"]) {
+        if (playerShip.weapons[2]!==undefined) {
+            playerShip.weapons[2].doDamage(0,0,0)
+        }
+    }
+    if(keyPressed["Digit4"]) {
+        if (playerShip.weapons[3]!==undefined) {
+            playerShip.weapons[3].doDamage(0,0,0)
+        }
     }
 
+    //speed
     if (keyPressed["ShiftLeft"]) {
         playerShip.targetSpeed+=valSpeed
     } else if (keyPressed["ControlLeft"]) {
         playerShip.targetSpeed-=valSpeed
     }
-
+    //----------------------------------------------------------
     //Speed
     if (playerShip.targetSpeed<0) {
         playerShip.targetSpeed=0

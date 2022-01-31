@@ -500,14 +500,18 @@ class Computer extends Part {
             this.mapScaling+=10
         } else if (this.mapScaling<1000) {
             this.mapScaling+=100
-        } else {
+        } else if (this.mapScaling<10000) {
             this.mapScaling+=1000
+        } else {
+            this.mapScaling+=10000
         }
 
     }
 
     decMapScaling() {
-        if (this.mapScaling>1000) {
+        if (this.mapScaling>10000) {
+            this.mapScaling-=10000
+        } else if (this.mapScaling>1000) {
             this.mapScaling-=1000
         } else if (this.mapScaling>100) {
             this.mapScaling-=100

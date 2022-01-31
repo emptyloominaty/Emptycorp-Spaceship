@@ -1,5 +1,8 @@
 class AiShip {
     position = {x:0,y:0,z:0}
+    positionPrecise = {x:new BigNumber(0),y:new BigNumber(0),z:new BigNumber(0)}
+    positionHi = {x:0, y:0, z:0}
+    positionLo = {x:0, y:0, z:0}
     hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
     type = "civilian"
 
@@ -83,15 +86,26 @@ class AiShip {
         let vx = (Math.sin(phi)*Math.sin(theta) )* speed
         let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
-        this.position.x += vx
-        this.position.y += vy
-        this.position.z += vz
+        this.positionPrecise.x = this.positionPrecise.x.plus(vx)
+        this.positionPrecise.y = this.positionPrecise.y.plus(vy)
+        this.positionPrecise.z = this.positionPrecise.z.plus(vz)
+        this.position.x = this.positionPrecise.x.toNumber()
+        this.position.y = this.positionPrecise.y.toNumber()
+        this.position.z = this.positionPrecise.z.toNumber()
+
+        this.positionHi.x = ((this.positionPrecise.x.toNumber().toPrecision(12)))
+        this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
+        this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12)))
+
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
     }
 
     constructor(x,y,z,type,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge ) {
-        this.position.x = x
-        this.position.y = y
-        this.position.z = z
+        this.positionPrecise.x = new BigNumber(x)
+        this.positionPrecise.y = new BigNumber(y)
+        this.positionPrecise.z = new BigNumber(z)
         this.type = type //miner,trader,civilian,military
         this.faction = faction
         this.rotationSpeed = rotSpeed

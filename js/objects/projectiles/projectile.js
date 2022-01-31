@@ -65,9 +65,6 @@ class Projectile {
         this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
         this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
         this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
-
-        //console.log(((playerShip.positionHi.y)-(this.positionHi.y)).toString())
-
     }
 
     constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,damageData) {
