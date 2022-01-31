@@ -11,6 +11,10 @@ class Ship {
     //---------------------------------------------
     speed = 0 //c
     position = {x:1, y:1, z:0, yaw: {direction:360, targetDirection:360, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
+    positionPrecise = {x:new BigNumber(1),y:new BigNumber(1),z:new BigNumber(0)}
+    positionHi = {x:1, y:1, z:0}
+    positionLo = {x:0, y:0, z:0}
+
     hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
     weight = this.baseWeight
 
@@ -294,7 +298,7 @@ class Ship {
     }
     move() {
         let speedInlyh = this.speed/8765.812756
-        let speed = speedInlyh/3600/gameFPS
+        let speed = speedInlyh/3600/gameFPS // ly/s
 
         let angleInRadianYaw = (playerShip.position.yaw.direction*Math.PI) / 180
         let angleInRadianPitch = ((playerShip.position.pitch.direction-180)*Math.PI) / 180
@@ -305,9 +309,22 @@ class Ship {
         let vx = (Math.sin(phi)*Math.sin(theta) )* speed
         let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
-        this.position.x += vx
-        this.position.y += vy
-        this.position.z += vz
+
+        this.positionPrecise.x = this.positionPrecise.x.plus(vx)
+        this.positionPrecise.y = this.positionPrecise.y.plus(vy)
+        this.positionPrecise.z = this.positionPrecise.z.plus(vz)
+        this.position.x = this.positionPrecise.x.toNumber()
+        this.position.y = this.positionPrecise.y.toNumber()
+        this.position.z = this.positionPrecise.z.toNumber()
+
+        this.positionHi.x = ((this.positionPrecise.x.toNumber().toPrecision(12)))
+        this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
+        this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12))) // (new BigNumber(
+
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
+
     }
     doLights() {
         if (this.lights.insideOn===1) {
@@ -783,8 +800,8 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
-    missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30,damage:100,shieldDmgBonus:0,ignoreShield:false, speed:100, color: 0x555555, maxSpeed:100000, guided:true}}],
-    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
+    missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30,damage:100,shieldDmgBonus:0,ignoreShield:false, speed:0.000001, color: 0x555555, maxSpeed:100000, guided:true}}],
+    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
         //{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
         //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,damage:4,shieldDmgBonus:0,ignoreShield:false,cd:1 /*seconds*/,life: 5, speed:5000, color: 0xffaa00}}

@@ -3,9 +3,11 @@ class Weapon extends Part {
         if (this.cooldown>=this.maxCooldown) {
             if (playerShip.usePower((this.power*this.length),this.group)) {
                 let xyz = this.getStartPosition()
-                let x = playerShip.position.x + xyz[0]
-                let y = playerShip.position.y + xyz[1]
-                let z = playerShip.position.z + xyz[2]
+                let x = playerShip.positionPrecise.x.plus(xyz[0])
+                let y = playerShip.positionPrecise.y.plus(xyz[1])
+                let z = playerShip.positionPrecise.z.plus(xyz[2])
+
+                //console.log(x.toString()," | ",y.toString()," | ",z.toString())
                 let yaw = playerShip.position.yaw.direction
                 let pitch = playerShip.position.pitch.direction-180
 
@@ -51,7 +53,7 @@ class Weapon extends Part {
     }
 
     getStartPosition() {
-        let speed = 0.000003 //0.005
+        let speed = 0.000000000000005
 
         let angleInRadianYaw = (playerShip.position.yaw.direction*Math.PI) / 180
         let angleInRadianPitch = (((playerShip.position.pitch.direction-45)-180)*Math.PI) / 180
@@ -62,7 +64,7 @@ class Weapon extends Part {
         let vx = (Math.sin(phi)*Math.sin(theta) )* speed
         let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
-        //console.log(vx," | ",vy," | ",vz)
+
         return [vx,vy,vz]
     }
 

@@ -4,6 +4,10 @@ class Projectile {
     targetYaw = 0
     targetPitch = 0
     position = {x:0,y:0,z:0}
+    positionPrecise = {x:new BigNumber(1),y:new BigNumber(1),z:new BigNumber(0)}
+    positionHi = {x:0, y:0, z:0}
+    positionLo = {x:0, y:0, z:0}
+
     speed = 0
     life = 10
     maxLife = 10
@@ -46,15 +50,30 @@ class Projectile {
         let vx = (Math.sin(phi)*Math.sin(theta) )* speed
         let vy = (Math.sin(phi)*Math.cos(theta) )* speed
         let vz = (Math.cos(phi))* speed
-        this.position.x += vx
-        this.position.y += vy
-        this.position.z += vz
+
+        this.positionPrecise.x = this.positionPrecise.x.plus(vx)
+        this.positionPrecise.y = this.positionPrecise.y.plus(vy)
+        this.positionPrecise.z = this.positionPrecise.z.plus(vz)
+        this.position.x = this.positionPrecise.x.toNumber()
+        this.position.y = this.positionPrecise.y.toNumber()
+        this.position.z = this.positionPrecise.z.toNumber()
+
+        this.positionHi.x = ((this.positionPrecise.x.toNumber().toPrecision(12)))
+        this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
+        this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12)))
+
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
+
+        console.log(((playerShip.positionLo.y)-(this.positionLo.y)).toString())
+
     }
 
     constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,damageData) {
-        this.position.x = x
-        this.position.y = y
-        this.position.z = z
+        this.positionPrecise.x = x
+        this.positionPrecise.y = y
+        this.positionPrecise.z = z
         this.yaw = yaw
         this.targetYaw = yaw
         this.pitch = pitch
