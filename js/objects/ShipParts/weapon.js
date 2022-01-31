@@ -6,8 +6,6 @@ class Weapon extends Part {
                 let x = playerShip.positionPrecise.x.plus(xyz[0])
                 let y = playerShip.positionPrecise.y.plus(xyz[1])
                 let z = playerShip.positionPrecise.z.plus(xyz[2])
-
-                //console.log(x.toString()," | ",y.toString()," | ",z.toString())
                 let yaw = playerShip.position.yaw.direction
                 let pitch = playerShip.position.pitch.direction-180
 

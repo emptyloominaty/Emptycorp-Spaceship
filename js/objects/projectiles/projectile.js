@@ -66,7 +66,7 @@ class Projectile {
         this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
         this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
 
-        console.log(((playerShip.positionLo.y)-(this.positionLo.y)).toString())
+        //console.log(((playerShip.positionHi.y)-(this.positionHi.y)).toString())
 
     }
 
@@ -99,7 +99,6 @@ let projectilesRun = function() {
             if (projectiles[i].type==="missile") {
                 projectiles[i].run2()
             }
-           // console.log(projectiles[i].x," | ",projectiles[i].y," | ",projectiles[i].z)
             if (!destroy) {
                 shipWindow3D.scene.remove(shipWindow3D.projectiles[i])
                 shipWindow3D.projectiles[i] = undefined

@@ -65,7 +65,7 @@ class CanvasMain {
         let type = projectiles[id].type
         let geometry
         if (type==="laser") {
-            geometry = new THREE.CylinderGeometry( 0.0000000000000002, 0.0000000000000002, 0.000000000000058, 12, 2 ) //0.0000000000000002, 0.0000000000000002, 0.0000000001
+            geometry = new THREE.CylinderGeometry( 0.0000000000000002, 0.0000000000000002, 0.000000000000058, 20, 50 ) // 0.0000000000000002, 0.0000000000000002, 0.000000000000058
         } else if (type==="plasma") {
             geometry = new THREE.SphereGeometry(0.0000000000000005, 16, 16, 0, Math.PI * 2, 0, Math.PI * 2)
         } else if (type==="missile") {
@@ -96,12 +96,10 @@ class CanvasMain {
                 if (this.projectiles[i]===undefined) {
                     this.createNewProjectile(i)
                 }
-                this.projectiles[i].position.x = (projectiles[i].positionHi.x-camHi.x)+(projectiles[i].positionLo.x-camLo.x) //x //TODO:FIX
-                this.projectiles[i].position.y = (projectiles[i].positionHi.z-camHi.y)+(projectiles[i].positionLo.z-camLo.z) //z //TODO:FIX
-                this.projectiles[i].position.z = (projectiles[i].positionHi.y-camHi.z)+(projectiles[i].positionLo.y-camLo.z) //y //TODO:FIX
-                //console.log( this.projectiles[i].position.x," | ", this.projectiles[i].position.y," | ", this.projectiles[i].position.z)
-                //console.log( (projectiles[i].positionHi.x-camHi.x)," | ", (projectiles[i].positionHi.y-camHi.z)," | ", (projectiles[i].positionHi.z-camHi.y))
-                //console.log( (projectiles[i].positionLo.x-camLo.x)," | ", (projectiles[i].positionLo.y-camLo.z)," | ", (projectiles[i].positionLo.z-camLo.y))
+                this.projectiles[i].position.x = (projectiles[i].positionHi.x-camHi.x)+(projectiles[i].positionLo.x-camLo.x) //x
+                this.projectiles[i].position.y = (projectiles[i].positionHi.z-camHi.y)+(projectiles[i].positionLo.z-camLo.y) //z
+                this.projectiles[i].position.z = (projectiles[i].positionHi.y-camHi.z)+(projectiles[i].positionLo.y-camLo.z) //y
+
 
                 this.projectiles[i].rotation.x = ((projectiles[i].pitch-90)/57.295779487363233601652280409982)
                 this.projectiles[i].rotation.y = ((projectiles[i].yaw-180)/57.295779487363233601652280409982)
