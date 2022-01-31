@@ -27,6 +27,7 @@ let inputFunctions = {
 
     toggleLightsInside() {
         playerShip.lights.insideOn = 1 - playerShip.lights.insideOn
+        toggleLights()
         this.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
     },
     toggleLightsOutside() {
@@ -110,11 +111,22 @@ let inputFunctions = {
     }
 }
 
+let toggleLights = function() {
+    if (playerShip.lights.insideOn===1) {
+        elements.root.style.setProperty("--background-color-light","#343434")
+        elements.root.style.setProperty("--background-color-light2","#333")
+    } else {
+        elements.root.style.setProperty("--background-color-light","#171717")
+        elements.root.style.setProperty("--background-color-light2","#151515")
+    }
+}
+
 let updateToggles = function() {
     inputFunctions.toggleButtonText( document.getElementById("btn_rcs"),playerShip.rcs)
     inputFunctions.toggleButtonText( document.getElementById("btn_eRcs"),playerShip.eRcs)
     inputFunctions.toggleButtonText( document.getElementById("btn_lightsInside"),playerShip.lights.insideOn)
     inputFunctions.toggleButtonText( document.getElementById("btn_lightsOutside"),playerShip.lights.outsideOn)
+    toggleLights()
     inputFunctions.toggleButtonText( document.getElementById("btn_computer"),playerShip.computers[0].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_atmosphereControl"),playerShip.lifeSupport[0].on)
     inputFunctions.toggleButtonText( document.getElementById("btn_temperatureControl"),playerShip.lifeSupport[1].on)

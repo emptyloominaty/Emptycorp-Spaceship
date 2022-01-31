@@ -1,6 +1,6 @@
 #navControl {
     background-color:#000;
-    border:2px solid #333;
+    border:2px solid var(--background-color-light2);
     border-radius:2px;
     position:absolute;
     right:0;

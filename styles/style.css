@@ -1,5 +1,13 @@
+:root {
+    --background-color-light:#343434;
+    --background-color-light2:#333;
+
+    --background-color-dark: #171717;
+    --background-color-dark2: #151515;
+}
+
 html {
-    background-color: #343434;
+    background-color: var(--background-color-light);
     color: #d1d1d1;
     font-family: Consolas, monospace;
 }
@@ -304,7 +312,7 @@ input[type=number] {
 
 
 .backgroundBottomDiv {
-    background-color:#333;
+    background-color:var(--background-color-light2);
     border:1px solid #000;
     border-radius:3px;
     padding:4px;
@@ -312,7 +320,7 @@ input[type=number] {
 
 
 .RcsControl {
-    background-color:#333;
+    background-color:var(--background-color-light2);
     border:1px solid #000;
     border-radius:2px;
     position:absolute;

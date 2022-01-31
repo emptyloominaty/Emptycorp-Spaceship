@@ -40,6 +40,7 @@ let elements = {
     debug123: document.getElementById("debug123"),
     navControl: document.getElementById("navControl"),
     shieldCharge: document.getElementById("shieldCharge"),
+    root: document.querySelector(':root'),
 }
 
 for (let i = 0; i<11; i++) {
