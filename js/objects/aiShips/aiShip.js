@@ -116,6 +116,7 @@ let aiShipsRun = function() {
             let destroy = aiShips[i].run()
             aiShips[i].run2()
             if (!destroy) {
+                if (playerShip.computers[0].targetObj===aiShips[i]) {playerShip.computers[0].targetObj={}}
                 //shipWindow3D.scene.remove()
                 //shipWindow3D.aiShips[i] = undefined
                 aiShips[i]=undefined

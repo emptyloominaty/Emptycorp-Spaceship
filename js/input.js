@@ -168,8 +168,6 @@ let keyLoop = () => {
         playerShip.targetSpeed-=valSpeed
     }
 
-
-
     //Speed
     if (playerShip.targetSpeed<0) {
         playerShip.targetSpeed=0
@@ -200,6 +198,20 @@ document.addEventListener('keydown', keydown)
 document.addEventListener('keyup', keyup)
 
 
+let zoom = function(event) {
+    event.preventDefault()
+    let val = event.deltaY * -0.01
+    if ( playerShip.computers[0].tab!=="nav") {
+        val = 0
+    }
+    if (val>0) {
+        playerShip.computers[0].incMapScaling()
+    } else if((val<0)) {
+        playerShip.computers[0].decMapScaling()
+    }
+}
+
+playerShip.computers[0].display.canvasElement.onwheel = zoom
 
 
 
