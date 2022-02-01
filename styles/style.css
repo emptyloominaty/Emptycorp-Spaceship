@@ -108,14 +108,29 @@ input[type=number] {
 #bottomDiv {
     position:absolute;
     width:100%;
-    top:500px;
     display:flex;
+    top:500px;
     justify-content: space-evenly;
 }
 
-@media only screen and (max-height: 950px) {
+@media only screen and (min-height: 1020px) {
     #bottomDiv {
-        top:450px;
+        top:560px;
+    }
+}
+@media only screen and (max-height: 1020px) {
+    #bottomDiv {
+        top:560px;
+    }
+}
+@media only screen and (max-height: 980px) {
+    #bottomDiv {
+        top:530px;
+    }
+}
+@media only screen and (max-height: 960px) {
+    #bottomDiv {
+        top:480px;
     }
 }
 @media only screen and (max-height: 900px) {
@@ -123,7 +138,12 @@ input[type=number] {
         top:400px;
     }
 }
-@media only screen and (max-height: 820px) {
+@media only screen and (max-height: 850px) {
+    #bottomDiv {
+        top:350px;
+    }
+}
+@media only screen and (max-height: 800px) {
     #bottomDiv {
         top:300px;
     }
