@@ -73,7 +73,7 @@ starSystems.push (new StarSystem(
         },
     {
         //
-        O2:{max:5000000,val:5000000,selling:true, buying:false, price:0.0004, ratios:[0.2,0.5,0.8]}, N2:{max:5000000,val:5000000,selling:true, buying:false, price:0.0004, ratios:[0.2,0.5,0.8]}, H2:{max:5000000,val:5000000,selling:true, buying:false, price:0.0004, ratios:[0.2,0.5,0.8]}, He:{max:5000000,val:5000000,selling:true, buying:false, price:0.0004, ratios:[0.2,0.5,0.8]}, //Gas (Litres)
+        O2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:0.0004, ratios:[0.2,0.5,0.8]}, N2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:0.0004, ratios:[0.2,0.5,0.8]}, H2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:0.0004, ratios:[0.2,0.5,0.8]}, He:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:0.0004, ratios:[0.2,0.5,0.8]}, //Gas (Litres)
         deuterium:1250, fuel1:10, uranium:5000, //Liquids,Solid (kg)
         food:0.01, water:0.001, medicine:1.2, //pop resources
         steel:0.1, gold:1.4, silver:0.5, aluminium:0.2, titanium:0.6, silicon:0.05, chromium:0.12, carbon:0.075, polymer:0.5, lead:0.2, //building resources

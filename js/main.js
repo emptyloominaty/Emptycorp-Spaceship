@@ -41,6 +41,7 @@ let elements = {
     navControl: document.getElementById("navControl"),
     shieldCharge: document.getElementById("shieldCharge"),
     root: document.querySelector(':root'),
+    weaponBar: document.getElementById("weaponBar"),
 }
 
 for (let i = 0; i<11; i++) {

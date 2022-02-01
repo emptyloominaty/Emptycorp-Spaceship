@@ -44,6 +44,18 @@ class StarSystem {
                 this.resources[key].selling = false
             }
 
+            if (this.resources[key].need!==undefined && ratio<this.resources[key].ratios[1]) {
+                let amount = (this.resources[key].val*(this.resources[key].ratios[2]-ratio))
+                this.resourcesNeed[this.resourcesNeed.length] = {name:this.resources[key].name, amount:amount, maxPrice:this.resources[key].price}
+                this.resources[key].need = this.resourcesNeed.length
+            }
+
+            if (ratio<this.resources[key].ratios[1]) {
+                this.resources[key].maxPrice = this.resources[key].price/((1-this.resources[key].ratios[1])+ratio)
+                this.resourcesNeed[this.resources[key].need] = this.resources[key].maxPrice
+            }
+
+
         })
     }
 
