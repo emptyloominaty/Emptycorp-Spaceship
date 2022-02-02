@@ -16,6 +16,7 @@ class StarSystem {
     resourcesNeed = [] // {name:"H2",amount:500,maxPrice:0.002}
     producing = [] //{name:"H2",amount:1/* per minute */}
 
+
     credits = 1000000
 
     run() {
@@ -40,12 +41,17 @@ class StarSystem {
 
             this.resources.electronics.val -= (pop*0.01)*mul
 
+            this.resources.steel.val -= (pop*0.02)*mul
             this.resources.polymer.val -= (pop*0.07)*mul
 
-            this.resources.O2.val -= (pop*381.94)*mul      //550
+            this.resources.O2.val -= (pop*381.94)*mul
             this.resources.deuterium.val -= (pop*0.001)*mul
             this.resources.uranium.val -= (pop*0.0001)*mul
             this.resources.fuel1.val -= (pop*0.001)*mul
+
+            //
+            this.credits += (pop*this.prosperity)*mul
+
         }
     }
 
@@ -53,7 +59,7 @@ class StarSystem {
     produceResources(avgFPS) {
         let mul = 60/avgFPS
         for (let i = 0; i<this.producing.length; i++) {
-            this.resources[this.producing[i].name] += this.producing[i].amount*mul
+            this.resources[this.producing[i].name].val += this.producing[i].amount*mul
         }
     }
 
@@ -135,7 +141,7 @@ class StarSystem {
     }
 
 
-    constructor(stars,planets,asteroids,faction,prices,resources,name,position,servers,mapSize = 15) {
+    constructor(stars,planets,asteroids,faction,prices,resources,name,position,servers,factories,prosperity,mapSize = 15) {
         this.stars = stars
         this.planets = planets
         this.asteroids = asteroids
@@ -148,6 +154,8 @@ class StarSystem {
         this.name = name
         this.mapSize = mapSize
         this.position = position
+        this.prosperity = prosperity
+        //population
         for (let i = 0; i<planets.length; i++) {
             this.totalPopulation += planets[i].population
             for (let j = 0; j<planets[i].moons.length; j++) {
@@ -157,5 +165,32 @@ class StarSystem {
         for (let i = 0; i<asteroids.length; i++) {
             this.totalPopulation+=asteroids[i].population
         }
+        //TODO:function updateFactories()
+        for (let i = 0; i<planets.length; i++) {
+
+            if (planets[i].naturalResources!==undefined) {
+                for (let a = 0; a<planets[i].naturalResources.length; a++) {
+                    let res = planets[i].naturalResources[a]
+                    if (res.mining) {
+                        this.producing.push({name:res.name, amount:res.amount})
+                    }
+                }
+            }
+
+            for (let j = 0; j<planets[i].moons.length; j++) {
+                if (planets[i].moons[j].naturalResources!==undefined) {
+                    for (let a = 0; a<planets[i].moons[j].naturalResources.length; a++) {
+                        let res = planets[i].moons[j].naturalResources[a]
+                        if (res.mining) {
+                            this.producing.push({name:res.name, amount:res.amount})
+                        }
+                    }
+                }
+            }
+        }
+        for (let i = 0; i<factories.length; i++) {
+
+        }
+
     }
 }

@@ -14,12 +14,12 @@ let updateSystems = {i:0,array:[],}
 
 let doBeforeStart =  function() {
     //------------------------------
+    //generate when the systems should be updated
     for (let i = 0; i < 3600; i++) {
         updateSystems.array[i] = []
     }
     let noSystems = starSystems.length
     let a = 0
-    //generate when the systems should be updated
     for (let i = 0; i<noSystems; i++) {
         updateSystems.array[a].push(i)
         a++
