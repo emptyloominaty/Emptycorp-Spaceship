@@ -15,6 +15,7 @@ class StarSystem {
 
     resourcesNeed = [] // {name:"H2",amount:500,maxPrice:0.002}
     producing = [] //{name:"H2",amount:1/* per minute */}
+    factories = []
 
 
     credits = 1000000
@@ -60,7 +61,26 @@ class StarSystem {
         let mul = 60/avgFPS
         for (let i = 0; i<this.producing.length; i++) {
             this.resources[this.producing[i].name].val += this.producing[i].amount*mul
+            console.log(this.producing[i].name," +",this.producing[i].amount*mul )
         }
+        for (let i = 0; i<this.factories.length; i++) {
+            let useA = this.factories[i].amount*this.factories[i].ratio*mul
+            let useB = this.factories[i].amount/this.factories[i].ratio*mul
+            let matA = this.factories[i].input[0]
+            let matB = this.factories[i].input[1]
+
+            if (this.resources[matA].val>useA && this.resources[matB].val>useB) {
+                this.resources[matA].val-= useA
+                this.resources[matB].val-= useB
+                console.log(matA," -",useA )
+                console.log(matB," -",useB )
+
+                this.resources[this.factories[i].name].val += this.factories[i].amount*mul
+                console.log(this.factories[i].name," +",this.factories[i].amount*mul )
+            }
+
+        }
+
     }
 
     checkResources() {
@@ -141,7 +161,7 @@ class StarSystem {
     }
 
 
-    constructor(stars,planets,asteroids,faction,prices,resources,name,position,servers,factories,prosperity,mapSize = 15) {
+    constructor(stars,planets,asteroids,faction,prices,resources,name,position,servers,factories,naturalResources,prosperity,mapSize = 15) {
         this.stars = stars
         this.planets = planets
         this.asteroids = asteroids
@@ -151,6 +171,10 @@ class StarSystem {
         this.factionColor = factionList[faction].color
         this.prices = prices
         this.resources = resources
+
+        this.naturalResources = naturalResources
+        this.factoryResources = factories
+
         this.name = name
         this.mapSize = mapSize
         this.position = position
@@ -166,30 +190,15 @@ class StarSystem {
             this.totalPopulation+=asteroids[i].population
         }
         //TODO:function updateFactories()
-        for (let i = 0; i<planets.length; i++) {
-
-            if (planets[i].naturalResources!==undefined) {
-                for (let a = 0; a<planets[i].naturalResources.length; a++) {
-                    let res = planets[i].naturalResources[a]
-                    if (res.mining) {
-                        this.producing.push({name:res.name, amount:res.amount})
-                    }
-                }
-            }
-
-            for (let j = 0; j<planets[i].moons.length; j++) {
-                if (planets[i].moons[j].naturalResources!==undefined) {
-                    for (let a = 0; a<planets[i].moons[j].naturalResources.length; a++) {
-                        let res = planets[i].moons[j].naturalResources[a]
-                        if (res.mining) {
-                            this.producing.push({name:res.name, amount:res.amount})
-                        }
-                    }
-                }
+        for (let i = 0; i<naturalResources.length; i++) {
+            if (naturalResources[i].producing) {
+                this.producing.push({name:naturalResources[i].name, amount:naturalResources[i].amount})
             }
         }
         for (let i = 0; i<factories.length; i++) {
-
+            if (factories[i].producing) {
+                this.factories.push({name:factories[i].name, amount:factories[i].amount, input:factories[i].input, ratio:factories[i].ratio})
+            }
         }
 
     }
