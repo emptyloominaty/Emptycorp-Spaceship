@@ -10,5 +10,5 @@ function loop(timestamp) {
     window.requestAnimationFrame(loop)
 }
 
-
+doBeforeStart()
 window.requestAnimationFrame(loop)

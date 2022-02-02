@@ -22,14 +22,42 @@ class StarSystem {
 
     }
 
-
-    produceResources() { //TODO:every min
-        for (let i = 0; i<this.producing.length; i++) {
-            this.resources[this.producing[i].name] += this.producing[i].amount
+    runMinute(avgFPS) {
+        if (Object.keys(this.resources).length>0) {
+            this.produceResources(avgFPS)
+            this.popUseResources(avgFPS)
+            this.checkResources()
         }
     }
 
-    checkResources() { //TODO:every min
+    popUseResources(avgFPS) {
+        if (this.totalPopulation>0) {
+            let mul = 60/avgFPS
+            let pop = this.totalPopulation/1000000
+            this.resources.water.val -= (pop*69.4)*mul
+            this.resources.food.val -= (pop*0.694)*mul
+            this.resources.medicine.val -= (pop*0.07)*mul
+
+            this.resources.electronics.val -= (pop*0.01)*mul
+
+            this.resources.polymer.val -= (pop*0.07)*mul
+
+            this.resources.O2.val -= (pop*381.94)*mul      //550
+            this.resources.deuterium.val -= (pop*0.001)*mul
+            this.resources.uranium.val -= (pop*0.0001)*mul
+            this.resources.fuel1.val -= (pop*0.001)*mul
+        }
+    }
+
+
+    produceResources(avgFPS) {
+        let mul = 60/avgFPS
+        for (let i = 0; i<this.producing.length; i++) {
+            this.resources[this.producing[i].name] += this.producing[i].amount*mul
+        }
+    }
+
+    checkResources() {
         Object.keys(this.resources).forEach(key => {
             let ratio = this.resources[key].max/this.resources[key].val
             //idk

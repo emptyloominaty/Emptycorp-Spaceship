@@ -3,10 +3,31 @@ let debug = {performance:false,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
 let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
+let avgFPSlastMin = [60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60]
+let avgFPS = 60
 
 let inputRange_speed = 0
 let inputNumber_speed = 0
 
+let timers = [{val:0,maxVal:60}]
+let updateSystems = {i:0,array:[],}
+
+let doBeforeStart =  function() {
+    //------------------------------
+    for (let i = 0; i < 3600; i++) {
+        updateSystems.array[i] = []
+    }
+    let noSystems = starSystems.length
+    let a = 0
+    //generate when the systems should be updated
+    for (let i = 0; i<noSystems; i++) {
+        updateSystems.array[a].push(i)
+        a++
+        if (a>3600) {a=0}
+    }
+    //------------------------------
+    //------------------------------
+    }
 
 let elements = {
     inputRange_speed: document.getElementById("inputRange_speed"),
@@ -59,11 +80,39 @@ function update(progress) {
     }
     gameFPS = (1/progress*1000)/speedInc
 
+    avgFPSlastMin.push(gameFPS)
+    if (avgFPSlastMin.length===3600) {
+        avgFPSlastMin.shift()
+    }
+    avgFPS = 0
+    for (let i = 0; i<avgFPSlastMin.length;i++) {
+        avgFPS += avgFPSlastMin[i]
+    }
+    avgFPS = avgFPS / avgFPSlastMin.length
+
     keyLoop() //keyboard inputs
     playerShip.everyFrame(gameFPS)
     mainServer.run()
     projectilesRun()
     aiShipsRun()
+
+
+    timers[0].val+=1/gameFPS
+    if (timers[0].val>timers[0].maxVal) {
+        timers[0].val = 0
+        //-----------------------------------------------------Every Min Code
+
+        //
+    }
+    //Update Systems
+    for (let i = 0; i<updateSystems.array[updateSystems.i].length; i++) {
+        starSystems[updateSystems.array[updateSystems.i][i]].runMinute(avgFPS)
+        //console.log(updateSystems.array[updateSystems.i][i])
+    }
+    updateSystems.i++
+    if (updateSystems.i===3600) {updateSystems.i=0}
+
+
     //speed range<->number
      if (elements.inputRange_speed.value!==inputRange_speed) {
          elements.inputNumber_speed.value = elements.inputRange_speed.value
