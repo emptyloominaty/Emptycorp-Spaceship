@@ -29,6 +29,8 @@ class AiShip {
     consumption = 5 // kg per ly
     consumptionC = 5/8765.812756 //kg per c
 
+    credits = 0
+
     //ai
     target = {}
 

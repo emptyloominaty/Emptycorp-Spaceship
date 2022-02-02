@@ -16,6 +16,8 @@ class StarSystem {
     resourcesNeed = [] // {name:"H2",amount:500,maxPrice:0.002}
     producing = [] //{name:"H2",amount:1/* per minute */}
 
+    credits = 1000000
+
     run() {
 
     }
@@ -78,22 +80,20 @@ class StarSystem {
     }
     
     updateSellingPrice(name,ratio) {
-        ratio = 0.3+ratio
-        if (ratio>1) {ratio = 1}
-        this.resources[name] = this.resources[name].price/(ratio)
+        ratio = 0.4+ratio
+        if (ratio>1.4) {ratio = 1.4}
+        this.resources[name].price = this.resources[name].price/(ratio)
     }
 
     buy(name,amount,credits) { //system->ship
-        //TODO:credits
-        this.resources[name].val -= Math.round(amount)
-
-
+        this.credits += credits
+        this.resources[name].val -= amount
         return amount
     }
 
     sell(name,amount) { //ship->system
         let credits
-        this.resources[name].val += Math.round(amount)
+        this.resources[name].val += amount
         if (this.resources[name].need!==undefined && this.resourcesNeed[this.resources[name].need]!==undefined) {
             this.resourcesNeed[this.resources[name].need].amount -= amount
             if (this.resourcesNeed[this.resources[name].need].amount<0) {
@@ -102,6 +102,7 @@ class StarSystem {
             }
         }
         credits = this.resources[name].val*this.resources[name].price
+        this.credits -= credits
         return credits
     }
 
