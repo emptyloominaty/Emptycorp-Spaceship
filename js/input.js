@@ -219,6 +219,10 @@ let keyLoop = () => {
             }
         }
     }
+    if (keyPressed["Tab"]) {
+        playerShip.computers[0].functions.findNearestEnemyTarget()
+        keyPressed["Tab"] = false
+    }
 
 
     //----------------------------------------------------------

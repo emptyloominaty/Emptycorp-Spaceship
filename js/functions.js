@@ -24,6 +24,14 @@ let getDirection360 = function(direction) {
     return direction
 }
 
+let calcDistance = function(obj1,obj2) {
+    let a = obj1.position.x - obj2.position.x //x1 - x2
+    let b = obj1.position.y - obj2.position.y //y1 - y2
+    let c = obj1.position.z - obj2.position.z //z1 - z2
+    return Math.sqrt( a*a + b*b + c*c )
+}
+
+
 let calcHitbox = function(x,y,z,size) {
   return  {x1:x-size,y1:y-size,z1:z-size,x2:x+size,y2:y+size,z2:z+size}
 }

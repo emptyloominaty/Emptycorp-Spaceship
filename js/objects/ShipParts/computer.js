@@ -91,6 +91,18 @@ class Computer extends Part {
             this.comm.transmitData([0.004, id, 3, {data:"trade", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(3)
             this.data.priceData={"Downloading Data...":""}
+        },
+        findNearestEnemyTarget: ()=>{
+            for (let i = 0; i<aiShips.length;i++) {
+                let ship = aiShips[i]
+                let faction = ship.faction
+                if (factionList[faction].playerRelations<-50) {
+                    if (calcDistance(playerShip,ship)<1) {
+                        this.targetObj = ship
+                        this.target = "Unidentified Ship"
+                    }
+                }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 class Ship {
     myAddress = 1
+    faction = "Player"
     //---------------------------------------------
     crew = [{name:"Empty",status:"alive",dying:0}]
     baseWeight = 5500 //kg

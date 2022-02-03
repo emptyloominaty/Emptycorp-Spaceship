@@ -1,7 +1,7 @@
 let galaxy = {
 
 }
-let factionList = {Terran:new Faction("#6c8aee",10,), }
+let factionList = {Player:new Faction("#53ee53",100,),Terran:new Faction("#6c8aee",10,),Pirate:new Faction("#ff3d3a",-100,) }
 
 
 let globalPrices = {
