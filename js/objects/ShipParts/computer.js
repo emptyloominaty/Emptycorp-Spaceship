@@ -426,7 +426,8 @@ class Computer extends Part {
                 let x = varX-(xx*this.mapScaling)
                 let y = varY-(yy*this.mapScaling)
                 if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
-                    this.display.drawCircle(x,y,2,"#ff88f1")
+                    //this.display.drawCircle(x,y,2,"#ff88f1")
+                    this.display.drawLineRotate(x,y,2,10,370-pr.yaw,"#ff88f1")
                 }
             }
         }

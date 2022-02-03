@@ -60,6 +60,20 @@ class DisplayModule {
         this.canvas.closePath()
     }
 
+    drawLineRotate(x,y,width,height,angle,color) {
+        this.canvas.save()
+        this.canvas.translate( x, y)
+        this.canvas.rotate(angle * Math.PI / 180)
+        this.canvas.beginPath()
+        this.canvas.moveTo(0, 0)
+        this.canvas.lineTo(width, height)
+        this.canvas.lineWidth = width
+        this.canvas.strokeStyle = color
+        this.canvas.stroke()
+        this.canvas.closePath()
+        this.canvas.restore()
+    }
+
     cursorPosition(event) {
         let rect = this.canvasElement.getBoundingClientRect()
         let x = event.clientX - rect.left
