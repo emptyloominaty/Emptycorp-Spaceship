@@ -63,6 +63,8 @@ let elements = {
     shieldCharge: document.getElementById("shieldCharge"),
     root: document.querySelector(':root'),
     weaponBar: document.getElementById("weaponBar"),
+    rcsV: document.getElementById("rcsV"),
+    rcsH: document.getElementById("rcsH"),
 }
 
 for (let i = 0; i<11; i++) {
@@ -123,7 +125,18 @@ function update(progress) {
      inputNumber_speed = elements.inputNumber_speed.value
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
-    throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
+
+    //throttle
+    if (playerShip.computers[0].data.engineThrottle>=0) {
+        throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
+    } else {
+        throttleBar(playerShip.computers[0].data.engineThrottle*(-100),"throttleBar")
+
+    }
+
+    //rcs
+    elements.rcsV.textContent = ((playerShip.computers[0].data.rcsUThrust*100)-(playerShip.computers[0].data.rcsDThrust*100)).toFixed(3)
+    elements.rcsH.textContent = ((playerShip.computers[0].data.rcsLThrust*100)-(playerShip.computers[0].data.rcsRThrust*100)).toFixed(3)
     throttleBar(playerShip.computers[0].data.rcsRThrust*100,"rcsBar",0,0.2,0.5,1,5,10,25,50,75,90) //right
     throttleBar(playerShip.computers[0].data.rcsLThrust*100,"rcs2Bar",0,0.2,0.5,1,5,10,25,50,75,90) //left
 

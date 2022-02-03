@@ -4,7 +4,7 @@ class AiShip {
     positionHi = {x:0, y:0, z:0}
     positionLo = {x:0, y:0, z:0}
     hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
-    type = "civilian"
+    type = "Fighter"
 
     yaw = 0
     targetYaw = 0
@@ -108,7 +108,7 @@ class AiShip {
         this.positionPrecise.x = new BigNumber(x)
         this.positionPrecise.y = new BigNumber(y)
         this.positionPrecise.z = new BigNumber(z)
-        this.type = type //miner,trader,civilian,military
+        this.type = type
         this.faction = faction
         this.rotationSpeed = rotSpeed
         this.accelerationSpeed = accSpeed

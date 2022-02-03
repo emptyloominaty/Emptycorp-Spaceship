@@ -75,6 +75,7 @@ class Engine extends Part {
                 let consumption = thrust/this.thrust
                 if (this.usePower(speed,consumption)) {
                     if (this.useFuel(speed,consumption)) {
+                        playerShip.computers[0].data.engineThrottle = thrust/this.thrust
                         return thrust
                     } else {this.noPowerOrFuel()}
                 } else {this.noPowerOrFuel()}

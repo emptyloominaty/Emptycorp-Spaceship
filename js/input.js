@@ -49,8 +49,12 @@ let inputFunctions = {
     toggleSpeedMode() {
         if (playerShip.speedMode === "FTL" && playerShip.speed<0.0000001) {
             playerShip.speedMode = "Sublight"
+            document.getElementById("inputRange_speed").max = 0.0001
+            document.getElementById("inputRange_speed").step = 0.0000001
         } else {
             playerShip.speedMode = "FTL"
+            document.getElementById("inputRange_speed").max = playerShip.maxSpeed
+            document.getElementById("inputRange_speed").step = 1
         }
         document.getElementById("btn_speedMode").innerText = playerShip.speedMode
     },
@@ -59,7 +63,7 @@ let inputFunctions = {
         document.getElementById("btn_turnOffEngines").style.backgroundColor = "#d34644"
     },
     setSpeed() {
-        playerShip.targetSpeed = document.getElementById("inputNumber_speed").value
+        playerShip.targetSpeed = Number(document.getElementById("inputNumber_speed").value)
         if (playerShip.speed<playerShip.targetSpeed) {
             playerShip.acc = 1
         } else {
@@ -156,7 +160,7 @@ let keyLoop = () => {
     if (playerShip.speedMode==="FTL") {
         valSpeed = 50*gameFPS
     } else {
-        valSpeed = 0.00000001*gameFPS
+        valSpeed = 0.000000001*gameFPS
     }
 
     //rotation
@@ -196,9 +200,27 @@ let keyLoop = () => {
     //speed
     if (keyPressed["ShiftLeft"]) {
         playerShip.targetSpeed+=valSpeed
+        playerShip.propulsion="on"
+        if (playerShip.speedMode==="Sublight") {
+            if (playerShip.speed<playerShip.targetSpeed) {
+                playerShip.acc = 1
+            } else {
+                playerShip.acc = 0
+            }
+        }
     } else if (keyPressed["ControlLeft"]) {
         playerShip.targetSpeed-=valSpeed
+        if (playerShip.speedMode==="Sublight") {
+            playerShip.propulsion="on"
+            if (playerShip.speed<playerShip.targetSpeed) {
+                playerShip.acc = 1
+            } else {
+                playerShip.acc = 0
+            }
+        }
     }
+
+
     //----------------------------------------------------------
     //Speed
     if (playerShip.targetSpeed<0) {

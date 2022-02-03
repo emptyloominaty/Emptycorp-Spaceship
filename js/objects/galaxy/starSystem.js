@@ -39,7 +39,6 @@ class StarSystem {
             this.resources.water.val -= (pop*69.4)*mul
             this.resources.food.val -= (pop*0.694)*mul
             this.resources.medicine.val -= (pop*0.07)*mul
-
             this.resources.electronics.val -= (pop*0.01)*mul
 
             this.resources.steel.val -= (pop*0.02)*mul

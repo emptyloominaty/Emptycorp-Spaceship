@@ -747,7 +747,6 @@ class Ship {
                     break
                 }
             }
-            //if (part.maxSpeed>maxSpeed) {maxSpeed = part.maxSpeed}
         }
         document.getElementById("inputRange_speed").max = maxSpeed
         this.maxSpeed = maxSpeed

@@ -50,3 +50,20 @@
     margin-bottom:2px;
     margin-left:41%;
 }
+
+
+#rcsV,#rcsH {
+    font: 10px "Consolas", monospace;
+    color:#888;
+}
+
+#rcsH {
+    position:absolute;
+    top:365px;
+    left:7px;
+}
+#rcsV {
+    position:absolute;
+    top:325px;
+    left:66px;
+}
