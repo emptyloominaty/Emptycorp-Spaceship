@@ -6,7 +6,6 @@
     flex-direction:column;
 }
 
-
 .throttleBar,.rcsBar,.rcsBarV {
     transition: all 100ms ease-out;
 }
@@ -34,23 +33,20 @@
     margin-left:41%;
 }
 
-
 .vline {
-    background-color:#FFF;
+    background-color:#888;
     width:1px;
     height:12px;
     margin-right:2px;
 }
 
-
 .hline {
-    background-color:#FFF;
+    background-color:#888;
     width:12px;
     height:1px;
     margin-bottom:2px;
     margin-left:41%;
 }
-
 
 #rcsV,#rcsH {
     font: 10px "Consolas", monospace;

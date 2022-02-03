@@ -21,3 +21,13 @@
     border-radius: 2px;
     padding:3px;
 }
+
+.wepCd {
+    background-color: #fff;
+    height:5px;
+}
+
+.wepCdBorder {
+    border: 1px solid #fff;
+    height:5px;
+}

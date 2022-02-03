@@ -75,13 +75,11 @@ elements.navControlAnglePitch = document.getElementById("navControlAnglePitch")
 let wbHtml = ""
 for (let i = 0; i<playerShip.weapons.length; i++) {
     let wep = playerShip.weapons[i]
-    wbHtml +="<div class='weaponBar'> "+wep.type+"("+Number(i+1)+")<br> <span id='wepCd"+i+"'>"+wep.cooldown+"</span> / <span id='wepMaxCd"+i+"'>"+wep.maxCooldown+"</span> </div>"
+    wbHtml +="<div class='weaponBar'> "+wep.type+"("+Number(i+1)+")<br> <div class='wepCdBorder'><div class='wepCd' id='wepCd"+i+"'> </div></div> </div>"
 }
-
 elements.weaponBar.innerHTML = wbHtml
 for (let i = 0; i<playerShip.weapons.length; i++) {
     elements["wepCd"+i] = document.getElementById("wepCd"+i)
-    elements["wepMaxCd"+i] = document.getElementById("wepMaxCd"+i)
 }
 //----------------------------------------------------------------------------------------------
 
@@ -135,8 +133,7 @@ function draw(progress) {
     elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)+" MJ"
     //weapons
     for (let i = 0; i<playerShip.weapons.length; i++) {
-        elements["wepCd"+i].textContent = playerShip.weapons[i].cooldown.toFixed(1)
-        elements["wepMaxCd"+i].textContent = playerShip.weapons[i].maxCooldown.toFixed(1)
+        elements["wepCd"+i].style.width = (playerShip.weapons[i].cooldown/playerShip.weapons[i].maxCooldown*100)+"%"
     }
     //Nav
     if (playerShip.computers[0].nav.on===1 && playerShip.computers[0].on===1) {
