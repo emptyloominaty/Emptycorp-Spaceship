@@ -43,7 +43,8 @@ class Missile extends Projectile {
     }
     
     guide() {
-        if (Object.keys(this.target).length!==0 && this.source.target!=="") {
+        if (Object.keys(this.source.target).length!==0) {
+            console.log(this.source.target)
             let a = this.source.target.position.x - this.position.x //x1 - x2
             let b = this.source.target.position.y - this.position.y //y1 - y2
             let c = this.source.target.position.z - this.position.z //z1 - z2
