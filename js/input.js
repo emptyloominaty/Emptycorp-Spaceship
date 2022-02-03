@@ -157,11 +157,28 @@ let keyPressed = {}
 let keyLoop = () => {
     let val = gameFPS/120
     let valSpeed = 1
-    if (playerShip.speedMode==="FTL") {
+
+    if (speedInputSet==="Default") {
+        if (playerShip.speedMode==="FTL") {
+            valSpeed = 50*gameFPS
+        } else {
+            valSpeed = 0.000000001*gameFPS
+        }
+    } else if (speedInputSet==="VeryFast") {
+        valSpeed = 250*gameFPS
+    } else if (speedInputSet==="Fast") {
         valSpeed = 50*gameFPS
-    } else {
+    } else if (speedInputSet==="Medium") {
+        valSpeed = gameFPS
+    } else if (speedInputSet==="Slow") {
         valSpeed = 0.000000001*gameFPS
+    } else if (speedInputSet==="VerySlow") {
+        valSpeed = 0.0000000001*gameFPS
     }
+
+    //TODO:Shutdown engines
+
+    //TODO:Autopilot
 
     //rotation
     if (keyPressed["KeyA"]) {
@@ -255,7 +272,7 @@ let keydown= (e)=> {
 document.addEventListener('keydown', keydown)
 document.addEventListener('keyup', keyup)
 
-
+//------------------------------------------------------------------------
 let zoom = function(event) {
     event.preventDefault()
     let val = event.deltaY * -0.01
@@ -271,5 +288,21 @@ let zoom = function(event) {
 
 playerShip.computers[0].display.canvasElement.onwheel = zoom
 
+//------------------------------------------------------------------------
+let changeSpeedSensitivity = function(event) {
+    event.preventDefault()
+    let val = event.deltaY * -0.01
+    if (val>0) {
+        speedIdArray++
+        if (speedIdArray>speedInputArray.length-1) {speedIdArray = speedInputArray.length-1}
+    } else if((val<0)) {
+        speedIdArray--
+        if (speedIdArray<0) {speedIdArray=0}
+    }
 
+    speedInputSet = speedInputArray[speedIdArray]
+    elements.speedSensitivityValue.innerText = speedInputSet+""
+}
+
+elements.speedSensitivity.onwheel = changeSpeedSensitivity
 

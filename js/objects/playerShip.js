@@ -117,7 +117,7 @@ class Ship {
             for(let i = 0; i<this.engines.length; i++) {
                 if (this.engines[i].on===1 && this.engines[i].type===this.speedMode) {
                     let thrust = this.engines[i].run(0,fps,this.targetSpeed,this.speed)
-                    this.thrust += thrust
+                    this.thrust += Number(thrust)
                     //------------------------------------------
                     if (thrust>1000000000) {
                         this.computers[0].data.engineThrustString = (thrust/1000000000).toFixed(1)+"PN"
@@ -143,9 +143,9 @@ class Ship {
             }
         }
 
-        if (this.speed>1) {
+        if (this.speed>1 || this.speedMode==="FTL") {
             let warpFriction = (Math.pow(this.speed*75, 1.5))
-            this.speed -= (((warpFriction*1000000)/this.weight)/299792458)/fps
+            this.speed -= Number((((warpFriction*1000000)/this.weight)/299792458)/fps)
             if (this.speed<0) {
                 this.speed=0
             }
@@ -786,7 +786,7 @@ let shipDefaultParts = {
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
     generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0,efficiency:80},
         {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0,efficiency:85}], //
-    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:50 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
+    engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.000000099 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
         {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.1 /* MN */, consumptionFuel:[0,0.09,0.15] /* kg/h */ , consumptionPower:[0.00005,0.06] /* MW*/  }],
     shields: [{weight:15 ,capacity:50, efficiency:0.5 /* per sec */, consumption:[0.05,0.2] /*MWh 0-maintaining 1-charging*/}],

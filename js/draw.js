@@ -156,7 +156,7 @@ function draw(progress) {
             let a = ss.position.x - nav.position.x //x1 - x2
             let b = ss.position.y - nav.position.y //y1 - y2
             let c = ss.position.z - nav.position.z //z1 - z2
-            d = Math.sqrt( a*a + b*b + c*c ).toFixed(2)+"ly"
+            d = Math.sqrt( a*a + b*b + c*c )
             //yaw
             angle = ((((Math.atan2( nav.position.y - ss.position.y, nav.position.x - ss.position.x ) * 180)) / Math.PI)-270)
             angle = angle*(-1)
@@ -175,7 +175,7 @@ function draw(progress) {
         elements.navControlDirYaw.textContent = getDirection360(playerShip.position.yaw.direction).toFixed(0)+"° / "+(playerShip.position.yaw.targetDirection-360).toFixed(0)+"°"
         elements.navControlDirPitch.textContent = (playerShip.position.pitch.direction-180).toFixed(0)+"° / "+(playerShip.position.pitch.targetDirection-180).toFixed(0)+"°"
         elements.navControlTarget.textContent = comp.target
-        elements.navControlDistance.textContent = d
+        elements.navControlDistance.textContent = getDistanceText(d)
         elements.navControlAngleYaw.textContent = angle
         elements.navControlAnglePitch.textContent = anglePitch
         if (elements.navControlScreen.style.display!=="block") {

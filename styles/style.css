@@ -149,6 +149,15 @@ input[type=number] {
     }
 }
 
+#speedSensitivity {
+    margin-top:3px;
+    padding:2px;
+    border:1px solid #666;
+    border-radius: 2px;
+    text-align: center;
+    font: 13px "Consolas", monospace;
+}
+
 #tanksDiv,#energyDiv {
     margin-top:50px;
 }

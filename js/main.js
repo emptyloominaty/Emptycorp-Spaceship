@@ -12,6 +12,15 @@ let inputNumber_speed = 0
 let timers = [{val:0,maxVal:60}]
 let updateSystems = {i:0,array:[],}
 
+
+//VerySlow,Slow,Medium,Fast,VeryFast,Default
+let speedInputSet = "Default"
+let speedInputArray = ["VerySlow","Slow","Medium","Fast","VeryFast","Default"]
+let speedIdArray = 5
+
+let settingsOpen = false
+
+
 let doBeforeStart =  function() {
     //------------------------------
     //generate when the systems should be updated
@@ -65,6 +74,8 @@ let elements = {
     weaponBar: document.getElementById("weaponBar"),
     rcsV: document.getElementById("rcsV"),
     rcsH: document.getElementById("rcsH"),
+    speedSensitivityValue: document.getElementById("speedSensitivityValue"),
+    speedSensitivity: document.getElementById("speedSensitivity"),
 }
 
 for (let i = 0; i<11; i++) {

@@ -31,6 +31,21 @@ let calcDistance = function(obj1,obj2) {
     return Math.sqrt( a*a + b*b + c*c )
 }
 
+let getDistanceText = function(dist) {
+    if (dist>100) {
+        return (dist/1000).toFixed(2)+"kly"
+    } else if (dist>0.01) {
+        return dist.toFixed(2)+"ly"
+    } else if (dist>0.0000001) {
+        return (dist/0.0000158128451).toFixed(2)+"au"
+    } else if (dist>0.0000000001) {
+        return (dist/0.000000000105702341).toFixed(2)+"gm"
+    } else if (dist>0.00000000000001) {
+        return (dist/0.000000000000105702341).toFixed(2)+"km"
+    } else {
+        return (dist/0.000000000000000105702341).toFixed(2)+"m"
+    }
+}
 
 let calcHitbox = function(x,y,z,size) {
   return  {x1:x-size,y1:y-size,z1:z-size,x2:x+size,y2:y+size,z2:z+size}

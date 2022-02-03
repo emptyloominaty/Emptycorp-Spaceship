@@ -20,7 +20,6 @@ class Missile extends Projectile {
                 this.speed+=10000/gameFPS
             }
             if (this.guided) {
-                //console.log("yaw: "+this.targetYaw+" / "+this.yaw)
                 this.guide()
 
                 //yaw
@@ -44,14 +43,12 @@ class Missile extends Projectile {
     
     guide() {
         if (Object.keys(this.source.target).length!==0) {
-            console.log(this.source.target)
             let a = this.source.target.position.x - this.position.x //x1 - x2
             let b = this.source.target.position.y - this.position.y //y1 - y2
             let c = this.source.target.position.z - this.position.z //z1 - z2
             //let distanceToObject = Math.sqrt( a*a + b*b + c*c )
 
             let angleYaw = ((((Math.atan2( this.position.y - this.source.target.position.y, this.position.x - this.source.target.position.x ) * 180)) / Math.PI))-270
-            //console.log(angleYaw)
             angleYaw = angleYaw*(-1)
             /*angleYaw = angleYaw % 360
             if (angleYaw < 0) {
@@ -61,7 +58,6 @@ class Missile extends Projectile {
             let anglePitch = Math.atan2(c,Math.sqrt(b * b + a * a))
             anglePitch = (((anglePitch)*57.2957795))
 
-            //console.log(angleYaw," - ", this.yaw)
             this.targetYaw = angleYaw
             this.targetPitch = anglePitch
         }

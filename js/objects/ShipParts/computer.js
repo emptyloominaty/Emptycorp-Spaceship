@@ -13,12 +13,13 @@ class Computer extends Part {
 
     //display
     mapScaling = 60 //px per ly
-    gridEnabled = true
+    gridEnabled = false
     starSystems = []
     nav2PlanetView = ""
 
     //autopilot
     target = ""
+    targetType = ""
     targetObj = {}
     autopilot = 0
 
@@ -100,6 +101,7 @@ class Computer extends Part {
                     if (calcDistance(playerShip,ship)<1) {
                         this.targetObj = ship
                         this.target = "Unidentified Ship"
+                        this.targetType = "ship"
                     }
                 }
             }
@@ -262,10 +264,12 @@ class Computer extends Part {
 
                 this.display.drawText(5, 120, "Trade: ", font1, color1, 'left')
                 let ii = 0
+                let iii = 0
                 Object.keys(this.data.priceData).forEach((key)=> {
                     let prices = key+": "+this.data.priceData[key]
-                    this.display.drawText(65, 120+(ii*15), prices, font1, color5, 'left')
+                    this.display.drawText(5+iii, 140+(ii*15), prices, font1, color5, 'left')
                     ii++
+                    if (ii>11) {ii=0;iii=150}
                 })
 
                 this.display.drawRect(15,325,70,20,"#494949") //test
@@ -426,8 +430,7 @@ class Computer extends Part {
                 let x = varX-(xx*this.mapScaling)
                 let y = varY-(yy*this.mapScaling)
                 if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
-                    //this.display.drawCircle(x,y,2,"#ff88f1")
-                    this.display.drawLineRotate(x,y,2,10,370-pr.yaw,"#ff88f1")
+                    this.display.drawLineRotate(x,y,2,4,387-pr.yaw,"#ff88f1")
                 }
             }
         }
@@ -441,7 +444,8 @@ class Computer extends Part {
                 let x = varX-(xx*this.mapScaling)
                 let y = varY-(yy*this.mapScaling)
                 if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
-                    this.display.drawCircle(x,y,3,"#ffb2b0")
+                    let color = factionList[ai.faction].color
+                    this.display.drawCircle(x,y,3,color)
                 }
             }
         }
@@ -459,13 +463,13 @@ class Computer extends Part {
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav";this.starSystems = []}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm";this.starSystems = []}},
 
-            {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.incMapScaling()}}},
-            {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.decMapScaling()}}},
+            {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.defaultMapScaling()}}},
+            {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.zoomMapScaling()}}},
             {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
             //target
-            {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView]}}},
+            {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetType="system";this.targetObj=starSystems[this.nav2PlanetView]}}},
             //autopilot
-            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot;this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
+            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot;this.targetType="system";this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
 
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
@@ -515,14 +519,46 @@ class Computer extends Part {
             this.mapScaling+=100
         } else if (this.mapScaling<10000) {
             this.mapScaling+=1000
-        } else {
+        } else if (this.mapScaling<100000) {
             this.mapScaling+=10000
+        } else if (this.mapScaling<1000000){
+            this.mapScaling+=100000
+        } else if (this.mapScaling<10000000){
+            this.mapScaling+=1000000
+        } else if (this.mapScaling<100000000){
+            this.mapScaling+=10000000
+        } else if (this.mapScaling<1000000000){
+            this.mapScaling+=100000000
+        } else if (this.mapScaling<1000000000) {
+            this.mapScaling+=1000000000
+        } else if (this.mapScaling<10000000000){
+            this.mapScaling+=10000000000
+        } else if (this.mapScaling<100000000000){
+            this.mapScaling+=100000000000
+        } else {
+            this.mapScaling+=1000000000000
         }
-
     }
 
+
     decMapScaling() {
-        if (this.mapScaling>10000) {
+        if (this.mapScaling>1000000000000) {
+            this.mapScaling-=1000000000000
+        } else if (this.mapScaling>100000000000) {
+            this.mapScaling-=100000000000
+        } else if (this.mapScaling>10000000000) {
+            this.mapScaling-=10000000000
+        } else if (this.mapScaling>1000000000) {
+            this.mapScaling-=1000000000
+        } else if (this.mapScaling>100000000) {
+            this.mapScaling-=100000000
+        } else  if (this.mapScaling>10000000) {
+            this.mapScaling-=10000000
+        } else if (this.mapScaling>1000000) {
+            this.mapScaling-=1000000
+        } else if (this.mapScaling>100000) {
+            this.mapScaling-=100000
+        } else if (this.mapScaling>10000) {
             this.mapScaling-=10000
         } else if (this.mapScaling>1000) {
             this.mapScaling-=1000
@@ -533,6 +569,14 @@ class Computer extends Part {
         } else if(this.mapScaling>1) {
             this.mapScaling-=1
         }
+    }
+
+    defaultMapScaling() {
+        this.mapScaling=60
+    }
+
+    zoomMapScaling() {
+        this.mapScaling=1000000000000
     }
 
 

@@ -40,12 +40,17 @@ class Engine extends Part {
                 if (speed<targetSpeed && speed!==0) {
                     thrustNeed = thrustNeed * (Math.pow((targetSpeed/speed), 3))
                 }
+                if (targetSpeed<10000) {
+                    thrustNeed = (targetSpeed+(targetSpeed-speed)*10000000)
+                }
+
                 if (thrust>thrustNeed) {
                     thrust = thrustNeed
                 }
 
                 playerShip.computers[0].data.engineThrottle = thrust/this.thrust
                 let throttle = (thrust/this.thrust)+0.15
+                if (speed<1) {throttle=1-speed}
                 if (throttle>1) {throttle=1}
                 if (thrust>this.thrust*this.maxFTLThrust) {thrust = this.thrust*this.maxFTLThrust}
                 if (speed>this.maxSpeed) {thrust = 0}
@@ -82,8 +87,10 @@ class Engine extends Part {
             } else if (this.type === "FTL") {
                 //-----------------------------------------------------------FTL
                 if (targetSpeed<speed/1.01) {
-                    if (speed<1000) {
+                    if (speed<1000 && speed>26) {
                         playerShip.speed-=25
+                    } else if (speed<=26) {
+                        playerShip.speed-= speed/10
                     }
                     playerShip.speed-= speed/20
                 }

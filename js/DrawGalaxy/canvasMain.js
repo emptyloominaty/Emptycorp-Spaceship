@@ -25,7 +25,7 @@ class CanvasMain {
         //stars
         for (let i = 0; i<starSystems.length; i++) {
             let starColor = starSystems[i].stars[0].starType
-            let starSize = starSystems[i].stars[0].radius/50000000
+            let starSize = starSystems[i].stars[0].radius/80000000 // /50000000 //TODO:FIX
             let geometry = new THREE.SphereGeometry(starSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
             this.stars[i] = new THREE.Mesh(geometry, this.materials[starColor])
             this.stars[i].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
@@ -35,7 +35,7 @@ class CanvasMain {
             if (this.planets[i]===undefined) {this.planets[i]=[]}
             for (let j = 0; j<starSystems[i].planets.length; j++) {
                 let planetColor = 0x666666
-                let planetSize = starSystems[i].planets[j].radius/50000000
+                let planetSize = starSystems[i].planets[j].radius/60528409678 //TODO:FIX
                 let planetGeometry = new THREE.SphereGeometry(planetSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
                 this.planets[i][j] = new THREE.Mesh(planetGeometry, new THREE.MeshBasicMaterial({color:planetColor}))
 
@@ -81,7 +81,6 @@ class CanvasMain {
         } else if (type==="missile") {
             geometry = new THREE.CylinderGeometry( 0.0000000000002, 0.0000000000002, 0.000000000058, 12, 2 )
         }
-        console.log(color)
         let material = new THREE.MeshBasicMaterial( {color: color} )
         this.projectiles[id] = new THREE.Mesh( geometry, material )
         this.projectiles[id].position.set(projectiles[id].position.x,projectiles[id].position.z,projectiles[id].position.y)
@@ -90,6 +89,14 @@ class CanvasMain {
         this.projectiles[id].rotation.y = ((projectiles[id].yaw-180)/57.295779487363233601652280409982)
 
         this.scene.add(this.projectiles[id])
+    }
+
+    createNewShip(id) {
+        let material = new THREE.MeshBasicMaterial( {color: 0x444444} )
+        let geometry = new THREE.BoxGeometry( 0.000000000000255702341, 0.000000000000105702341, 0.000000000000105702341 )
+        this.ships[id] = new THREE.Mesh( geometry, material )
+        this.scene.add(this.ships[id])
+
     }
 
     run() {
@@ -114,6 +121,18 @@ class CanvasMain {
             }
         }
         //ships
+        for (let i = 0; i<aiShips.length; i++) {
+            if (aiShips[i]!==undefined) {
+                if (this.ships[i] === undefined) {
+                    this.createNewShip(i)
+                }
+                this.ships[i].position.x = (aiShips[i].positionHi.x - camHi.x) + (aiShips[i].positionLo.x - camLo.x) //x
+                this.ships[i].position.y = (aiShips[i].positionHi.z - camHi.y) + (aiShips[i].positionLo.z - camLo.y) //z
+                this.ships[i].position.z = (aiShips[i].positionHi.y - camHi.z) + (aiShips[i].positionLo.y - camLo.z) //y
+                this.ships[i].rotation.x = ((aiShips[i].pitch - 90) / 57.295779487363233601652280409982)
+                this.ships[i].rotation.y = ((aiShips[i].yaw - 180) / 57.295779487363233601652280409982)
+            }
+        }
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
@@ -122,13 +141,13 @@ class CanvasMain {
                 (starSystems[i].position.z)-camHi.y-camLo.y,
                 (starSystems[i].position.y)-camHi.z-camLo.z,
                 )
-
+            //planets
             for (let j = 0; j<starSystems[i].planets.length; j++) {
-                let orbitHeight = 0.013914+starSystems[i].planets[j].orbitHeight/7000000000
+                let orbitHeight = 0.013914+(starSystems[i].planets[j].orbitHeight/9460528409678.2681473440592957161)  //TODO:FIX
                 this.planets[i][j].position.set (
                     (starSystems[i].position.x)-camHi.x-camLo.x,
                     (starSystems[i].position.z)-camHi.y-camLo.y,
-                    (starSystems[i].position.y+orbitHeight)-camHi.z-camLo.z, //TODO:
+                    (starSystems[i].position.y+orbitHeight)-camHi.z-camLo.z,
                 )
             }
         }
