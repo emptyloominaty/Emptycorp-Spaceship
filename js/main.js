@@ -18,9 +18,6 @@ let speedInputSet = "Default"
 let speedInputArray = ["VerySlow","Slow","Medium","Fast","VeryFast","Default"]
 let speedIdArray = 5
 
-let settingsOpen = false
-
-
 let doBeforeStart =  function() {
     //------------------------------
     //generate when the systems should be updated
@@ -76,6 +73,7 @@ let elements = {
     rcsH: document.getElementById("rcsH"),
     speedSensitivityValue: document.getElementById("speedSensitivityValue"),
     speedSensitivity: document.getElementById("speedSensitivity"),
+    appSettings:document.getElementById("appSettings"),
 }
 
 for (let i = 0; i<11; i++) {
@@ -103,7 +101,6 @@ function update(progress) {
     }
     avgFPS = avgFPS / avgFPSlastMin.length
 
-    keyLoop() //keyboard inputs
     playerShip.everyFrame(gameFPS)
     mainServer.run()
     projectilesRun()
@@ -159,6 +156,8 @@ function update(progress) {
         debug.timeC = performance.now()
         elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"
         debug.timeD = performance.now()
+    } else {
+        elements.debug123.textContent = ""
     }
 
     shipWindow3D.run()

@@ -3,7 +3,10 @@ function loop(timestamp) {
     if (progress > 250) {
         progress = 250
     }
-    update(progress)
+    keyLoop() //keyboard inputs
+    if (!settingsOpen) {
+        update(progress)
+    }
     draw(progress)
 
     lastRender = timestamp

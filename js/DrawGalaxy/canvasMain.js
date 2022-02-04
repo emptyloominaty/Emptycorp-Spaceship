@@ -13,7 +13,9 @@ class CanvasMain {
     constructor() {
         this.scene = new THREE.Scene()
         this.camera = new THREE.PerspectiveCamera(50, 1900 / 550, 0.00000000000000001, 200000000)
-        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } )
+        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } ) //,antialias: false
+        //this.renderer.setPixelRatio(2)
+
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 
         this.materials["Class G"] = new THREE.MeshBasicMaterial()

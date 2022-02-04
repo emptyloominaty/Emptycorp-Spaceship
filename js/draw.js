@@ -86,6 +86,8 @@ for (let i = 0; i<playerShip.weapons.length; i++) {
 
 
 function draw(progress) {
+    //---------------------------------------------Settings---------------------------------------
+    drawSettings()
     //------------------------------------------------UI------------------------------------------
     elements.atmosphereComposition.innerText = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
     elements.pressureAndTemperature.innerText =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
