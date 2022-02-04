@@ -49,8 +49,8 @@ let settingsList = {
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
         new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,1000,100000],2),
-        new Setting("MSAA (TODO)","antialiasing",[0,1],{0:"Off",1:"On"},[0,1],0),
-        new Setting("FXAA (TODO)","antialiasingfx",[0,1],{0:"Off",1:"On"},[0,1],0),
+        new Setting("MSAA (TODO, idk how)","antialiasing",[0,1],{0:"Off",1:"On"},[0,1],0),
+        new Setting("FXAA (Dont, low perf)","antialiasingfx",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
 
      ],
@@ -62,6 +62,8 @@ let settingsList = {
 
 
 let updateSettings = function() {
+    //fxaa
+    shipWindow3D.fxaa = settings.antialiasingfx
     //msaa
     //shipWindow3D.resetRenderer(Boolean(settingsList["Graphics"][2].values[settingsList["Graphics"][2].value]))
     //render distance

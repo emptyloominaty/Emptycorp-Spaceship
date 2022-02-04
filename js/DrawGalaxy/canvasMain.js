@@ -1,4 +1,5 @@
 class CanvasMain {
+    fxaa = false
     materials = {}
 
     stars = []
@@ -58,6 +59,22 @@ class CanvasMain {
             this.scene.add(test[0])
         }*/
 
+        //FXAA
+        const renderPass = new RenderPass( this.scene, this.camera )
+        this.fxaaPass = new ShaderPass( FXAAShader )
+        const copyPass = new ShaderPass( CopyShader )
+
+        this.composer1 = new EffectComposer( this.renderer )
+        this.composer1.addPass( renderPass )
+        this.composer1.addPass( copyPass )
+        this.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( 1900 )
+        this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( 550 )
+
+        this.composer2 = new EffectComposer( this.renderer )
+        this.composer2.addPass( renderPass )
+        this.composer2.addPass( this.fxaaPass )
+
+        //---------------
 
         this.camera.position.x = 0   //x
         this.camera.position.y = 0   //z
@@ -67,6 +84,12 @@ class CanvasMain {
         this.render = () => {
             requestAnimationFrame(this.render)
             this.renderer.render(this.scene, this.camera)
+            //FXAA
+            if(this.fxaa) {
+                this.composer1.render()
+                this.composer2.render()
+            }
+
         }
 
         this.render()
