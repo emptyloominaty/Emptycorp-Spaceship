@@ -613,9 +613,9 @@ class Ship {
                     }
                 } else if (axis==="pitch") {
                     if (thrust>0) {
-                        this.computers[0].data.rcsUThrust += thrust/maxERCSThrust
+                        this.computers[0].data.rcsDThrust += thrust/maxERCSThrust
                     } else {
-                        this.computers[0].data.rcsDThrust += (thrust*(-1))/maxERCSThrust
+                        this.computers[0].data.rcsUThrust += (thrust*(-1))/maxERCSThrust
                     }
                 }
 

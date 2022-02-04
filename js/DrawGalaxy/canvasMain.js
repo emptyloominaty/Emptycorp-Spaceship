@@ -12,8 +12,8 @@ class CanvasMain {
 
     constructor() {
         this.scene = new THREE.Scene()
-        this.camera = new THREE.PerspectiveCamera(50, 1900 / 550, 0.00000000000000001, 200000000)
-        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow } ) //,antialias: false
+        this.camera = new THREE.PerspectiveCamera(50, 1900 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
+        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false} ) //,antialias: false
         //this.renderer.setPixelRatio(2)
 
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
@@ -63,6 +63,7 @@ class CanvasMain {
         this.camera.position.y = 0   //z
         this.camera.position.z = 0   //y
 
+
         this.render = () => {
             requestAnimationFrame(this.render)
             this.renderer.render(this.scene, this.camera)
@@ -70,6 +71,10 @@ class CanvasMain {
 
         this.render()
 
+    }
+    resetRenderer(msaa) {
+        //does not work????????
+        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias: msaa} )
     }
 
     createNewProjectile(id) {
