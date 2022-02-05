@@ -83,7 +83,7 @@ class StarSystem {
 
     checkResources() {
         Object.keys(this.resources).forEach(key => {
-            let ratio = this.resources[key].max/this.resources[key].val
+            let ratio = this.resources[key].val/this.resources[key].max
             //idk
             if (ratio>this.resources[key].ratios[2]) {
                 this.resources[key].buying = false
@@ -127,14 +127,16 @@ class StarSystem {
                 this.resources[key].maxPrice = this.resources[key].price/((1-this.resources[key].ratios[1])+ratio)
                 this.resourcesNeed[this.resources[key].need] = this.resources[key].maxPrice
             }
-            this.updateSellingPrice(key,ratio)
+            this.updateSellingPrice(key)
         })
     }
     
-    updateSellingPrice(name,ratio) {
+    updateSellingPrice(name) {
+        let ratio = this.resources[name].val/this.resources[name].max
         ratio = 0.4+ratio
         if (ratio>1.4) {ratio = 1.4}
-        this.resources[name].price = this.resources[name].price/(ratio)
+        this.resources[name].price = globalPrices[name]/(ratio)
+        console.log(name," ",this.resources[name].price,"cr global:", globalPrices[name]," (",ratio," ratio)")
     }
 
     buy(name,amount,credits) { //system->ship
