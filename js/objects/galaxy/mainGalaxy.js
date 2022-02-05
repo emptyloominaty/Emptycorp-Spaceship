@@ -1,8 +1,4 @@
-let galaxy = {
-
-}
-let factionList = {Player:new Faction("#53ee53",100,),Terran:new Faction("#6c8aee",10,),Pirate:new Faction("#ff3d3a",-100,) }
-
+let galaxy = {}
 
 let globalPrices = {
         O2:0.0004, N2:0.0002, H2:0.005, He:0.008, //Gas (Litres)

@@ -17,7 +17,6 @@ class StarSystem {
     producing = [] //{name:"H2",amount:1/* per minute */}
     factories = []
 
-
     credits = 1000000
 
     run() {
@@ -154,7 +153,7 @@ class StarSystem {
                 this.resources[name].need = undefined
             }
         }
-        credits = this.resources[name].val*this.resources[name].price
+        credits = amount*this.resources[name].price
         this.credits -= credits
         return credits
     }

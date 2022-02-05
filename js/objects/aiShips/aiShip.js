@@ -4,7 +4,7 @@ class AiShip {
     positionHi = {x:0, y:0, z:0}
     positionLo = {x:0, y:0, z:0}
     hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
-    type = "Fighter"
+    role = "Civilian"
 
     yaw = 0
     targetYaw = 0
@@ -30,6 +30,8 @@ class AiShip {
     consumption = 5 // kg per ly
     consumptionC = 5/8765.812756 //kg per c
 
+    cargo = {max:50000,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
+
     credits = 0
 
     //ai
@@ -37,8 +39,27 @@ class AiShip {
     targetType = ""  //system,ship,point
     nearTarget = false
     destroyed = false
-    task = "stop"
+    task = "stop" // stop,refuel,attack,fuel,trade,home,
     refuel = false
+
+    tradeTodo = [] // [{do:"buy", item:"steel", amount:500, systemId:1},{do:"sell", item:"steel", amount:250, systemId:0},{do:"sell", item:"steel", amount:250, systemId:5}]
+    currentTrade = {} //{do:"buy", item:"steel", amount:500, systemId:1}
+
+    doTrade() {
+        if (Object.keys(this.currentTrade).length===0) {
+            if (this.tradeTodo.length>0) {
+                this.currentTrade = Object.assign({}, this.tradeTodo[0])
+                this.changeTarget(starSystems[this.currentTrade.systemId],"system",true)
+                this.tradeTodo.shift()
+            } else {
+                this.task = "stop"
+            }
+        } else {
+
+        }
+    }
+
+
 
     run() {
         if (this.destroyed) {
@@ -56,6 +77,8 @@ class AiShip {
         }
         if (this.task==="stop") {
             this.targetSpeed = 0
+        } else if (this.task==="trade") {
+            this.doTrade()
         }
         this.accelerate()
         this.navigate()
@@ -63,7 +86,7 @@ class AiShip {
         this.move()
         if(this.fuelTank.capacity<this.fuelTank.maxCapacity/4) {
             if(!this.refuel && this.task!=="attack" && this.task!=="flee") {
-                this.target = this.findRefuelStation()
+                this.changeTarget(this.findRefuelStation(),"system",true)
                 this.refuel = true
             }
         }
@@ -105,11 +128,54 @@ class AiShip {
             let cr = this.target.resources[this.fuelTank.type].price*amount
             this.credits -= cr
             this.fuelTank.capacity += this.target.buy(this.fuelTank.type,amount,cr)
+            this.refuel = false
             this.task = "stop"
-            this.target = ""
-            this.targetType = ""
-            this.nearTarget = false
+            this.changeTarget("","",true)
+        } else if (this.task==="trade") {
+            //{max:50000,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
+            //{do:"buy", item:"steel", amount:500, systemId:1}
+            if (this.currentTrade.do==="buy") {
+                //buy
+                let amount = this.currentTrade.amount
+                let item = this.currentTrade.item
+                let id = this.currentTrade.systemId
+                let cr = this.target.resources[item].price*amount
+                this.credits -= cr
+
+                let bought = starSystems[id].buy(item,amount,cr)
+
+                let itemId = this.cargo.items.findIndex(x => x.name === item)
+                if (itemId===undefined || itemId===-1) {
+                    this.cargo.items.push({name:item, val:bought, weight: bought}) //TODO: WEIGHT FOR GASSES
+                } else {
+                    this.cargo.items[itemId].val+=bought
+                    this.cargo.items[itemId].weight+=bought //TODO: WEIGHT FOR GASSES
+                }
+                this.cargo.val+=bought //TODO: WEIGHT FOR GASSES
+
+
+                this.currentTrade = {}
+            } else if (this.currentTrade.do==="sell"){
+                //sell
+                let amount = this.currentTrade.amount
+                let item = this.currentTrade.item
+                let id = this.currentTrade.systemId
+                this.credits += starSystems[id].sell(item,amount)
+
+                let itemId = this.cargo.items.findIndex(x => x.name === item)
+                this.cargo.items[itemId].val-=amount
+                this.cargo.items[itemId].weight-=amount //TODO: WEIGHT FOR GASSES
+                this.cargo.val-=amount //TODO: WEIGHT FOR GASSES
+
+                this.currentTrade = {}
+            }
+
         }
+    }
+
+    goHome() {
+        this.task = "home"
+        this.changeTarget(starSystems[this.home],"system",true)
     }
 
     navigate() {
@@ -173,20 +239,18 @@ class AiShip {
         let prices = []
         for (let i = 0; i<systems.length; i++) {
             if (starSystems[systems[i].id].resources[this.fuelTank.type]!==undefined && systems[i].distance<maxDistance) {
-                //TODO:faction relations
-                let res = starSystems[systems[i].id].resources[this.fuelTank.type]
-                if (res.val>this.fuelTank.maxCapacity) {
-                    prices.push({id:systems[i].id, distance:systems[i].distance, price:res.price, amount:res.val})
+                let relations = factionList[this.faction].relations[starSystems[systems[i].id].faction] //TODO:TEST
+                if (relations>-25) {
+                    let res = starSystems[systems[i].id].resources[this.fuelTank.type]
+                    if (res.val>this.fuelTank.maxCapacity) {
+                        let totalPrice = (res.price*this.fuelTank.maxCapacity)+((systems[i].distance/this.consumptionC)*res.price)
+                        prices.push({id:systems[i].id, distance:systems[i].distance, price:res.price, amount:res.val, totalPrice:totalPrice})
+                    }
                 }
             }
         }
-        console.log(prices)
-        console.log(prices[0])
-        prices = prices.sort((a, b) => a.price > b.price ? 1 : -1)
-        console.log(prices[0])
+        prices = prices.sort((a, b) => a.totalPrice > b.totalPrice ? 1 : -1)
         this.task = "refuel"
-        this.targetType = "system"
-        this.nearTarget = false
         return starSystems[prices[0].id]
     }
 
@@ -244,11 +308,17 @@ class AiShip {
         this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
     }
 
-    constructor(x,y,z,type,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge ) {
+    changeTarget(obj,type,resetNear = true) {
+        this.target = obj
+        this.targetType = type
+        this.nearTarget = resetNear
+    }
+
+    constructor(x,y,z,role,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge,home,shipDesign) {
         this.positionPrecise.x = new BigNumber(x)
         this.positionPrecise.y = new BigNumber(y)
         this.positionPrecise.z = new BigNumber(z)
-        this.type = type
+        this.role = role
         this.faction = faction
         this.rotationSpeed = rotSpeed
         this.accelerationSpeed = accSpeed
@@ -261,6 +331,10 @@ class AiShip {
         this.shield = shield
         this.shieldMax = shield
         this.shieldRecharge = shieldRecharge
+        this.home = home
+        factionList[this.faction].ships[role].push(this)
+
+
     }
 }
 
