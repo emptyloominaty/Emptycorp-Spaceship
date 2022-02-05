@@ -40,26 +40,11 @@ class AiShip {
     nearTarget = false
     destroyed = false
     task = "stop" // stop,refuel,attack,fuel,trade,home,
+    prevTask = "stop"
     refuel = false
 
     tradeTodo = [] // [{do:"buy", item:"steel", amount:500, systemId:1},{do:"sell", item:"steel", amount:250, systemId:0},{do:"sell", item:"steel", amount:250, systemId:5}]
     currentTrade = {} //{do:"buy", item:"steel", amount:500, systemId:1}
-
-    doTrade() {
-        if (Object.keys(this.currentTrade).length===0) {
-            if (this.tradeTodo.length>0) {
-                this.currentTrade = Object.assign({}, this.tradeTodo[0])
-                this.changeTarget(starSystems[this.currentTrade.systemId],"system",true)
-                this.tradeTodo.shift()
-            } else {
-                this.task = "stop"
-            }
-        } else {
-
-        }
-    }
-
-
 
     run() {
         if (this.destroyed) {
@@ -122,6 +107,20 @@ class AiShip {
         }
     }
 
+    doTrade() {
+        if (Object.keys(this.currentTrade).length===0) {
+            if (this.tradeTodo.length>0) {
+                this.currentTrade = Object.assign({}, this.tradeTodo[0])
+                this.changeTarget(starSystems[this.currentTrade.systemId],"system",true)
+                this.tradeTodo.shift()
+            } else {
+                this.task = "stop"
+            }
+        } else {
+
+        }
+    }
+
     inSystem() {
         if(this.task==="refuel") {
             let amount = this.fuelTank.maxCapacity-this.fuelTank.capacity
@@ -129,7 +128,7 @@ class AiShip {
             this.credits -= cr
             this.fuelTank.capacity += this.target.buy(this.fuelTank.type,amount,cr)
             this.refuel = false
-            this.task = "stop"
+            this.task = this.prevTask
             this.changeTarget("","",true)
         } else if (this.task==="trade") {
             //{max:50000,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
@@ -238,6 +237,9 @@ class AiShip {
         let maxDistance = this.fuelTank.capacity/this.consumption
         let prices = []
         for (let i = 0; i<systems.length; i++) {
+            if(systems[i].distance>maxDistance){
+                break
+            }
             if (starSystems[systems[i].id].resources[this.fuelTank.type]!==undefined && systems[i].distance<maxDistance) {
                 let relations = factionList[this.faction].relations[starSystems[systems[i].id].faction] //TODO:TEST
                 if (relations>-25) {
@@ -250,6 +252,7 @@ class AiShip {
             }
         }
         prices = prices.sort((a, b) => a.totalPrice > b.totalPrice ? 1 : -1)
+        this.prevTask = this.task
         this.task = "refuel"
         return starSystems[prices[0].id]
     }
@@ -311,7 +314,10 @@ class AiShip {
     changeTarget(obj,type,resetNear = true) {
         this.target = obj
         this.targetType = type
-        this.nearTarget = resetNear
+        if(resetNear) {
+            this.nearTarget = false
+        }
+
     }
 
     constructor(x,y,z,role,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge,home,shipDesign) {

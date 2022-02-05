@@ -32,6 +32,11 @@ let doBeforeStart =  function() {
         if (a>3600) {a=0}
     }
     //------------------------------
+    for (let i = 0; i<starSystems.length; i++) {
+        starSystems[i].produceResources(60)
+        starSystems[i].popUseResources(60)
+        starSystems[i].checkResources()
+    }
     //------------------------------
     }
 

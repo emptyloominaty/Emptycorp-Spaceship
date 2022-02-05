@@ -28,6 +28,7 @@ class StarSystem {
             this.produceResources(avgFPS)
             this.popUseResources(avgFPS)
             this.checkResources()
+            this.assignTrades()
         }
     }
 
@@ -84,6 +85,7 @@ class StarSystem {
     checkResources() {
         Object.keys(this.resources).forEach(key => {
             let ratio = this.resources[key].val/this.resources[key].max
+            this.resources[key].ratio = ratio
             //idk
             if (ratio>this.resources[key].ratios[2]) {
                 this.resources[key].buying = false
@@ -127,16 +129,16 @@ class StarSystem {
                 this.resources[key].maxPrice = this.resources[key].price/((1-this.resources[key].ratios[1])+ratio)
                 this.resourcesNeed[this.resources[key].need] = this.resources[key].maxPrice
             }
-            this.updateSellingPrice(key)
+            this.updateSellingPrice(key,ratio)
         })
     }
     
-    updateSellingPrice(name) {
-        let ratio = this.resources[name].val/this.resources[name].max
-        ratio = 0.4+ratio
+    updateSellingPrice(name,ratio) {
+        let rr = (1-this.resources[name].ratios[2])*(-1)
+        ratio = 0.4+ratio+rr
         if (ratio>1.4) {ratio = 1.4}
         this.resources[name].price = globalPrices[name]/(ratio)
-        console.log(name," ",this.resources[name].price,"cr global:", globalPrices[name]," (",ratio," ratio)")
+        //console.log(name," ",this.resources[name].price,"cr global:", globalPrices[name]," (",ratio," ratio)")
     }
 
     buy(name,amount,credits) { //system->ship
@@ -160,12 +162,114 @@ class StarSystem {
         return credits
     }
 
+    assignTrades() {
+        let needResources = []
+        //which resources does this system need
+        Object.keys(this.resources).forEach(key => {
+            let res = this.resources[key]
+            if (res.ratio<res.ratios[2]+0.4) {
+                //this.resources[key].val/this.resources[key].max
+                let needAmount = this.resources[key].max-this.resources[key].val
+                if (needAmount>100) {
+                    needResources.push({ratio:res.ratio, price:res.price, name:key, amount:needAmount})
+                }
+            }
+        })
+        needResources = needResources.sort((a, b) => a.ratio> b.ratio ? 1 : -1)
+        //check prices in other systems
+        for (let a = 0; a<needResources.length; a++) {
+            let minPrice = 10000000000
+            let idMinPrice = 0
+            //TODO:Distance let systems = sortAllSystemsByDistance(this,this.position,starSystems)
+            for (let i = 0; i<starSystems.length; i++) {
+                if (i===this.id) {
+                    continue
+                }
+                let relations = factionList[this.faction].relations[starSystems[i].faction] //TODO: TEST
+                if(relations>-25) {
+                    if (starSystems[i].resources[needResources[a].name]!==undefined) {
+                        if (starSystems[i].resources[needResources[a].name].price<minPrice) {
+                            idMinPrice = i
+                            minPrice = starSystems[i].resources[needResources[a].name].price
+                        }
+                    }
+                }
+            }
+            //lower price
+            needResources[a].systemId = idMinPrice
+            let res = this.resources[needResources[a].name]
+            if(res.ratio>=res.ratios[1]) {
+                if (minPrice*1.05>=this.resources[needResources[a].name].price) {
+                    needResources[a] = undefined
+                }
+            } else if(res.ratio<res.ratios[0]) {
+                if (minPrice>=this.resources[needResources[a].name].price) {
+                    needResources[a] = undefined
+                }
+            } else if(res.ratio<res.ratios[1]) {
+                if (minPrice*1.01>=this.resources[needResources[a].name].price) {
+                    needResources[a] = undefined
+                }
+            }
+
+
+
+        }
+        //assign ship
+        let n = 0
+        let error = 0
+        for (let i = 0; i<factionList[this.faction].ships["Trade"].length; i++) {
+            let ship = factionList[this.faction].ships["Trade"][i]
+            if (ship.task==="stop" || ship.task==="home") {
+
+                if (needResources[n]===undefined) {
+                    n++
+                    error++
+                    if (error>10) {
+                        break
+                    }
+                    continue
+                }
+                error = 0
+
+                let shipCargoAmount = ship.cargo.max-ship.cargo.val
+                let shipCargoLeft =  ship.cargo.max-ship.cargo.val
+                let amount = needResources[n].amount
+                let am = amount
+                if (shipCargoAmount<amount) {
+                    shipCargoLeft = 0
+                    amount = shipCargoAmount
+                    am = shipCargoAmount
+                    needResources[n].amount-=shipCargoAmount
+                } else {
+                    shipCargoLeft = shipCargoAmount-amount
+                    am = amount
+                    amount-=shipCargoAmount
+
+                }
+                console.log("assigned: "+i+" for:"+n+" - "+needResources[n].name+" ( from "+needResources[n].systemId+" to "+this.id+" )"+" amount:"+am)
+                ship.tradeTodo.push({do:"buy", item:needResources[n].name, amount:am, systemId:needResources[n].systemId})
+                ship.tradeTodo.push({do:"sell", item:needResources[n].name, amount:am, systemId:this.id})
+                ship.task = "trade"
+                if(amount<1) {
+                    n++
+                } else if (Math.random()>0.5) {
+                    n++
+                }
+            }
+        }
+
+
+    }
+
+
 
     constructor(stars,planets,asteroids,faction,prices,resources,name,position,servers,factories,naturalResources,prosperity,mapSize = 15) {
         this.stars = stars
         this.planets = planets
         this.asteroids = asteroids
         this.servers = servers
+        this.id = starSystems.length
 
         this.faction = faction
         this.factionColor = factionList[faction].color
