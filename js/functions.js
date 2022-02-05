@@ -109,5 +109,15 @@ let throttleBar = function(throttle,el,a=0,b=10,c=20,d=30,e=40,f=50,g=60,h=70,i=
     if (throttle>a) {
         elements[el+1].style.backgroundColor = "#ff9679"
     }
+}
 
+let sortAllSystemsByDistance = function(obj,position,systems) {
+    let systemsSorted = []
+    for (let i = 0; i<systems.length; i++) {
+        let distance = calcDistance(obj,systems[i])
+        systemsSorted.push({id:i,distance:distance})
+    }
+
+    systemsSorted = systemsSorted.sort((a, b) => a.distance > b.distance ? 1 : -1)
+    return systemsSorted
 }

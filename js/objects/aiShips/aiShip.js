@@ -13,6 +13,7 @@ class AiShip {
 
     speed = 0
     targetSpeed = 0
+    maxSpeed = 350000
 
     faction = ""
 
@@ -33,8 +34,11 @@ class AiShip {
 
     //ai
     target = {}
-
+    targetType = ""  //system,ship,point
+    nearTarget = false
     destroyed = false
+    task = "stop"
+    refuel = false
 
     run() {
         if (this.destroyed) {
@@ -44,10 +48,146 @@ class AiShip {
         if (this.shield<this.shieldMax) {
             this.shield+=this.shieldRecharge/gameFPS
         }
-        let consNow = (this.consumptionC*this.speed/3600)
+        let consNow = (this.consumptionC*this.speed/3600)/gameFPS
+        if (this.nearTarget) {
+            if (this.targetType==="system") {
+                this.inSystem()
+            }
+        }
+        if (this.task==="stop") {
+            this.targetSpeed = 0
+        }
+        this.accelerate()
+        this.navigate()
+        this.rotate()
         this.move()
+        if(this.fuelTank.capacity<this.fuelTank.maxCapacity/4) {
+            if(!this.refuel && this.task!=="attack" && this.task!=="flee") {
+                this.target = this.findRefuelStation()
+                this.refuel = true
+            }
+        }
         this.fuelTank.capacity -= consNow
         return true
+    }
+
+    accelerate() {
+        if (this.targetSpeed>this.speed) {
+            this.speed += (this.targetSpeed+(this.targetSpeed-this.speed))/gameFPS
+        } else if (this.targetSpeed<this.speed) {
+            this.speed -= this.speed/20
+        }
+        if (this.speed>this.maxSpeed) {
+            this.speed = this.maxSpeed
+        }
+        if (this.speed<0.0000000000000000001) {
+            this.speed = 0
+        }
+    }
+
+    rotate() {
+        if (this.targetYaw>this.yaw) {
+            this.yaw+=this.rotationSpeed/gameFPS
+        } else if (this.targetYaw<this.yaw) {
+            this.yaw-=this.rotationSpeed/gameFPS
+        }
+        //pitch
+        if (this.targetPitch>this.pitch) {
+            this.pitch+=this.rotationSpeed/gameFPS
+        } else if (this.targetPitch<this.pitch) {
+            this.pitch-=this.rotationSpeed/gameFPS
+        }
+    }
+
+    inSystem() {
+        if(this.task==="refuel") {
+            let amount = this.fuelTank.maxCapacity-this.fuelTank.capacity
+            let cr = this.target.resources[this.fuelTank.type].price*amount
+            this.credits -= cr
+            this.fuelTank.capacity += this.target.buy(this.fuelTank.type,amount,cr)
+            this.task = "stop"
+            this.target = ""
+            this.targetType = ""
+            this.nearTarget = false
+        }
+    }
+
+    navigate() {
+        if (Object.keys(this.target).length!==0) {
+            let a = this.target.position.x - this.position.x //x1 - x2
+            let b = this.target.position.y - this.position.y //y1 - y2
+            let c = this.target.position.z - this.position.z //z1 - z2
+            let distanceToObject = Math.sqrt( a*a + b*b + c*c )
+
+            let angleYaw = ((((Math.atan2( this.position.y - this.target.position.y, this.position.x - this.target.position.x ) * 180)) / Math.PI))-270
+            angleYaw = angleYaw*(-1)
+            /*angleYaw = angleYaw % 360
+            if (angleYaw < 0) {
+                angleYaw += 360
+            }*/
+            //angleYaw = 360-angleYaw
+            let anglePitch = Math.atan2(c,Math.sqrt(b * b + a * a))
+            anglePitch = (((anglePitch)*57.2957795))
+
+            this.targetYaw = angleYaw
+            this.targetPitch = anglePitch
+            this.setTargetSpeed(distanceToObject)
+        }
+    }
+
+    setTargetSpeed(distanceToObject) {
+        if (this.targetType==="system") {
+            this.targetSpeed = this.maxSpeed
+            if (distanceToObject<0.15) {
+                this.targetSpeed = 0
+                this.nearTarget = true
+            } else {
+                this.nearTarget = false
+            }
+        } else if (this.targetType==="ship" || this.targetType==="point" || this.targetType==="")  {
+            if (distanceToObject<0.0000000000105702341) {
+                this.targetSpeed = 0
+                this.nearTarget = true
+            } else if (distanceToObject<0.0001) {
+                this.targetSpeed = (distanceToObject*10000000)
+                this.nearTarget = false
+            } else if (distanceToObject<0.0003) {
+                this.targetSpeed = 2000
+                this.nearTarget = false
+            } else if (distanceToObject<0.001) {
+                this.targetSpeed = 10000
+                this.nearTarget = false
+            } else if (distanceToObject<0.005) {
+                this.targetSpeed = 40000
+                this.nearTarget = false
+            } else {
+                this.targetSpeed = this.maxSpeed
+                this.nearTarget = false
+            }
+        }
+    }
+
+    findRefuelStation() {
+        let systems = sortAllSystemsByDistance(this,this.position,starSystems)
+        let maxDistance = this.fuelTank.capacity/this.consumption
+        let prices = []
+        for (let i = 0; i<systems.length; i++) {
+            if (starSystems[systems[i].id].resources[this.fuelTank.type]!==undefined && systems[i].distance<maxDistance) {
+                //TODO:faction relations
+                let res = starSystems[systems[i].id].resources[this.fuelTank.type]
+                if (res.val>this.fuelTank.maxCapacity) {
+                    prices.push({id:systems[i].id, distance:systems[i].distance, price:res.price, amount:res.val})
+                }
+            }
+        }
+        console.log(prices)
+        console.log(prices[0])
+        prices = prices.sort((a, b) => a.price > b.price ? 1 : -1)
+        console.log(prices[0])
+        this.task = "refuel"
+        this.targetType = "system"
+        this.nearTarget = false
+        return starSystems[prices[0].id]
     }
 
     getDamage(damage,shieldDmgBonus,ignoreShield = false) {

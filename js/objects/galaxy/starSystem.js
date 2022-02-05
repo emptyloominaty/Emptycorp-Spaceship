@@ -60,7 +60,7 @@ class StarSystem {
         let mul = 60/avgFPS
         for (let i = 0; i<this.producing.length; i++) {
             this.resources[this.producing[i].name].val += this.producing[i].amount*mul
-            console.log(this.producing[i].name," +",this.producing[i].amount*mul )
+            //console.log(this.producing[i].name," +",this.producing[i].amount*mul )
         }
         for (let i = 0; i<this.factories.length; i++) {
             let useA = this.factories[i].amount*this.factories[i].ratio*mul
@@ -71,11 +71,11 @@ class StarSystem {
             if (this.resources[matA].val>useA && this.resources[matB].val>useB) {
                 this.resources[matA].val-= useA
                 this.resources[matB].val-= useB
-                console.log(matA," -",useA )
-                console.log(matB," -",useB )
+                //console.log(matA," -",useA )
+                //console.log(matB," -",useB )
 
                 this.resources[this.factories[i].name].val += this.factories[i].amount*mul
-                console.log(this.factories[i].name," +",this.factories[i].amount*mul )
+                //console.log(this.factories[i].name," +",this.factories[i].amount*mul )
             }
 
         }
