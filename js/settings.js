@@ -4,10 +4,12 @@ let settingsHTML = true
 
 class Setting {
     setValue(val) {
-        settings[this.settingName] = val
-        this.value = val
-        updateSettingsHTML()
-        updateSettings()
+        if (!this.locked) {
+            settings[this.settingName] = val
+            this.value = val
+            updateSettingsHTML()
+            updateSettings()
+        }
     }
 
     getValue() {
@@ -18,17 +20,16 @@ class Setting {
         console.log(this.settingName)
     }
 
-    constructor(name,settingName,options,optionsString,values,defaultValue) {
+    constructor(name,settingName,options,optionsString,values,defaultValue,locked = false) {
         this.name = name
         this.settingName = settingName
         this.options = options
         this.optionsString = optionsString
         this.value = defaultValue
         this.values = values
+        this.locked = locked
     }
 }
-
-
 
 let settings = {
     //Game
@@ -38,11 +39,18 @@ let settings = {
     modelsQuality:2,
     renderQuality:2,
     renderDistance:2,
+    glowQuality:2,
     //dev/experimental
     maxTimeSpeed:4,
     debugPerformance:0,
     multiThreading:0,
-    drawAllShips:1, //change to 0
+    drawAllShips:1, //change to 0?
+
+    shipFar:1,
+    shipMid:0.01,
+    shipFarUpdate:30,
+    shipMidUpdate:6,
+    disableResourceSim:0
 }
 
 let settingsList = {
@@ -54,16 +62,20 @@ let settingsList = {
         new Setting("MSAA (TODO, idk how)","antialiasing",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("FXAA (Dont, low perf)","antialiasingfx",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
-
+        new Setting("Glow (TODO)","glowQuality",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,1,2],2),
      ],
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Max Time Speed","maxTimeSpeed",[4,5,8,10,30,60],{4:"4x",5:"5x",8:"8x",10:"10x",30:"30x",60:"60x"},[4,5,8,10,30,60],4),
         new Setting("MultiThreading","multiThreading",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Draw ALL ships in Nav","drawAllShips",[0,1],{0:"Off",1:"On"},[0,1],1),
+        new Setting("Far Update (every x frames)","shipFarUpdate",[10,15,20,30],{10:"10",15:"15",20:"20",30:"30"},[10,15,20,30],30),
+        new Setting("Mid Update (every x frames)","shipMidUpdate",[2,3,4,5,6,10,30],{2:"2",3:"3",4:"4",5:"5",6:"6",10:"10",30:"30"},[2,3,4,5,6,10,30],6),
+        new Setting("Far Distance (ly)","shipFar",[0.25,0.5,1,2,5],{0.25:"0.25",0.5:"0.5",1:"1",2:"2",5:"5"},[0.25,0.5,1,2,5],1),
+        new Setting("Mid Distance (ly)","shipMid",[0.01,0.1,0.5,1,2],{0.01:"0.01",0.1:"0.1",0.5:"0.5",1:"1",2:"2"},[0.01,0.1,0.5,1,2],0.01),
+        new Setting("Disable All Ship/Systems","disableResourceSim",[0,1],{0:"No",1:"Yes"},[0,1],0,true),
         ]
 }
-
 
 let updateSettings = function() {
     //fxaa
@@ -79,11 +91,34 @@ let updateSettings = function() {
     document.getElementById("inputRange_time").max = settings.maxTimeSpeed //settingsList["Dev/Experimental"][1].value
     //
     debug.performance = Boolean(settings.debugPerformance)
-}
+    if (settings.disableResourceSim===1) {
+        for (let i = 0; i<aiShips.length; i++){
+            aiShips[i].destroyed = true
+        }
+    }
 
+}
+let menus = ["shipInfo","galaxyMap","settings","save","load"]
+let menuIn = "settings"
+
+
+let updateMenu = function(id) {
+    document.getElementById("menu_"+menuIn).classList.remove("selectedMenu")
+    menuIn = menus[id]
+    document.getElementById("menu_"+menuIn).classList.add("selectedMenu")
+}
 
 let generateSettingsHTML = function() {
     let html = ""
+    //menu
+    html += "<div class='flex-column gameMenu'> DOES NOT WORK RN" +
+        " <button class='menuButton' onclick='updateMenu(0)' id='menu_shipInfo'>Ship Info</button>" +
+        " <button class='menuButton' onclick='updateMenu(1)' id='menu_galaxyMap'>Galaxy Map</button>" +
+        " <button class='menuButton' onclick='updateMenu(2)' id='menu_settings'>Settings</button>" +
+        " <button class='menuButton' onclick='updateMenu(3)' id='menu_save'>Save</button>" +
+        " <button class='menuButton' onclick='updateMenu(4)' id='menu_load'>Load</button>" +
+        "</div>"
+
     let categoryArray = []
     Object.keys(settingsList).forEach(key => {
         categoryArray.push(key)
@@ -150,3 +185,4 @@ let drawSettings = function() {
 generateSettingsHTML()
 updateSettingsHTML()
 updateSettings()
+document.getElementById("menu_"+menuIn).classList.add("selectedMenu")

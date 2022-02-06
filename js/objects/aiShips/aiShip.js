@@ -14,7 +14,7 @@ class AiShip {
 
     speed = 0
     targetSpeed = 0
-    maxSpeed = 3500000 //350000
+    maxSpeed = 350000
 
     faction = ""
 
@@ -51,7 +51,10 @@ class AiShip {
         if (this.destroyed) {
             return false
         }
-        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,0.0001)
+        let hitboxSize = 0.00000000000003 //280m
+        if (this.pos==="mid") {hitboxSize = 0.001}
+        if (this.pos==="far") {hitboxSize = 0.01}
+        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,hitboxSize)
         if (this.shield<this.shieldMax) {
             this.shield+=this.shieldRecharge/gameFPS
         }
@@ -353,7 +356,6 @@ class AiShip {
 }
 //--------------------------------------------------------------------------------------------------------------
 let aiShips = []
-let aiShipsMT = []
 
 let aiShipsFar = []
 let aiShipsMid = []
@@ -367,15 +369,16 @@ let aiShipsMidInc = 60
 
 let shipIdxDistance = 0
 
+
 let checkDistanceToPlayer = function(i) {
     if (aiShips[i]!==undefined) {
         let distance = calcDistance2D(aiShips[i],playerShip)
-        if (distance>1) {
+        if (distance>settings.shipFar) {
             aiShips[i].pos = "far"
             aiShipsFar[i]=true
             aiShipsMid[i]=false
             aiShipsNear[i]=false
-        } else if (distance>0.001) {
+        } else if (distance>settings.shipMid) {
             aiShips[i].pos = "mid"
             aiShipsFar[i]=false
             aiShipsMid[i]=true
@@ -403,7 +406,7 @@ let checkDistanceToPlayerLoop = function() {
 
 let aiShipsRun = function() {
     checkDistanceToPlayerLoop()
-    aiShipsMT = []
+    let aiShipsMT = []
     let aiShipsMTFps = gameFPS
     for (let i = 0; i<aiShips.length; i++) {
         if (aiShips[i]!==undefined) {
@@ -432,10 +435,13 @@ let aiShipsRun = function() {
         }
     }
 
-    aiShipsMidInc = Math.ceil(aiShips.length/6)
-    aiShipsFarInc = Math.ceil(aiShips.length/30)
 
 
+
+
+
+    aiShipsMidInc = Math.ceil(aiShips.length/settings.shipFarUpdate)
+    aiShipsFarInc = Math.ceil(aiShips.length/settings.shipMidUpdate)
 
     //Mid
     aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsMidInc)

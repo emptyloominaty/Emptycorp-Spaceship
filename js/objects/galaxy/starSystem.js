@@ -30,6 +30,9 @@ class StarSystem {
             this.checkResources()
             this.assignTrades()
             this.transferCredits()
+            Object.keys(this.resources).forEach(key => {
+                this.prices[key] = Math.round(this.resources[key].price*10000)/10000
+            })
         }
     }
 

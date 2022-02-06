@@ -133,13 +133,16 @@ function update(progress) {
         //
     }
     //Update Systems
-    for (let i = 0; i<updateSystems.array[updateSystems.i].length; i++) {
-        starSystems[updateSystems.array[updateSystems.i][i]].runMinute(avgFPS)
-        //console.log(updateSystems.array[updateSystems.i][i])
+    if (settings.disableResourceSim===0) {
+        for (let i = 0; i < updateSystems.array[updateSystems.i].length; i++) {
+            starSystems[updateSystems.array[updateSystems.i][i]].runMinute(avgFPS)
+            //console.log(updateSystems.array[updateSystems.i][i])
+        }
+        updateSystems.i++
+        if (updateSystems.i === 3600) {
+            updateSystems.i = 0
+        }
     }
-    updateSystems.i++
-    if (updateSystems.i===3600) {updateSystems.i=0}
-
 
     //speed range<->number
      if (elements.inputRange_speed.value!==inputRange_speed) {

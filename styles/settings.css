@@ -1,3 +1,30 @@
+.menuButton {
+    padding:3px 7px 3px 7px;
+    margin:0 3px 0 3px;
+    /*border:1px solid rgba(255,255,255,0.2);
+    border-radius: 2px;*/
+    border: 0 #000;
+    width: 100%;
+    height: fit-content;
+    background-color: #292729;
+    font-size:24px;
+}
+
+.menuButton:hover {
+    background-color: #444144;
+}
+
+.selectedMenu {
+    background-color: #444144;
+}
+
+.gameMenu {
+    margin: 10px 10px 10px 10px;
+    padding-top: 10px;
+    align-items: center;
+}
+
+
 #appSettings {
     position:absolute;
     top:100px;
