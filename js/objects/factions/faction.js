@@ -2,6 +2,7 @@ class Faction {
     color = "#FFF"
     playerRelations = 0
     relations = {}
+    credits = 10000000000
 
     ships = {
         "Trade":[],

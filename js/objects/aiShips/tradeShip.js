@@ -16,7 +16,6 @@ aiShips.push(new TradeShip(1.401,1.001,0,"Trade","Terran",60,200,{},{type:"fuel1
 
 
 //performance test
-for (let i = 0; i<100; i++) {
+for (let i = 0; i<50; i++) {
     aiShips.push(new TradeShip(1.401+Math.random(),1.001+Math.random(),0,"Trade","Terran",60,200,{},{type:"fuel1", capacity:500, maxCapacity:500},5,20,50,0.05,0,{}))
-
 }

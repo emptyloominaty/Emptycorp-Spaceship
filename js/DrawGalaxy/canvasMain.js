@@ -151,7 +151,8 @@ class CanvasMain {
             }
         }
         //ships
-        for (let i = 0; i<aiShips.length; i++) {
+        //TODO:draw only <0.01ly
+        /*for (let i = 0; i<aiShips.length; i++) {
             if (aiShips[i]!==undefined) {
                 if (this.ships[i] === undefined) {
                     this.createNewShip(i)
@@ -162,7 +163,7 @@ class CanvasMain {
                 this.ships[i].rotation.x = ((aiShips[i].pitch - 90) / 57.295779487363233601652280409982)
                 this.ships[i].rotation.y = ((aiShips[i].yaw - 180) / 57.295779487363233601652280409982)
             }
-        }
+        }*/
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {

@@ -29,7 +29,13 @@ class StarSystem {
             this.popUseResources(avgFPS)
             this.checkResources()
             this.assignTrades()
+            this.transferCredits()
         }
+    }
+
+    transferCredits() {
+        factionList[this.faction].credits += this.credits
+        this.credits = 0
     }
 
     popUseResources(avgFPS) {

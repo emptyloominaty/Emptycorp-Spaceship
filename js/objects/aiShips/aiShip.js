@@ -79,6 +79,10 @@ class AiShip {
         return true
     }
 
+    runMinute() {
+        this.transferCredits()
+    }
+
     accelerate() {
         if (this.targetSpeed>this.speed) {
             this.speed += (this.targetSpeed+(this.targetSpeed-this.speed))/gameFPS
@@ -317,7 +321,11 @@ class AiShip {
         if(resetNear) {
             this.nearTarget = false
         }
+    }
 
+    transferCredits() {
+        factionList[this.faction].credits += this.credits
+        this.credits = 0
     }
 
     constructor(x,y,z,role,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge,home,shipDesign) {
@@ -351,6 +359,7 @@ let aiShipsRun = function() {
         if (aiShips[i]!==undefined) {
             let destroy = aiShips[i].run()
             aiShips[i].run2()
+            aiShips[i].runMinute() //TODO
             if (!destroy) {
                 if (playerShip.computers[0].targetObj===aiShips[i]) {playerShip.computers[0].targetObj={};playerShip.computers[0].target=""}
                 shipWindow3D.scene.remove(shipWindow3D.ships[i])
