@@ -62,9 +62,9 @@ class Projectile {
         this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
         this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12)))
 
-        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
-        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
-        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x).toNumber()
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y).toNumber()
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z).toNumber()
     }
 
     constructor(x,y,z,yaw,pitch,speed,type,source,maxLife,damageData) {

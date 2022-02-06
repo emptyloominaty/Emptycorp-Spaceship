@@ -253,7 +253,7 @@ class StarSystem {
                     amount-=shipCargoAmount
 
                 }
-                console.log("assigned: "+i+" for:"+n+" - "+needResources[n].name+" ( from "+needResources[n].systemId+" to "+this.id+" )"+" amount:"+am)
+                //console.log("assigned: "+i+" for:"+n+" - "+needResources[n].name+" ( from "+needResources[n].systemId+" to "+this.id+" )"+" amount:"+am)
                 ship.tradeTodo.push({do:"buy", item:needResources[n].name, amount:am, systemId:needResources[n].systemId})
                 ship.tradeTodo.push({do:"sell", item:needResources[n].name, amount:am, systemId:this.id})
                 ship.task = "trade"

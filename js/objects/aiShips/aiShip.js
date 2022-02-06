@@ -287,6 +287,16 @@ class AiShip {
     }
 
     move() {
+
+            //threads[threadIdx].worker.postMessage({do:"move", yaw:aiShips[1].yaw, pitch:aiShips[1].pitch, speed:aiShips[1].speed, fps:gameFPS, positionPrecise:aiShips[1].positionPrecise, position:aiShips[1].position, positionLo: aiShips[1].positionLo, positionHi: aiShips[1].positionHi})
+       /*    let postMsgData = {do:"move",id:this.id, yaw:this.yaw, pitch:this.pitch, speed:this.speed, fps:gameFPS, positionPrecise:this.positionPrecise, position:this.position, positionLo: this.positionLo, positionHi: this.positionHi}
+            //postMsgData = JSON.parse(JSON.stringify(postMsgData))
+            threads[threadIdx].worker.postMessage(postMsgData)*/
+       // threadIdx++
+       /* if (threadIdx>threads.length-1) {
+            threadIdx = 0
+        }*/
+
         let speedInlyh = this.speed/8765.812756
         let speed = speedInlyh/3600/gameFPS
 
@@ -310,9 +320,9 @@ class AiShip {
         this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
         this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12)))
 
-        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x)
-        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y)
-        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z)
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x).toNumber()
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y).toNumber()
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z).toNumber()
     }
 
     changeTarget(obj,type,resetNear = true) {
@@ -329,7 +339,7 @@ class AiShip {
     }
 
     constructor(x,y,z,role,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge,home,shipDesign) {
-        this.positionPrecise.x = new BigNumber(x)
+        this.positionPrecise.x = new BigNumber(x+0.0000000515648966666622154)
         this.positionPrecise.y = new BigNumber(y)
         this.positionPrecise.z = new BigNumber(z)
         this.role = role
@@ -347,6 +357,7 @@ class AiShip {
         this.shieldRecharge = shieldRecharge
         this.home = home
         factionList[this.faction].ships[role].push(this)
+        this.id = aiShips.length
 
 
     }

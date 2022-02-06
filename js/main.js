@@ -159,7 +159,7 @@ function update(progress) {
 
     if (debug.performance) {
         debug.timeC = performance.now()
-        elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms"
+        elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms <br> avg:"+avgFPS.toFixed(1)+"FPS"
         debug.timeD = performance.now()
     } else {
         elements.debug123.textContent = ""
