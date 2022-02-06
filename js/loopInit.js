@@ -14,5 +14,5 @@ function loop(timestamp) {
 }
 
 doBeforeStart()
-setTimeout(()=>{window.requestAnimationFrame(loop)},500)
+setTimeout(()=>{window.requestAnimationFrame(loop)},200)
 

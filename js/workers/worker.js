@@ -1,8 +1,8 @@
 function worker_function() {
-    let done = false
     let doTest = function(a,b,i) {
         return Number(a+b)+" ("+i+" Thread)"
     }
+
     let doBigNumberTest = function(a,b,i) {
         let aa = new BigNumber(0)
         aa.s = a.s
@@ -16,62 +16,54 @@ function worker_function() {
     }
 
     let convertToBigNumber = function(number) {
-        let bigNum = new BigNumber(0)
-        bigNum.s = number.s
-        bigNum.e = number.e
-        bigNum.c = number.c
-        return bigNum
+        return new BigNumber({ s: number.s, e: number.e, c: number.c, _isBigNumber: true })
     }
 
-    let move = function(yaw,pitch,shipSpeed,fps,positionPrecise2,position,positionHi,positionLo,done) {
-        if (done!==undefined) {
+    let position = {x:0,y:0,z:0}
+    let positionHi = {x:0,y:0,z:0}
+    let positionLo = {x:0,y:0,z:0}
 
-            let speedInlyh = shipSpeed / 8765.812756
-            let speed = speedInlyh / 3600 / fps
+    let move = function(yaw,pitch,shipSpeed,fps,positionPrecise2) {
+        let speedInlyh = shipSpeed / 8765.812756
+        let speed = speedInlyh / 3600 / fps
 
+        let angleInRadianYaw = (yaw * Math.PI) / 180
+        let angleInRadianPitch = (pitch * Math.PI) / 180
 
-            let angleInRadianYaw = (yaw * Math.PI) / 180
-            let angleInRadianPitch = (pitch * Math.PI) / 180
+        let phi = angleInRadianYaw
+        let theta = Math.PI / 2 - angleInRadianPitch
 
-            let theta = angleInRadianYaw
-            let phi = Math.PI / 2 - angleInRadianPitch
+        let vx = (Math.sin(theta) * Math.sin(phi)) * speed
+        let vy = (Math.sin(theta) * Math.cos(phi)) * speed
+        let vz = (Math.cos(theta)) * speed
 
-            let vx = (Math.sin(phi) * Math.sin(theta)) * speed
-            let vy = (Math.sin(phi) * Math.cos(theta)) * speed
-            let vz = (Math.cos(phi)) * speed
-
-            let positionPrecise = {
-                x: convertToBigNumber(positionPrecise2.x),
-                y: convertToBigNumber(positionPrecise2.y),
-                z: convertToBigNumber(positionPrecise2.z)
-            }
-
-            positionPrecise.x = positionPrecise.x.plus(vx)
-            positionPrecise.y = positionPrecise.y.plus(vy)
-            positionPrecise.z = positionPrecise.z.plus(vz)
-            position.x = positionPrecise.x.toNumber()
-            position.y = positionPrecise.y.toNumber()
-            position.z = positionPrecise.z.toNumber()
-            //console.log(position.y)
-
-            positionHi.x = ((positionPrecise.x.toNumber().toPrecision(12)))
-            positionHi.y = ((positionPrecise.y.toNumber().toPrecision(12)))
-            positionHi.z = ((positionPrecise.z.toNumber().toPrecision(12)))
-
-            positionLo.x = positionPrecise.x.minus(positionHi.x).toNumber()
-            positionLo.y = positionPrecise.y.minus(positionHi.y).toNumber()
-            positionLo.z = positionPrecise.z.minus(positionHi.z).toNumber()
-            return [positionPrecise, position, positionHi, positionLo]
+        let positionPrecise = {
+            x: convertToBigNumber(positionPrecise2.x),
+            y: convertToBigNumber(positionPrecise2.y),
+            z: convertToBigNumber(positionPrecise2.z)
         }
+
+        positionPrecise.x = positionPrecise.x.plus(vx)
+        positionPrecise.y = positionPrecise.y.plus(vy)
+        positionPrecise.z = positionPrecise.z.plus(vz)
+        position.x = positionPrecise.x.toNumber()
+        position.y = positionPrecise.y.toNumber()
+        position.z = positionPrecise.z.toNumber()
+
+        positionHi.x = ((positionPrecise.x.toNumber().toPrecision(12)))
+        positionHi.y = ((positionPrecise.y.toNumber().toPrecision(12)))
+        positionHi.z = ((positionPrecise.z.toNumber().toPrecision(12)))
+        positionLo.x = positionPrecise.x.minus(positionHi.x).toNumber()
+        positionLo.y = positionPrecise.y.minus(positionHi.y).toNumber()
+        positionLo.z = positionPrecise.z.minus(positionHi.z).toNumber()
+        return [positionPrecise, position, positionHi, positionLo]
     }
 
     self.addEventListener('message', function(e) {
         switch(e.data.do) {
             case "move": {
-                let postMsgData = {do:"moveData", id:e.data.id, val:move(e.data.yaw,e.data.pitch,e.data.speed,e.data.fps,e.data.positionPrecise,e.data.position,e.data.positionHi,e.data.positionLo,done)}
-                //postMsgData = JSON.parse(JSON.stringify(postMsgData))
+                let postMsgData = {do:"moveData", id:e.data.id, val:move(e.data.yaw,e.data.pitch,e.data.speed,e.data.fps,e.data.positionPrecise)}
                 postMessage(postMsgData)
-                move()
                 break
             }
             case "test": {
@@ -92,7 +84,7 @@ function worker_function() {
         }
     }, false)
 }
-
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 //Import Scripts
 let Worker_BigNumberJS = (function() {
     let parts = document.location.href.split('/')
@@ -102,11 +94,7 @@ let Worker_BigNumberJS = (function() {
 
 
 let convertToBigNumber = function(number) {
-    let bigNum = new BigNumber(0)
-    bigNum.s = number.s
-    bigNum.e = number.e
-    bigNum.c = number.c
-    return bigNum
+    return new BigNumber({ s: number.s, e: number.e, c: number.c, _isBigNumber: true })
 }
 
 let getNumberOfThreads = function() {
@@ -123,6 +111,7 @@ let getNumberOfThreads = function() {
 }
 
 let numberOfThreads = getNumberOfThreads()
+let idxNumberOfThreads = numberOfThreads-2
 
 let threads = []
 let threadIdx = 0
@@ -144,7 +133,6 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                     aiShips[e.data.id].positionLo = vals[3]
                     aiShips[e.data.id].positionPrecise = {x:convertToBigNumber(vals[0].x),y:convertToBigNumber(vals[0].y),z:convertToBigNumber(vals[0].z)}
                 }
-
                 break
             }
         }

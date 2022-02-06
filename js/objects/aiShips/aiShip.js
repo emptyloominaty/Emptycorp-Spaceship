@@ -245,7 +245,7 @@ class AiShip {
                 break
             }
             if (starSystems[systems[i].id].resources[this.fuelTank.type]!==undefined && systems[i].distance<maxDistance) {
-                let relations = factionList[this.faction].relations[starSystems[systems[i].id].faction] //TODO:TEST
+                let relations = factionList[this.faction].relations[starSystems[systems[i].id].faction]
                 if (relations>-25) {
                     let res = starSystems[systems[i].id].resources[this.fuelTank.type]
                     if (res.val>this.fuelTank.maxCapacity) {
@@ -288,12 +288,11 @@ class AiShip {
 
     move() {
 
-            //threads[threadIdx].worker.postMessage({do:"move", yaw:aiShips[1].yaw, pitch:aiShips[1].pitch, speed:aiShips[1].speed, fps:gameFPS, positionPrecise:aiShips[1].positionPrecise, position:aiShips[1].position, positionLo: aiShips[1].positionLo, positionHi: aiShips[1].positionHi})
-       /*    let postMsgData = {do:"move",id:this.id, yaw:this.yaw, pitch:this.pitch, speed:this.speed, fps:gameFPS, positionPrecise:this.positionPrecise, position:this.position, positionLo: this.positionLo, positionHi: this.positionHi}
-            //postMsgData = JSON.parse(JSON.stringify(postMsgData))
-            threads[threadIdx].worker.postMessage(postMsgData)*/
-       // threadIdx++
-       /* if (threadIdx>threads.length-1) {
+         /*
+        let postMsgData = {do:"move",id:this.id, yaw:this.yaw, pitch:this.pitch, speed:this.speed, fps:gameFPS, positionPrecise:this.positionPrecise}
+        threads[threadIdx].worker.postMessage(postMsgData)
+        threadIdx++
+        if (threadIdx>idxNumberOfThreads) {
             threadIdx = 0
         }*/
 
@@ -303,12 +302,13 @@ class AiShip {
         let angleInRadianYaw = (this.yaw*Math.PI) / 180
         let angleInRadianPitch = (this.pitch*Math.PI) / 180
 
-        let theta = angleInRadianYaw
-        let phi = Math.PI/2-angleInRadianPitch
+        let phi = angleInRadianYaw
+        let theta = Math.PI / 2 - angleInRadianPitch
 
-        let vx = (Math.sin(phi)*Math.sin(theta) )* speed
-        let vy = (Math.sin(phi)*Math.cos(theta) )* speed
-        let vz = (Math.cos(phi))* speed
+        let vx = (Math.sin(theta) * Math.sin(phi)) * speed
+        let vy = (Math.sin(theta) * Math.cos(phi)) * speed
+        let vz = (Math.cos(theta)) * speed
+
         this.positionPrecise.x = this.positionPrecise.x.plus(vx)
         this.positionPrecise.y = this.positionPrecise.y.plus(vy)
         this.positionPrecise.z = this.positionPrecise.z.plus(vz)

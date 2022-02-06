@@ -3,7 +3,7 @@ let debug = {performance:false,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
 let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
-let avgFPSlastMin = [60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60]
+let avgFPSlastMin = []
 let avgFPS = 60
 
 let inputRange_speed = 0

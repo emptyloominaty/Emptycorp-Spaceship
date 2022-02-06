@@ -148,7 +148,7 @@ class Computer extends Part {
             let colorHeat = "#ffa5a0"
             let colorCold = "#a2fffc"
             //ship
-            let colorShip = "#3b57da"
+            let colorShip = "#4b0001"
             //error
             let colorError = "#da4f57"
 
@@ -213,7 +213,7 @@ class Computer extends Part {
                     this.drawMap()
                     //ship
                     this.display.drawCircle(300, 180, 8, colorShip)
-                    this.display.drawPlayerShipDirection(0,0,6,3,"#2beeff",this.data.shipDirection)
+                    this.display.drawPlayerShipDirection(0,0,6,3,"#999f9a",this.data.shipDirection)
                     //x,y,distance
                     this.display.drawText(5, 20, "x: ", font1, color1, 'left')
                     this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color5, 'left')
@@ -445,7 +445,8 @@ class Computer extends Part {
                 let y = varY-(yy*this.mapScaling)
                 if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
                     let color = factionList[ai.faction].color
-                    this.display.drawCircle(x,y,3,color)
+                    this.display.drawRect(x,y,3,3,color)
+                    //this.display.drawCircle(x,y,3,color)
                 }
             }
         }

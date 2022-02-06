@@ -304,12 +304,12 @@ class Ship {
         let angleInRadianYaw = (playerShip.position.yaw.direction*Math.PI) / 180
         let angleInRadianPitch = ((playerShip.position.pitch.direction-180)*Math.PI) / 180
 
-        let theta = angleInRadianYaw
-        let phi = Math.PI/2-angleInRadianPitch
+        let phi = angleInRadianYaw
+        let theta = Math.PI / 2 - angleInRadianPitch
 
-        let vx = (Math.sin(phi)*Math.sin(theta) )* speed
-        let vy = (Math.sin(phi)*Math.cos(theta) )* speed
-        let vz = (Math.cos(phi))* speed
+        let vx = (Math.sin(theta) * Math.sin(phi)) * speed
+        let vy = (Math.sin(theta) * Math.cos(phi)) * speed
+        let vz = (Math.cos(theta)) * speed
 
         this.positionPrecise.x = this.positionPrecise.x.plus(vx)
         this.positionPrecise.y = this.positionPrecise.y.plus(vy)
