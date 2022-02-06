@@ -19,11 +19,10 @@ function worker_function() {
         return new BigNumber({ s: number.s, e: number.e, c: number.c, _isBigNumber: true })
     }
 
-    let position = {x:0,y:0,z:0}
-    let positionHi = {x:0,y:0,z:0}
-    let positionLo = {x:0,y:0,z:0}
-
     let move = function(yaw,pitch,shipSpeed,fps,positionPrecise2) {
+        let position = {x:0,y:0,z:0}
+        let positionHi = {x:0,y:0,z:0}
+        let positionLo = {x:0,y:0,z:0}
         let speedInlyh = shipSpeed / 8765.812756
         let speed = speedInlyh / 3600 / fps
 
@@ -62,7 +61,16 @@ function worker_function() {
     self.addEventListener('message', function(e) {
         switch(e.data.do) {
             case "move": {
-                let postMsgData = {do:"moveData", id:e.data.id, val:move(e.data.yaw,e.data.pitch,e.data.speed,e.data.fps,e.data.positionPrecise)}
+                let array = e.data.array
+                let moveArray = []
+                for (let i = 0; i<array.length;i++) {
+                    let a = array[i]
+                    moveArray[i] = move(a.yaw, a.pitch, a.speed, a.fps, a.positionPrecise)
+                    moveArray[i][4] = a.id
+                }
+
+                let postMsgData = {do:"moveData", val:moveArray}
+
                 postMessage(postMsgData)
                 break
             }
@@ -126,13 +134,18 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                 break
             }
             case "moveData": {
-                if (aiShips[e.data.id]!==undefined) {
-                    let vals = e.data.val //[positionPrecise, position, positionHi, positionLo]
-                    aiShips[e.data.id].position = vals[1]
-                    aiShips[e.data.id].positionHi = vals[2]
-                    aiShips[e.data.id].positionLo = vals[3]
-                    aiShips[e.data.id].positionPrecise = {x:convertToBigNumber(vals[0].x),y:convertToBigNumber(vals[0].y),z:convertToBigNumber(vals[0].z)}
+                let array = e.data.val
+                for (let i = 0; i<array.length; i++) {
+                    let vals = array[i]
+                    let shipId = vals[4]
+                    if (aiShips[shipId]!==undefined) {
+                        aiShips[shipId].position = vals[1]
+                        aiShips[shipId].positionHi = vals[2]
+                        aiShips[shipId].positionLo = vals[3]
+                        aiShips[shipId].positionPrecise = {x:convertToBigNumber(vals[0].x),y:convertToBigNumber(vals[0].y),z:convertToBigNumber(vals[0].z)}
+                    }
                 }
+
                 break
             }
         }

@@ -607,9 +607,9 @@ class Ship {
 
                 if (axis==="yaw") {
                     if (thrust>0) {
-                        this.computers[0].data.rcsLThrust += thrust/maxERCSThrust
+                        this.computers[0].data.rcsRThrust += thrust/maxERCSThrust
                     } else {
-                        this.computers[0].data.rcsRThrust += (thrust*(-1))/maxERCSThrust
+                        this.computers[0].data.rcsLThrust += (thrust*(-1))/maxERCSThrust
                     }
                 } else if (axis==="pitch") {
                     if (thrust>0) {

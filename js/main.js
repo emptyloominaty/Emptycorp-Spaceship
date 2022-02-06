@@ -5,6 +5,8 @@ let progress = 16.666666666666666666666666666667
 let gameFPS = 60
 let avgFPSlastMin = []
 let avgFPS = 60
+let avgFPSlastSec = []
+let avgFPSSec = 60
 
 let inputRange_speed = 0
 let inputNumber_speed = 0
@@ -95,7 +97,7 @@ function update(progress) {
         debug.timeA = performance.now()
     }
     gameFPS = (1/progress*1000)/speedInc
-
+    //AvgFPS Min---------------------------------------------
     avgFPSlastMin.push(gameFPS)
     if (avgFPSlastMin.length===3600) {
         avgFPSlastMin.shift()
@@ -105,6 +107,17 @@ function update(progress) {
         avgFPS += avgFPSlastMin[i]
     }
     avgFPS = avgFPS / avgFPSlastMin.length
+    //AvgFPS Sec---------------------------------------------
+    avgFPSlastSec.push(gameFPS)
+    if (avgFPSlastSec.length===60) {
+        avgFPSlastSec.shift()
+    }
+    avgFPSSec = 0
+    for (let i = 0; i<avgFPSlastSec.length;i++) {
+        avgFPSSec += avgFPSlastSec[i]
+    }
+    avgFPSSec = avgFPSSec / avgFPSlastSec.length
+    //---------------------------------------------
 
     playerShip.everyFrame(gameFPS)
     mainServer.run()
@@ -159,7 +172,7 @@ function update(progress) {
 
     if (debug.performance) {
         debug.timeC = performance.now()
-        elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms <br> avg:"+avgFPS.toFixed(1)+"FPS"
+        elements.debug123.innerHTML = (debug.timeC-debug.timeA).toFixed(1)+" ms  <br>"+(debug.timeA-debug.timeD).toFixed(1)+"ms <br> avg:"+avgFPSSec.toFixed(1)+"FPS"
         debug.timeD = performance.now()
     } else {
         elements.debug123.textContent = ""

@@ -1,4 +1,5 @@
 class AiShip {
+    pos = "mid"
     position = {x:0,y:0,z:0}
     positionPrecise = {x:new BigNumber(0),y:new BigNumber(0),z:new BigNumber(0)}
     positionHi = {x:0, y:0, z:0}
@@ -13,7 +14,7 @@ class AiShip {
 
     speed = 0
     targetSpeed = 0
-    maxSpeed = 350000
+    maxSpeed = 3500000 //350000
 
     faction = ""
 
@@ -68,7 +69,6 @@ class AiShip {
         this.accelerate()
         this.navigate()
         this.rotate()
-        this.move()
         if(this.fuelTank.capacity<this.fuelTank.maxCapacity/4) {
             if(!this.refuel && this.task!=="attack" && this.task!=="flee") {
                 this.changeTarget(this.findRefuelStation(),"system",true)
@@ -286,18 +286,9 @@ class AiShip {
         }
     }
 
-    move() {
-
-         /*
-        let postMsgData = {do:"move",id:this.id, yaw:this.yaw, pitch:this.pitch, speed:this.speed, fps:gameFPS, positionPrecise:this.positionPrecise}
-        threads[threadIdx].worker.postMessage(postMsgData)
-        threadIdx++
-        if (threadIdx>idxNumberOfThreads) {
-            threadIdx = 0
-        }*/
-
+    move(fps) {
         let speedInlyh = this.speed/8765.812756
-        let speed = speedInlyh/3600/gameFPS
+        let speed = speedInlyh/3600/fps
 
         let angleInRadianYaw = (this.yaw*Math.PI) / 180
         let angleInRadianPitch = (this.pitch*Math.PI) / 180
@@ -358,17 +349,66 @@ class AiShip {
         this.home = home
         factionList[this.faction].ships[role].push(this)
         this.id = aiShips.length
+    }
+}
+//--------------------------------------------------------------------------------------------------------------
+let aiShips = []
+let aiShipsMT = []
 
+let aiShipsFar = []
+let aiShipsMid = []
+let aiShipsNear = []
 
+let aiShipsFarIdx = 0
+let aiShipsFarInc = 10
+
+let aiShipsMidIdx = 0
+let aiShipsMidInc = 60
+
+let shipIdxDistance = 0
+
+let checkDistanceToPlayer = function(i) {
+    if (aiShips[i]!==undefined) {
+        let distance = calcDistance2D(aiShips[i],playerShip)
+        if (distance>1) {
+            aiShips[i].pos = "far"
+            aiShipsFar[i]=true
+            aiShipsMid[i]=false
+            aiShipsNear[i]=false
+        } else if (distance>0.001) {
+            aiShips[i].pos = "mid"
+            aiShipsFar[i]=false
+            aiShipsMid[i]=true
+            aiShipsNear[i]=false
+        } else {
+            aiShips[i].pos = "near"
+            aiShipsFar[i]=false
+            aiShipsMid[i]=false
+            aiShipsNear[i]=true
+        }
     }
 }
 
-let aiShips = []
+let checkDistanceToPlayerLoop = function() {
+    let ships = aiShips.length
+    for (let i = 0; i<10; i++) {
+        checkDistanceToPlayer(shipIdxDistance)
+        shipIdxDistance++
+        if(shipIdxDistance>ships) {
+            shipIdxDistance = 0
+        }
+    }
+}
+
 
 let aiShipsRun = function() {
+    checkDistanceToPlayerLoop()
+    aiShipsMT = []
+    let aiShipsMTFps = gameFPS
     for (let i = 0; i<aiShips.length; i++) {
         if (aiShips[i]!==undefined) {
             let destroy = aiShips[i].run()
+
             aiShips[i].run2()
             aiShips[i].runMinute() //TODO
             if (!destroy) {
@@ -377,6 +417,67 @@ let aiShipsRun = function() {
                 shipWindow3D.ships[i] = undefined
                 aiShips[i]=undefined
             }
+        }
+    }
+
+    //Near
+    for (let i = 0 ; i<aiShipsNear.length; i++) {
+        if (aiShipsNear[i] && aiShips[i]!==undefined) {
+            if (settings.multiThreading===1) {
+                let ship = aiShips[i]
+                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+            } else {
+                aiShips[i].move(aiShipsMTFps)
+            }
+        }
+    }
+
+    aiShipsMidInc = Math.ceil(aiShips.length/6)
+    aiShipsFarInc = Math.ceil(aiShips.length/30)
+
+
+
+    //Mid
+    aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsMidInc)
+    for (let i = 0 ; i<aiShipsMidInc; i++) {
+        if (aiShipsMid[aiShipsMidIdx] && aiShips[aiShipsMidIdx]!==undefined) {
+            if (settings.multiThreading===1) {
+                let ship = aiShips[aiShipsMidIdx]
+                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+            } else {
+                aiShips[aiShipsMidIdx].move(aiShipsMTFps)
+            }
+        }
+        aiShipsMidIdx++
+        if(aiShipsMidIdx>aiShips.length) {aiShipsMidIdx = 0}
+    }
+
+
+    //Far
+    aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsFarInc)
+    for (let i = 0 ; i<aiShipsFarInc; i++) {
+        if (aiShipsFar[aiShipsFarIdx] && aiShips[aiShipsFarIdx]!==undefined) {
+            if (settings.multiThreading===1) {
+                let ship = aiShips[aiShipsFarIdx]
+                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+            } else {
+                aiShips[aiShipsFarIdx].move(aiShipsMTFps)
+            }
+        }
+        aiShipsFarIdx++
+        if(aiShipsFarIdx>aiShips.length) {aiShipsFarIdx = 0}
+    }
+
+
+
+
+
+    if (settings.multiThreading===1) {
+        let postMsgData = {do: "move", array: aiShipsMT, fps: gameFPS}
+        threads[threadIdx].worker.postMessage(postMsgData)
+        threadIdx++
+        if (threadIdx > idxNumberOfThreads) {
+            threadIdx = 0
         }
     }
 }

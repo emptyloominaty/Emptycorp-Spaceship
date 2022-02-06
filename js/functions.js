@@ -25,10 +25,16 @@ let getDirection360 = function(direction) {
 }
 
 let calcDistance = function(obj1,obj2) {
-    let a = obj1.position.x - obj2.position.x //x1 - x2
-    let b = obj1.position.y - obj2.position.y //y1 - y2
-    let c = obj1.position.z - obj2.position.z //z1 - z2
+    let a = obj1.position.x - obj2.position.x
+    let b = obj1.position.y - obj2.position.y
+    let c = obj1.position.z - obj2.position.z
     return Math.sqrt( a*a + b*b + c*c )
+}
+
+let calcDistance2D = function(obj1,obj2) {
+    let a = obj1.position.x - obj2.position.x
+    let b = obj1.position.y - obj2.position.y
+    return Math.sqrt( a*a + b*b)
 }
 
 let getDistanceText = function(dist) {

@@ -438,15 +438,17 @@ class Computer extends Part {
         //ships
         for (let i = 0; i<aiShips.length; i++) {
             if (aiShips[i]!==undefined) {
-                let ai = aiShips[i]
-                let xx = ai.position.x
-                let yy = ai.position.y
-                let x = varX-(xx*this.mapScaling)
-                let y = varY-(yy*this.mapScaling)
-                if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
-                    let color = factionList[ai.faction].color
-                    this.display.drawRect(x,y,3,3,color)
-                    //this.display.drawCircle(x,y,3,color)
+                if (!aiShipsFar[i] || settings.drawAllShips===1) {
+                    let ai = aiShips[i]
+                    let xx = ai.position.x
+                    let yy = ai.position.y
+                    let x = varX-(xx*this.mapScaling)
+                    let y = varY-(yy*this.mapScaling)
+                    if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
+                        let color = factionList[ai.faction].color
+                        this.display.drawRect(x,y,3,3,color)
+                        //this.display.drawCircle(x,y,3,color)
+                    }
                 }
             }
         }

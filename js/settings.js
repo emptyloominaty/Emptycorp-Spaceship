@@ -41,6 +41,8 @@ let settings = {
     //dev/experimental
     maxTimeSpeed:4,
     debugPerformance:0,
+    multiThreading:0,
+    drawAllShips:1, //change to 0
 }
 
 let settingsList = {
@@ -57,6 +59,8 @@ let settingsList = {
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Max Time Speed","maxTimeSpeed",[4,5,8,10,30,60],{4:"4x",5:"5x",8:"8x",10:"10x",30:"30x",60:"60x"},[4,5,8,10,30,60],4),
+        new Setting("MultiThreading","multiThreading",[0,1],{0:"Off",1:"On"},[0,1],0),
+        new Setting("Draw ALL ships in Nav","drawAllShips",[0,1],{0:"Off",1:"On"},[0,1],1),
         ]
 }
 
