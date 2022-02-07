@@ -95,7 +95,7 @@ class CanvasMain {
         // blend pass
         this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
         this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
-        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.8 //0.4
+        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
 
         // output pass
         this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
