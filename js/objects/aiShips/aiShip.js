@@ -378,11 +378,21 @@ let checkDistanceToPlayer = function(i) {
             aiShipsFar[i]=true
             aiShipsMid[i]=false
             aiShipsNear[i]=false
+            //remove object from 3D if far
+            if (shipWindow3D.ships[i]!==undefined) {
+                shipWindow3D.scene.remove(shipWindow3D.ships[i])
+                shipWindow3D.ships[i] = undefined
+            }
         } else if (distance>settings.shipMid) {
             aiShips[i].pos = "mid"
             aiShipsFar[i]=false
             aiShipsMid[i]=true
             aiShipsNear[i]=false
+            //remove object from 3D if far
+            if (shipWindow3D.ships[i]!==undefined) {
+                shipWindow3D.scene.remove(shipWindow3D.ships[i])
+                shipWindow3D.ships[i] = undefined
+            }
         } else {
             aiShips[i].pos = "near"
             aiShipsFar[i]=false
@@ -443,7 +453,6 @@ let aiShipsRun = function() {
                 let pl = ship.positionLo
                 let ph = ship.positionHi
                 aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
-                //aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
             } else {
                 aiShips[i].move(aiShipsMTFps)
             }

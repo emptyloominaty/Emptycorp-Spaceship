@@ -18,8 +18,7 @@ class Projectile {
             return false
         }
         this.move()
-        //collision
-        for (let i = 0; i<aiShips.length; i++) {
+        /*for (let i = 0; i<aiShips.length; i++) {
             if (aiShips[i]!==undefined) {
                 let objPos = aiShips[i].hitbox
                 if (this.checkCollision(objPos.x1,objPos.y1,objPos.z1,objPos.x2,objPos.y2,objPos.z2)) {
@@ -27,7 +26,19 @@ class Projectile {
                     return false
                 }
             }
+        }*/
+        //check for collision only with near or mid ships
+        for (let i = 0; i<aiShips.length; i++) {
+            if ((aiShipsNear[i] || aiShipsMid[i]) && aiShips[i]!==undefined) {
+                let objPos = aiShips[i].hitbox
+                if (this.checkCollision(objPos.x1,objPos.y1,objPos.z1,objPos.x2,objPos.y2,objPos.z2)) {
+                    aiShips[i].getDamage(this.damage,this.shieldDmgBonus,this.ignoreShield)
+                    return false
+                }
+            }
         }
+
+
         return true
     }
 

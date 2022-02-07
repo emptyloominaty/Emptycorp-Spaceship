@@ -40,6 +40,7 @@ let settings = {
     renderQuality:2,
     renderDistance:2,
     glowQuality:2,
+    motionBlur:0,
     //dev/experimental
     maxTimeSpeed:4,
     debugPerformance:0,
@@ -63,6 +64,7 @@ let settingsList = {
         new Setting("FXAA (Dont, low perf)","antialiasingfx",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
         new Setting("Glow (TODO)","glowQuality",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,1,2],2),
+        new Setting("Motion Blur","motionBlur",[0,1],{0:"Off",1:"On"},[0,1],0),
      ],
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
@@ -78,8 +80,31 @@ let settingsList = {
 }
 
 let updateSettings = function() {
+    //motion blur
+    if (settings.motionBlur===1) {
+        if (!shipWindow3D.motionBlur) {
+            shipWindow3D.enableMotionBlur()
+            shipWindow3D.motionBlur = true
+        }
+    } else {
+        if (shipWindow3D.motionBlur) {
+            shipWindow3D.disableMotionBlur()
+            shipWindow3D.motionBlur = false
+        }
+    }
+
     //fxaa
-    shipWindow3D.fxaa = settings.antialiasingfx
+    if (settings.antialiasingfx===1) {
+        if (!shipWindow3D.fxaa) {
+            shipWindow3D.enableFXAA()
+            shipWindow3D.fxaa = true
+        }
+    } else {
+        if (shipWindow3D.fxaa) {
+            shipWindow3D.disableFXAA()
+            shipWindow3D.fxaa = false
+        }
+    }
     //msaa
     //shipWindow3D.resetRenderer(Boolean(settingsList["Graphics"][2].values[settingsList["Graphics"][2].value]))
     //render distance

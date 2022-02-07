@@ -1,5 +1,6 @@
 class CanvasMain {
     fxaa = false
+    motionBlur = false
     materials = {}
 
     stars = []
@@ -59,22 +60,41 @@ class CanvasMain {
             this.scene.add(test[0])
         }*/
 
-        //FXAA
-        const renderPass = new RenderPass( this.scene, this.camera )
+        //------------------------------------------------------------------------------------------FXAA
+        this.renderPassFXAA = new RenderPass( this.scene, this.camera )
         this.fxaaPass = new ShaderPass( FXAAShader )
-        const copyPass = new ShaderPass( CopyShader )
+        this.copyPassFXAA = new ShaderPass( CopyShader )
 
-        this.composer1 = new EffectComposer( this.renderer )
-        this.composer1.addPass( renderPass )
-        this.composer1.addPass( copyPass )
+        this.composer = new EffectComposer( this.renderer )
         this.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( 1900 )
         this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( 550 )
 
-        this.composer2 = new EffectComposer( this.renderer )
-        this.composer2.addPass( renderPass )
-        this.composer2.addPass( this.fxaaPass )
+        this.composerFX = new EffectComposer( this.renderer )
 
-        //---------------
+        //------------------------------------------------------------------------------------------Motion Blur
+        this.composerMotionBlur = new EffectComposer( this.renderer )
+        // render pass
+        this.renderPassMotionBlur = new THREE.RenderPass( this.scene, this.camera )
+
+        // save pass
+        let renderTargetParameters = {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            stencilBuffer: false
+        }
+
+        this.savePassMotionBlur = new THREE.SavePass( new THREE.WebGLRenderTarget( 1900, 550, renderTargetParameters ) )
+
+        // blend pass
+        this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
+        this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
+        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
+
+        // output pass
+        this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
+        this.outputPassMotionBlur.renderToScreen = true
+
+        //-----------------------------------------------------------------------------------------
 
         this.camera.position.x = 0   //x
         this.camera.position.y = 0   //z
@@ -86,9 +106,10 @@ class CanvasMain {
             this.renderer.render(this.scene, this.camera)
             //FXAA
             if(this.fxaa) {
-                this.composer1.render()
-                this.composer2.render()
+                this.composer.render()
+                this.composerFX.render()
             }
+            this.composerMotionBlur.render()
 
         }
 
@@ -152,8 +173,8 @@ class CanvasMain {
         }
         //ships
         //TODO:draw only <0.01ly
-        /*for (let i = 0; i<aiShips.length; i++) {
-            if (aiShips[i]!==undefined) {
+        for (let i = 0; i<aiShips.length; i++) {
+            if (aiShips[i]!==undefined && aiShipsNear[i]) {
                 if (this.ships[i] === undefined) {
                     this.createNewShip(i)
                 }
@@ -163,7 +184,7 @@ class CanvasMain {
                 this.ships[i].rotation.x = ((aiShips[i].pitch - 90) / 57.295779487363233601652280409982)
                 this.ships[i].rotation.y = ((aiShips[i].yaw - 180) / 57.295779487363233601652280409982)
             }
-        }*/
+        }
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
@@ -188,6 +209,35 @@ class CanvasMain {
     }
 
 
+    enableMotionBlur() {
+        this.composerMotionBlur.addPass( this.renderPassMotionBlur )
+        this.composerMotionBlur.addPass( this.blendPassMotionBlur )
+        this.composerMotionBlur.addPass( this.savePassMotionBlur  )
+        this.composerMotionBlur.addPass( this.outputPassMotionBlur )
+    }
+
+    disableMotionBlur() {
+        this.composerMotionBlur.removePass( this.renderPassMotionBlur )
+        this.composerMotionBlur.removePass( this.blendPassMotionBlur )
+        this.composerMotionBlur.removePass( this.savePassMotionBlur  )
+        this.composerMotionBlur.removePass( this.outputPassMotionBlur )
+    }
+
+    enableFXAA() {
+        this.composerFX.addPass( this.renderPassFXAA )
+        this.composerFX.addPass( this.copyPassFXAA )
+
+        this.composer.addPass( this.renderPassFXAA )
+        this.composer.addPass( this.fxaaPass )
+    }
+
+    disableFXAA() {
+        this.composerFX.removePass( this.renderPassFXAA )
+        this.composerFX.removePass( this.copyPassFXAA )
+
+        this.composer.removePass( this.renderPassFXAA )
+        this.composer.removePass( this.fxaaPass )
+    }
 
 }
 
