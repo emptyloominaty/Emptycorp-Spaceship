@@ -1,6 +1,7 @@
 class CanvasMain {
     fxaa = false
     motionBlur = false
+    smaa = false
     materials = {}
 
     stars = []
@@ -70,6 +71,12 @@ class CanvasMain {
         this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( 550 )
 
         this.composerFX = new EffectComposer( this.renderer )
+        //------------------------------------------------------------------------------------------SMAA
+        this.composerSMAA = new EffectComposer( this.renderer )
+        this.composerSMAA.addPass( new RenderPass( this.scene, this.camera ) )
+
+        const pass = new SMAAPass( 1900, 550 )
+        this.composerSMAA.addPass( pass )
 
         //------------------------------------------------------------------------------------------Motion Blur
         this.composerMotionBlur = new EffectComposer( this.renderer )
@@ -88,7 +95,7 @@ class CanvasMain {
         // blend pass
         this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
         this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
-        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
+        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.8 //0.4
 
         // output pass
         this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
@@ -109,7 +116,13 @@ class CanvasMain {
                 this.composer.render()
                 this.composerFX.render()
             }
-            this.composerMotionBlur.render()
+            if (this.motionBlur) {
+                this.composerMotionBlur.render()
+            }
+            if (this.smaa) {
+                this.composerSMAA.render()
+            }
+
 
         }
 
