@@ -49,29 +49,63 @@ function worker_function() {
         position.y = positionPrecise.y.toNumber()
         position.z = positionPrecise.z.toNumber()
 
-        positionHi.x = ((positionPrecise.x.toNumber().toPrecision(12)))
-        positionHi.y = ((positionPrecise.y.toNumber().toPrecision(12)))
-        positionHi.z = ((positionPrecise.z.toNumber().toPrecision(12)))
+        positionHi.x = Number((positionPrecise.x.toNumber().toPrecision(12)))
+        positionHi.y = Number((positionPrecise.y.toNumber().toPrecision(12)))
+        positionHi.z = Number((positionPrecise.z.toNumber().toPrecision(12)))
         positionLo.x = positionPrecise.x.minus(positionHi.x).toNumber()
         positionLo.y = positionPrecise.y.minus(positionHi.y).toNumber()
         positionLo.z = positionPrecise.z.minus(positionHi.z).toNumber()
         return [positionPrecise, position, positionHi, positionLo]
     }
 
+    let numbersToBigNumber = function(positionHi,positionLo) {
+        let bignumberLo = new BigNumber(positionLo)
+        let bignumber = new BigNumber(positionHi)
+        return bignumber.plus(bignumberLo)
+    }
+
     self.addEventListener('message', function(e) {
         switch(e.data.do) {
             case "move": {
+                /*
+                   0=id
+                   1=yaw
+                   2=pitch
+                   3=speed
+                   4=fps
+                   5=pl.x
+                   6=pl.y
+                   7=pl.z
+                   8=ph.x
+                   9=ph.y
+                   10=ph.z
+                    */
                 let array = e.data.array
                 let moveArray = []
-                for (let i = 0; i<array.length;i++) {
-                    let a = array[i]
-                    moveArray[i] = move(a.yaw, a.pitch, a.speed, a.fps, a.positionPrecise)
-                    moveArray[i][4] = a.id
+                if (array.length>0) {
+                    for (let i = 0; i < array.length; i+=11) {
+                        let realIdx = i/11
+                        if (array[i]===undefined) {break}
+                        let positionLo = {x:array[i+5], y:array[i+6], z:array[i+7]}
+                        let positionHi = {x:array[i+8], y:array[i+9], z:array[i+10]}
+                        let positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
+                        /*moveArray[realIdx] = move(array[i+1], array[i+2], array[i+3], array[i+4], positionPrecise)
+                        moveArray[realIdx][4] = array[i]*/
+                        let moveArray1 = move(array[i+1], array[i+2], array[i+3], array[i+4], positionPrecise)
+
+                        //[positionPrecise, position, positionHi, positionLo]
+                        let p = [moveArray1[1].x, moveArray1[1].y, moveArray1[1].z]
+                        let ph = [moveArray1[2].x, moveArray1[2].y, moveArray1[2].z]
+                        let pl =  [moveArray1[3].x, moveArray1[3].y, moveArray1[3].z]
+
+                        moveArray.push(p[0],p[1],p[2], ph[0],ph[1],ph[2], pl[0],pl[1],pl[2], array[i])
+                    }
+                    let moveArray64 = Float64Array.from(moveArray)
+                    let postMsgData = {do:"moveData", val:moveArray64}
+                    postMessage(postMsgData,[moveArray64.buffer])
                 }
 
-                let postMsgData = {do:"moveData", val:moveArray}
 
-                postMessage(postMsgData)
                 break
             }
             case "test": {
@@ -134,15 +168,31 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                 break
             }
             case "moveData": {
-                let array = e.data.val
-                for (let i = 0; i<array.length; i++) {
-                    let vals = array[i]
-                    let shipId = vals[4]
+                /*
+                0 p.x
+                1 p.y
+                2 p.z
+                3 ph.x
+                4 ph.y
+                5 ph.z
+                6 pl.x
+                7 pl.y
+                8 pl.z
+                9 id
+                 */
+                //moveArray[realIdx].push(p[0],p[1],p[2], ph[0],ph[1],ph[2], pl[0],pl[1],pl[2], array[i])
+                let vals = e.data.val
+                for (let i = 0; i<vals.length; i+=10) {
+                    let shipId = vals[i+9]
                     if (aiShips[shipId]!==undefined) {
-                        aiShips[shipId].position = vals[1]
-                        aiShips[shipId].positionHi = vals[2]
-                        aiShips[shipId].positionLo = vals[3]
-                        aiShips[shipId].positionPrecise = {x:convertToBigNumber(vals[0].x),y:convertToBigNumber(vals[0].y),z:convertToBigNumber(vals[0].z)}
+                        let positionHi = {x:vals[i+3],y:vals[i+4],z:vals[i+5]}
+                        let positionLo = {x:vals[i+6],y:vals[i+7],z:vals[i+8]}
+
+                        aiShips[shipId].position = {x:vals[i],y:vals[i+1],z:vals[i+2]}
+                        aiShips[shipId].positionHi = positionHi
+                        aiShips[shipId].positionLo = positionLo
+                        //console.log({x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)})
+                        aiShips[shipId].positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
                     }
                 }
 

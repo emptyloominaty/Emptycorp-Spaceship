@@ -28,7 +28,7 @@ class FuelConsumptionModule {
         for (let i = 0;i<this.fuelArray.length ;i++) {
             cons+=this.fuelArray[i]
         }
-        this.fuelConsumptionAvg = (cons/this.fuelArray.length)*gameFPS*3600000//g/h
+        this.fuelConsumptionAvg = (cons/this.fuelArray.length)*avgFPSSec*3600000//g/h
 
         //fuel consumption (10sec avg)
         if (this.partsActivated.preciseConsumption===1 && playerShip.usePower(this.partsConsumption.preciseConsumption/gameFPS,"computer")) {
@@ -41,7 +41,7 @@ class FuelConsumptionModule {
             for (let i = 0;i<this.fuelArrayPrecise.length ;i++) {
                 consPrecise+=this.fuelArrayPrecise[i]
             }
-            this.fuelConsumptionAvgPrecise = (consPrecise/this.fuelArrayPrecise.length)*gameFPS*3600000 //g/h
+            this.fuelConsumptionAvgPrecise = (consPrecise/this.fuelArrayPrecise.length)*avgFPSSec*3600000 //g/h
         }
 
 

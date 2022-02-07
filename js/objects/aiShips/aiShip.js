@@ -47,18 +47,21 @@ class AiShip {
     tradeTodo = [] // [{do:"buy", item:"steel", amount:500, systemId:1},{do:"sell", item:"steel", amount:250, systemId:0},{do:"sell", item:"steel", amount:250, systemId:5}]
     currentTrade = {} //{do:"buy", item:"steel", amount:500, systemId:1}
 
-    run() {
-        if (this.destroyed) {
-            return false
-        }
+    checkIfDestroyed() {
+        this.rotate(gameFPS)
+        return !this.destroyed
+    }
+
+    run(fps) {
+        this.transferCredits()
         let hitboxSize = 0.00000000000003 //280m
         if (this.pos==="mid") {hitboxSize = 0.001}
         if (this.pos==="far") {hitboxSize = 0.01}
         this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,hitboxSize)
         if (this.shield<this.shieldMax) {
-            this.shield+=this.shieldRecharge/gameFPS
+            this.shield+=this.shieldRecharge/fps
         }
-        let consNow = (this.consumptionC*this.speed/3600)/gameFPS
+        let consNow = (this.consumptionC*this.speed/3600)/fps
         if (this.nearTarget) {
             if (this.targetType==="system") {
                 this.inSystem()
@@ -69,9 +72,11 @@ class AiShip {
         } else if (this.task==="trade") {
             this.doTrade()
         }
-        this.accelerate()
-        this.navigate()
-        this.rotate()
+        if (this.task!=="stop") {
+            this.accelerate(fps)
+            this.navigate()
+        }
+
         if(this.fuelTank.capacity<this.fuelTank.maxCapacity/4) {
             if(!this.refuel && this.task!=="attack" && this.task!=="flee") {
                 this.changeTarget(this.findRefuelStation(),"system",true)
@@ -79,18 +84,13 @@ class AiShip {
             }
         }
         this.fuelTank.capacity -= consNow
-        return true
     }
 
-    runMinute() {
-        this.transferCredits()
-    }
-
-    accelerate() {
+    accelerate(fps) {
         if (this.targetSpeed>this.speed) {
-            this.speed += (this.targetSpeed+(this.targetSpeed-this.speed))/gameFPS
+            this.speed += (this.targetSpeed+(this.targetSpeed-this.speed))/fps
         } else if (this.targetSpeed<this.speed) {
-            this.speed -= this.speed/20
+            this.speed -= (this.speed*3)/fps
         }
         if (this.speed>this.maxSpeed) {
             this.speed = this.maxSpeed
@@ -100,17 +100,17 @@ class AiShip {
         }
     }
 
-    rotate() {
+    rotate(fps) {
         if (this.targetYaw>this.yaw) {
-            this.yaw+=this.rotationSpeed/gameFPS
+            this.yaw+=this.rotationSpeed/fps
         } else if (this.targetYaw<this.yaw) {
-            this.yaw-=this.rotationSpeed/gameFPS
+            this.yaw-=this.rotationSpeed/fps
         }
         //pitch
         if (this.targetPitch>this.pitch) {
-            this.pitch+=this.rotationSpeed/gameFPS
+            this.pitch+=this.rotationSpeed/fps
         } else if (this.targetPitch<this.pitch) {
-            this.pitch-=this.rotationSpeed/gameFPS
+            this.pitch-=this.rotationSpeed/fps
         }
     }
 
@@ -404,16 +404,15 @@ let checkDistanceToPlayerLoop = function() {
 }
 
 
+
 let aiShipsRun = function() {
+    //testTime = performance.now()
     checkDistanceToPlayerLoop()
     let aiShipsMT = []
     let aiShipsMTFps = gameFPS
     for (let i = 0; i<aiShips.length; i++) {
         if (aiShips[i]!==undefined) {
-            let destroy = aiShips[i].run()
-
-            aiShips[i].run2()
-            aiShips[i].runMinute() //TODO
+            let destroy = aiShips[i].checkIfDestroyed()
             if (!destroy) {
                 if (playerShip.computers[0].targetObj===aiShips[i]) {playerShip.computers[0].targetObj={};playerShip.computers[0].target=""}
                 shipWindow3D.scene.remove(shipWindow3D.ships[i])
@@ -428,20 +427,33 @@ let aiShipsRun = function() {
         if (aiShipsNear[i] && aiShips[i]!==undefined) {
             if (settings.multiThreading===1) {
                 let ship = aiShips[i]
-                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+                /*
+                0=id
+                1=yaw
+                2=pitch
+                3=speed
+                4=fps
+                5=pl.x
+                6=pl.y
+                7=pl.z
+                8=ph.x
+                9=ph.y
+                10=ph.z
+                 */
+                let pl = ship.positionLo
+                let ph = ship.positionHi
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                //aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
             } else {
                 aiShips[i].move(aiShipsMTFps)
             }
+            aiShips[i].run(aiShipsMTFps)
+            aiShips[i].run2(aiShipsMTFps)
         }
     }
 
-
-
-
-
-
-    aiShipsMidInc = Math.ceil(aiShips.length/settings.shipFarUpdate)
-    aiShipsFarInc = Math.ceil(aiShips.length/settings.shipMidUpdate)
+    aiShipsMidInc = Math.ceil(aiShips.length/settings.shipMidUpdate)
+    aiShipsFarInc = Math.ceil(aiShips.length/settings.shipFarUpdate)
 
     //Mid
     aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsMidInc)
@@ -449,41 +461,64 @@ let aiShipsRun = function() {
         if (aiShipsMid[aiShipsMidIdx] && aiShips[aiShipsMidIdx]!==undefined) {
             if (settings.multiThreading===1) {
                 let ship = aiShips[aiShipsMidIdx]
-                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+                let pl = ship.positionLo
+                let ph = ship.positionHi
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
             } else {
                 aiShips[aiShipsMidIdx].move(aiShipsMTFps)
             }
+            aiShips[aiShipsMidIdx].run(aiShipsMTFps)
+            aiShips[aiShipsMidIdx].run2(aiShipsMTFps)
         }
         aiShipsMidIdx++
         if(aiShipsMidIdx>aiShips.length) {aiShipsMidIdx = 0}
     }
 
-
     //Far
     aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsFarInc)
     for (let i = 0 ; i<aiShipsFarInc; i++) {
         if (aiShipsFar[aiShipsFarIdx] && aiShips[aiShipsFarIdx]!==undefined) {
-            if (settings.multiThreading===1) {
+            if (settings.multiThreading === 1) {
                 let ship = aiShips[aiShipsFarIdx]
-                aiShipsMT.push({id:ship.id, yaw:ship.yaw, pitch: ship.pitch, speed:ship.speed, positionPrecise:ship.positionPrecise, fps:aiShipsMTFps })
+                let pl = ship.positionLo
+                let ph = ship.positionHi
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
             } else {
                 aiShips[aiShipsFarIdx].move(aiShipsMTFps)
             }
+            aiShips[aiShipsFarIdx].run(aiShipsMTFps)
+            aiShips[aiShipsFarIdx].run2(aiShipsMTFps)
         }
         aiShipsFarIdx++
         if(aiShipsFarIdx>aiShips.length) {aiShipsFarIdx = 0}
     }
 
-
-
-
-
+    //send data to worker
     if (settings.multiThreading===1) {
-        let postMsgData = {do: "move", array: aiShipsMT, fps: gameFPS}
-        threads[threadIdx].worker.postMessage(postMsgData)
+        let aiShipsMTFloat64Array = Float64Array.from(aiShipsMT)
+        let postMsgData = {do: "move", array: aiShipsMTFloat64Array}
+
+        threads[threadIdx].worker.postMessage(postMsgData, [aiShipsMTFloat64Array.buffer])
         threadIdx++
         if (threadIdx > idxNumberOfThreads) {
             threadIdx = 0
         }
     }
+
+    /*
+    testTimeArray.push(performance.now()-testTime)
+    if (testTimeArray.length===60) {
+        testTimeArray.shift()
+    }
+    testReal = 0
+    for (let i = 0; i<testTimeArray.length;i++) {
+        testReal+= testTimeArray[i]
+    }
+    testReal = testReal / testTimeArray.length
+
+    console.log(testReal.toFixed(1)+"ms")*/
 }
+/*
+let testTime = performance.now()
+let testTimeArray = []
+let testReal = 0*/

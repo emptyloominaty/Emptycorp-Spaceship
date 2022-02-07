@@ -127,3 +127,26 @@ let sortAllSystemsByDistance = function(obj,position,systems) {
     systemsSorted = systemsSorted.sort((a, b) => a.distance > b.distance ? 1 : -1)
     return systemsSorted
 }
+
+let numbersToBigNumber = function(positionHi,positionLo) {
+    let bignumberLo = new BigNumber(positionLo)
+    let bignumber = new BigNumber(positionHi)
+    return bignumber.plus(bignumberLo)
+}
+
+/*
+let checkUndefinedBigNumber = function(number) {
+    if (number===undefined) {
+        return 0
+    } else {
+        return number
+    }
+}
+
+let convertBigNumberToArray = function(number) {
+    let c1,c2,c3
+    c1 = checkUndefinedBigNumber(number.c[0])
+    c2 = checkUndefinedBigNumber(number.c[1])
+    c3 = checkUndefinedBigNumber(number.c[2])
+    return [number.s,number.e,c1,c2,c3]
+}*/
