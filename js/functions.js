@@ -129,9 +129,9 @@ let sortAllSystemsByDistance = function(obj,position,systems) {
 }
 
 let numbersToBigNumber = function(positionHi,positionLo) {
-    let bignumberLo = new BigNumber(positionLo)
+    //let bignumberLo = new BigNumber(positionLo)
     let bignumber = new BigNumber(positionHi)
-    return bignumber.plus(bignumberLo)
+    return bignumber.plus(positionLo)
 }
 
 /*

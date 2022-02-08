@@ -89,11 +89,11 @@ function draw(progress) {
     //---------------------------------------------Settings---------------------------------------
     drawSettings()
     //------------------------------------------------UI------------------------------------------
-    elements.atmosphereComposition.innerText = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
-    elements.pressureAndTemperature.innerText =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
+    elements.atmosphereComposition.textContent = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
+    elements.pressureAndTemperature.textContent =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
     //update speed bar
     elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
-    elements.speedText.innerText = "Speed: "+getSpeedText(playerShip.speed)
+    elements.speedText.textContent= "Speed: "+getSpeedText(playerShip.speed)
     //energy
     let powerInput = 0
     let powerOutput = 0
@@ -107,14 +107,14 @@ function draw(progress) {
     }
     powerOutput = powerOutput/playerShip.powerOutputArray.length
 
-    elements.energyConsumption.innerText = "-"+(powerOutput*1000).toFixed(1) +"kW"
-    elements.energyGeneration.innerText = "+"+(powerInput*1000).toFixed(1) +"kW"
+    elements.energyConsumption.textContent = "-"+(powerOutput*1000).toFixed(1) +"kW"
+    elements.energyGeneration.textContent = "+"+(powerInput*1000).toFixed(1) +"kW"
     //capacitors
     for (let i = 0; i<playerShip.capacitors.length; i++) {
         elements["capacitorValue" + i].style.width = (playerShip.capacitors[i].charge / playerShip.capacitors[i].maxCharge * 100) + "%"
-        elements["capacitorType" + i].innerText = playerShip.capacitors[i].powerGroup
-        elements["capacitorText" + i].innerText = (playerShip.capacitors[i].charge*1000).toFixed(2)+"/"+(playerShip.capacitors[i].maxCharge*1000)+"kWh "
-        elements["capacitorText2" + i].innerText = (playerShip.capacitors[i].dischargePerSec*1000*3600).toFixed(1)+"kW"
+        elements["capacitorType" + i].textContent = playerShip.capacitors[i].powerGroup
+        elements["capacitorText" + i].textContent = (playerShip.capacitors[i].charge*1000).toFixed(2)+"/"+(playerShip.capacitors[i].maxCharge*1000)+"kWh "
+        elements["capacitorText2" + i].textContent = (playerShip.capacitors[i].dischargePerSec*1000*3600).toFixed(1)+"kW"
     }
     //battery
     elements.batteryValue.style.height = ((playerShip.batteries[0].charge/playerShip.batteries[0].maxCharge)*100)+"%"
@@ -122,11 +122,11 @@ function draw(progress) {
     //tanks
     for (let i = 0; i<playerShip.tanks.length; i++) {
         elements["tankValue" + i].style.width = (playerShip.tanks[i].capacity/playerShip.tanks[i].maxCapacity*100)+"%"
-        elements["tankText" + i].innerHTML = playerShip.tanks[i].type
+        elements["tankText" + i].textContent = playerShip.tanks[i].type
         if (playerShip.tanks[i].tankType==="gas") {
-            elements["tankText2" + i].innerHTML = playerShip.tanks[i].capacity.toFixed(0)+"/"+playerShip.tanks[i].maxCapacity.toFixed(0)+" l"
+            elements["tankText2" + i].textContent = playerShip.tanks[i].capacity.toFixed(0)+"/"+playerShip.tanks[i].maxCapacity.toFixed(0)+" l"
         } else if (playerShip.tanks[i].tankType==="fuel") {
-            elements["tankText2" + i].innerHTML = playerShip.tanks[i].capacity.toFixed(0)+"/"+playerShip.tanks[i].maxCapacity.toFixed(0)+" kg"
+            elements["tankText2" + i].textContent = playerShip.tanks[i].capacity.toFixed(0)+"/"+playerShip.tanks[i].maxCapacity.toFixed(0)+" kg"
         }
     }
     //Antenna

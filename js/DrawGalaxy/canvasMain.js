@@ -61,25 +61,22 @@ class CanvasMain {
             this.scene.add(test[0])
         }*/
 
-        //------------------------------------------------------------------------------------------FXAA
-        this.renderPassFXAA = new RenderPass( this.scene, this.camera )
-        this.fxaaPass = new ShaderPass( FXAAShader )
-        this.copyPassFXAA = new ShaderPass( CopyShader )
 
-        this.composer = new EffectComposer( this.renderer )
-        this.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( 1900 )
-        this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( 550 )
-
-        this.composerFX = new EffectComposer( this.renderer )
         //------------------------------------------------------------------------------------------SMAA
         this.composerSMAA = new EffectComposer( this.renderer )
         this.composerSMAA.addPass( new RenderPass( this.scene, this.camera ) )
 
-        const pass = new SMAAPass( 1900, 550 )
-        this.composerSMAA.addPass( pass )
+        this.passSMAA = new SMAAPass( 1900, 550 )
+        this.composerSMAA.addPass( this.passSMAA )
+
+        this.passSMAA.renderToScreen = true;
+        this.passSMAA.clear = false;
+        this.passSMAA.clearColor = false;
+        this.passSMAA.clearDepth = false;
 
         //------------------------------------------------------------------------------------------Motion Blur
         this.composerMotionBlur = new EffectComposer( this.renderer )
+
         // render pass
         this.renderPassMotionBlur = new THREE.RenderPass( this.scene, this.camera )
 
@@ -95,12 +92,11 @@ class CanvasMain {
         // blend pass
         this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
         this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
-        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
+        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.8 //0.4
 
         // output pass
         this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
         this.outputPassMotionBlur.renderToScreen = true
-
         //-----------------------------------------------------------------------------------------
 
         this.camera.position.x = 0   //x
@@ -111,18 +107,12 @@ class CanvasMain {
         this.render = () => {
             requestAnimationFrame(this.render)
             this.renderer.render(this.scene, this.camera)
-            //FXAA
-            if(this.fxaa) {
-                this.composer.render()
-                this.composerFX.render()
-            }
             if (this.motionBlur) {
                 this.composerMotionBlur.render()
             }
             if (this.smaa) {
                 this.composerSMAA.render()
             }
-
 
         }
 
@@ -185,7 +175,6 @@ class CanvasMain {
             }
         }
         //ships
-        //TODO:draw only <0.01ly
         for (let i = 0; i<aiShips.length; i++) {
             if (aiShips[i]!==undefined && aiShipsNear[i]) {
                 if (this.ships[i] === undefined) {
@@ -236,21 +225,6 @@ class CanvasMain {
         this.composerMotionBlur.removePass( this.outputPassMotionBlur )
     }
 
-    enableFXAA() {
-        this.composerFX.addPass( this.renderPassFXAA )
-        this.composerFX.addPass( this.copyPassFXAA )
-
-        this.composer.addPass( this.renderPassFXAA )
-        this.composer.addPass( this.fxaaPass )
-    }
-
-    disableFXAA() {
-        this.composerFX.removePass( this.renderPassFXAA )
-        this.composerFX.removePass( this.copyPassFXAA )
-
-        this.composer.removePass( this.renderPassFXAA )
-        this.composer.removePass( this.fxaaPass )
-    }
 
 }
 

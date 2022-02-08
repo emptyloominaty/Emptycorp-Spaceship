@@ -240,6 +240,7 @@ let keyLoop = () => {
         playerShip.computers[0].functions.findNearestEnemyTarget()
         keyPressed["Tab"] = false
     }
+
     if (keyPressed["Escape"]) {
         settingsOpen = !settingsOpen
         keyPressed["Escape"] = false

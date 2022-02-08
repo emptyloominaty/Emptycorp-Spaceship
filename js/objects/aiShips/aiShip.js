@@ -333,9 +333,20 @@ class AiShip {
     }
 
     constructor(x,y,z,role,faction,rotSpeed,accSpeed,weapon,fuelTank,consumption,armor,shield,shieldRecharge,home,shipDesign) {
-        this.positionPrecise.x = new BigNumber(x+0.0000000515648966666622154)
+        this.positionPrecise.x = new BigNumber(x)
         this.positionPrecise.y = new BigNumber(y)
         this.positionPrecise.z = new BigNumber(z)
+        this.position.x = this.positionPrecise.x.toNumber()
+        this.position.y = this.positionPrecise.y.toNumber()
+        this.position.z = this.positionPrecise.z.toNumber()
+
+        this.positionHi.x = ((this.positionPrecise.x.toNumber().toPrecision(12)))
+        this.positionHi.y = ((this.positionPrecise.y.toNumber().toPrecision(12)))
+        this.positionHi.z = ((this.positionPrecise.z.toNumber().toPrecision(12)))
+
+        this.positionLo.x = this.positionPrecise.x.minus(this.positionHi.x).toNumber()
+        this.positionLo.y = this.positionPrecise.y.minus(this.positionHi.y).toNumber()
+        this.positionLo.z = this.positionPrecise.z.minus(this.positionHi.z).toNumber()
         this.role = role
         this.faction = faction
         this.rotationSpeed = rotSpeed
@@ -354,7 +365,8 @@ class AiShip {
         this.id = aiShips.length
     }
 }
-//--------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 let aiShips = []
 
 let aiShipsFar = []
@@ -419,7 +431,7 @@ let aiShipsRun = function() {
     //testTime = performance.now()
     checkDistanceToPlayerLoop()
     let aiShipsMT = []
-    let aiShipsMTFps = gameFPS
+    let aiShipsFps = gameFPS
     for (let i = 0; i<aiShips.length; i++) {
         if (aiShips[i]!==undefined) {
             let destroy = aiShips[i].checkIfDestroyed()
@@ -452,12 +464,12 @@ let aiShipsRun = function() {
                  */
                 let pl = ship.positionLo
                 let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
             } else {
-                aiShips[i].move(aiShipsMTFps)
+                aiShips[i].move(aiShipsFps)
             }
-            aiShips[i].run(aiShipsMTFps)
-            aiShips[i].run2(aiShipsMTFps)
+            aiShips[i].run(aiShipsFps)
+            aiShips[i].run2(aiShipsFps)
         }
     }
 
@@ -465,38 +477,38 @@ let aiShipsRun = function() {
     aiShipsFarInc = Math.ceil(aiShips.length/settings.shipFarUpdate)
 
     //Mid
-    aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsMidInc)
+    aiShipsFps = avgFPSSec/(aiShips.length/aiShipsMidInc)
     for (let i = 0 ; i<aiShipsMidInc; i++) {
         if (aiShipsMid[aiShipsMidIdx] && aiShips[aiShipsMidIdx]!==undefined) {
             if (settings.multiThreading===1) {
                 let ship = aiShips[aiShipsMidIdx]
                 let pl = ship.positionLo
                 let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
             } else {
-                aiShips[aiShipsMidIdx].move(aiShipsMTFps)
+                aiShips[aiShipsMidIdx].move(aiShipsFps)
             }
-            aiShips[aiShipsMidIdx].run(aiShipsMTFps)
-            aiShips[aiShipsMidIdx].run2(aiShipsMTFps)
+            aiShips[aiShipsMidIdx].run(aiShipsFps)
+            aiShips[aiShipsMidIdx].run2(aiShipsFps)
         }
         aiShipsMidIdx++
         if(aiShipsMidIdx>aiShips.length) {aiShipsMidIdx = 0}
     }
 
     //Far
-    aiShipsMTFps = avgFPSSec/(aiShips.length/aiShipsFarInc)
+    aiShipsFps = avgFPSSec/(aiShips.length/aiShipsFarInc)
     for (let i = 0 ; i<aiShipsFarInc; i++) {
         if (aiShipsFar[aiShipsFarIdx] && aiShips[aiShipsFarIdx]!==undefined) {
             if (settings.multiThreading === 1) {
                 let ship = aiShips[aiShipsFarIdx]
                 let pl = ship.positionLo
                 let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsMTFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
             } else {
-                aiShips[aiShipsFarIdx].move(aiShipsMTFps)
+                aiShips[aiShipsFarIdx].move(aiShipsFps)
             }
-            aiShips[aiShipsFarIdx].run(aiShipsMTFps)
-            aiShips[aiShipsFarIdx].run2(aiShipsMTFps)
+            aiShips[aiShipsFarIdx].run(aiShipsFps)
+            aiShips[aiShipsFarIdx].run2(aiShipsFps)
         }
         aiShipsFarIdx++
         if(aiShipsFarIdx>aiShips.length) {aiShipsFarIdx = 0}
@@ -508,6 +520,7 @@ let aiShipsRun = function() {
         let postMsgData = {do: "move", array: aiShipsMTFloat64Array}
 
         threads[threadIdx].worker.postMessage(postMsgData, [aiShipsMTFloat64Array.buffer])
+        threads[threadIdx].available = false
         threadIdx++
         if (threadIdx > idxNumberOfThreads) {
             threadIdx = 0

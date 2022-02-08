@@ -1,4 +1,5 @@
 function worker_function() {
+    let id = 0
     let doTest = function(a,b,i) {
         return Number(a+b)+" ("+i+" Thread)"
     }
@@ -84,16 +85,13 @@ function worker_function() {
                 let moveArray = []
                 if (array.length>0) {
                     for (let i = 0; i < array.length; i+=11) {
-                        let realIdx = i/11
+                        //let realIdx = i/11
                         if (array[i]===undefined) {break}
                         let positionLo = {x:array[i+5], y:array[i+6], z:array[i+7]}
                         let positionHi = {x:array[i+8], y:array[i+9], z:array[i+10]}
                         let positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
-                        /*moveArray[realIdx] = move(array[i+1], array[i+2], array[i+3], array[i+4], positionPrecise)
-                        moveArray[realIdx][4] = array[i]*/
                         let moveArray1 = move(array[i+1], array[i+2], array[i+3], array[i+4], positionPrecise)
 
-                        //[positionPrecise, position, positionHi, positionLo]
                         let p = [moveArray1[1].x, moveArray1[1].y, moveArray1[1].z]
                         let ph = [moveArray1[2].x, moveArray1[2].y, moveArray1[2].z]
                         let pl =  [moveArray1[3].x, moveArray1[3].y, moveArray1[3].z]
@@ -122,6 +120,13 @@ function worker_function() {
             }
             case "importScript": {
                 importScripts(e.data.scriptUrl)
+                break
+            }
+            case "init": {
+                id = e.data.id
+                let postMsgData = {do:"initDone", val:id, msg:"Thread ("+id+") loaded."}
+                postMessage(postMsgData)
+                break
             }
         }
     }, false)
@@ -159,9 +164,9 @@ let threads = []
 let threadIdx = 0
 
 for (let i = 0; i<numberOfThreads-1; i++) {
-    threads[i] = {worker:new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})))}
-
+    threads[i] = {worker:new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'}))),available:true, usage:0, loaded: false}
     threads[i].worker.addEventListener('message', function(e) {
+        let id = i
         switch(e.data.do) {
             case "testB": {
                 console.log(e.data.val)
@@ -191,11 +196,21 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                         aiShips[shipId].position = {x:vals[i],y:vals[i+1],z:vals[i+2]}
                         aiShips[shipId].positionHi = positionHi
                         aiShips[shipId].positionLo = positionLo
-                        //console.log({x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)})
-                        aiShips[shipId].positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
+                        if (!aiShipsNear[shipId] && !aiShipsMid[shipId]) {
+                            //80% better performance
+                            aiShips[shipId].positionPrecise = {x:new BigNumber(positionHi.x + positionLo.x), y:new BigNumber(positionHi.y + positionLo.y), z:new BigNumber(positionHi.z + positionLo.z)}
+                        } else {
+                            aiShips[shipId].positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
+                        }
+
                     }
                 }
-
+                threads[id].available = true
+                break
+            }
+            case "initDone": {
+                console.log(e.data.msg)
+                threads[i].loaded = true
                 break
             }
         }
@@ -204,7 +219,8 @@ for (let i = 0; i<numberOfThreads-1; i++) {
 
 
     threads[i].worker.postMessage({do:"importScript",scriptUrl: Worker_BigNumberJS})
-    threads[i].worker.postMessage({do:"test", func:"doTest" ,funcParameters:[40,60,i]})
+    threads[i].worker.postMessage({do:"init", id:i})
+    //threads[i].worker.postMessage({do:"test", func:"doTest" ,funcParameters:[40,60,i]})
     /*threads[i].worker.postMessage({do:"testBigNumber", func:"doBigNumberTest" ,funcParameters:[new BigNumber(1),new BigNumber(2),i]})*/
 }
 

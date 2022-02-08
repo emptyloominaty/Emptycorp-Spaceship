@@ -80,6 +80,35 @@ let settingsList = {
         ]
 }
 
+//TODO
+let keybindNames = {
+    keyA:"A",
+    keyD:"D",
+    keyW:"W",
+    keyS:"S",
+    Digit1:"1",
+    Digit2:"2",
+    Digit3:"3",
+    Digit4:"4",
+    ShiftLeft:"Shift",
+    ControlLeft:"Ctrl",
+    Tab:"Tab",
+}
+
+let keybinds = {
+    "Pitch Up":"keyW",
+    "Pitch Down":"keyS",
+    "Yaw Left":"keyA",
+    "Yaw Right":"keyD",
+    "Weapon 1":"Digit1",
+    "Weapon 2":"Digit2",
+    "Weapon 3":"Digit3",
+    "Weapon 4":"Digit4",
+    "Increase Speed":"ShiftLeft",
+    "Decrease Speed" :"ControlLeft",
+    "Target Nearest Enemy":"Tab",
+    }
+
 let updateSettings = function() {
     //motion blur
     if (settings.motionBlur===1) {
@@ -91,18 +120,6 @@ let updateSettings = function() {
         if (shipWindow3D.motionBlur) {
             shipWindow3D.disableMotionBlur()
             shipWindow3D.motionBlur = false
-        }
-    }
-    //fxaa
-    if (settings.antialiasingfx===1) {
-        if (!shipWindow3D.fxaa) {
-            shipWindow3D.enableFXAA()
-            shipWindow3D.fxaa = true
-        }
-    } else {
-        if (shipWindow3D.fxaa) {
-            shipWindow3D.disableFXAA()
-            shipWindow3D.fxaa = false
         }
     }
     //msaa
@@ -125,25 +142,77 @@ let updateSettings = function() {
     }
 
 }
-let menus = ["shipInfo","galaxyMap","settings","save","load"]
+let menus = ["shipInfo","galaxyMap","settings","keybinds","save","load"]
 let menuIn = "settings"
 
 
 let updateMenu = function(id) {
+    generateMenu(id)
     document.getElementById("menu_"+menuIn).classList.remove("selectedMenu")
     menuIn = menus[id]
     document.getElementById("menu_"+menuIn).classList.add("selectedMenu")
 }
 
-let generateSettingsHTML = function() {
+let generateMenu = function(id) {
     let html = ""
     //menu
-    html += "<div class='flex-column gameMenu'> DOES NOT WORK RN" +
+    html += "<div class='flex-column gameMenu'> " +
         " <button class='menuButton' onclick='updateMenu(0)' id='menu_shipInfo'>Ship Info</button>" +
         " <button class='menuButton' onclick='updateMenu(1)' id='menu_galaxyMap'>Galaxy Map</button>" +
         " <button class='menuButton' onclick='updateMenu(2)' id='menu_settings'>Settings</button>" +
-        " <button class='menuButton' onclick='updateMenu(3)' id='menu_save'>Save</button>" +
-        " <button class='menuButton' onclick='updateMenu(4)' id='menu_load'>Load</button>" +
+        " <button class='menuButton' onclick='updateMenu(3)' id='menu_keybinds'>Keybinds</button>" +
+        " <button class='menuButton' onclick='updateMenu(4)' id='menu_save'>Save</button>" +
+        " <button class='menuButton' onclick='updateMenu(5)' id='menu_load'>Load</button>" +
+        "</div>"
+
+    if (menus[id]==="settings") {
+        //settings
+        let categoryArray = []
+        Object.keys(settingsList).forEach(key => {
+            categoryArray.push(key)
+            html+= "<div class='flex-column settingCategory' id='settingCategory"+key+"'><h3 class='settingH3'>"+key+"</h3></div>"
+        })
+        elements.appSettings.innerHTML = html
+
+        for (let i = 0; i<categoryArray.length; i++) {
+            html = ""
+            let array = settingsList[categoryArray[i]]
+            for (let j = 0; j<array.length; j++) {
+                //let setVal = array[j].optionsString[settings[array[j].settingName]]
+                html += "<div class='flex-row settingItem'><span>"+array[j].name+": </span> <div class='settingOptions'>"
+                for (let a = 0; a<array[j].options.length; a++) {
+                    html+= "<button onclick='settingsList[\""+categoryArray[i]+"\"]["+j+"].setValue("+array[j].options[a]+")' class='settingItemC' id='setting"+i+j+a+"'> "+array[j].optionsString[array[j].options[a]]+" </button>"
+                }
+                html += "</div></div>"
+
+            }
+            document.getElementById("settingCategory"+categoryArray[i]).innerHTML += html
+        }
+        updateSettingsHTML()
+    } else if (menus[id]==="keybinds") {
+        html += "<div class='keybinds'>"
+        //keybinds
+        Object.keys(keybinds).forEach(key => {
+          html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' >"+keybinds[key]+"</button></div>"
+        })
+        html+= "</div>"
+        elements.appSettings.innerHTML = html
+    }
+
+
+}
+
+
+let generateSettingsHTML = function() {
+    let html = ""
+    //menu
+    html += "<div class='flex-column gameMenu'> " +
+        " <button class='menuButton' onclick='updateMenu(0)' id='menu_shipInfo'>Ship Info</button>" +
+        " <button class='menuButton' onclick='updateMenu(1)' id='menu_galaxyMap'>Galaxy Map</button>" +
+        " <button class='menuButton' onclick='updateMenu(2)' id='menu_settings'>Settings</button>" +
+        " <button class='menuButton' onclick='updateMenu(3)' id='menu_keybinds'>Keybinds</button>" +
+        " <button class='menuButton' onclick='updateMenu(4)' id='menu_save'>Save</button>" +
+        " <button class='menuButton' onclick='updateMenu(5)' id='menu_load'>Load</button>" +
         "</div>"
 
     let categoryArray = []

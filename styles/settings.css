@@ -7,7 +7,7 @@
     width: 100%;
     height: fit-content;
     background-color: #292729;
-    font-size:24px;
+    font-size:1.25vw;
 }
 
 .menuButton:hover {
@@ -22,13 +22,14 @@
     margin: 10px 10px 10px 10px;
     padding-top: 10px;
     align-items: center;
+    /*width:7.25vw;*/
 }
 
 
 #appSettings {
     position:absolute;
     top:100px;
-    width:80%;
+    width:90%;
     height:80%;
     margin-left: auto;
     margin-right: auto;
@@ -39,6 +40,7 @@
     color:#CCC;
     filter:opacity(0);
     transition: filter 500ms;
+    flex-wrap: wrap;
 }
 
 #app {
@@ -46,15 +48,16 @@
 }
 
 .settingH3 {
-    font-size:20px;
+    font-size:1.2vw; /*font-size:20px;*/
     font-weight:600;
     padding-bottom:10px;
 }
 
 .settingCategory {
-    margin: 10px 10px 10px 10px;
-    padding: 10px;
+    margin: 0.5vw;
+    padding: 0.5vw;
     background-color: rgba(255,255,255,0.05);
+    font-size:0.9vw;
 }
 
 .settingItem {
@@ -64,6 +67,8 @@
 }
 
 .settingItemC {
+    background-color: rgba(255, 255, 255, 0);
+    font-size:0.72vw;
     padding:2px 5px 2px 5px;
     margin:0 3px 0 3px;
     border:1px solid rgba(255,255,255,0.2);
@@ -76,5 +81,24 @@
     overflow:hidden;
     display:flex;
     justify-content: start;
-    min-width:220px;
+    min-width:11.458vw;
+}
+
+.keybindName {
+
+}
+
+.keybind {
+    margin:0.1vw;
+    padding:0.1vw;
+}
+
+.keybindButton:hover {
+    background-color: #444144;
+}
+
+.keybinds {
+    display:flex;
+    flex-direction: column;
+    flex-wrap:wrap;
 }
