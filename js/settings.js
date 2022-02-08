@@ -96,10 +96,12 @@ let keybindNames = {
 }
 
 let keybinds = {
-    "Pitch Up":"keyW",
-    "Pitch Down":"keyS",
-    "Yaw Left":"keyA",
-    "Yaw Right":"keyD",
+    keyListening:0,
+    keyDone:true,
+    "Pitch Up":"KeyW",
+    "Pitch Down":"KeyS",
+    "Yaw Left":"KeyA",
+    "Yaw Right":"KeyD",
     "Weapon 1":"Digit1",
     "Weapon 2":"Digit2",
     "Weapon 3":"Digit3",
@@ -193,11 +195,25 @@ let generateMenu = function(id) {
         html += "<div class='keybinds'>"
         //keybinds
         Object.keys(keybinds).forEach(key => {
-          html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' >"+keybinds[key]+"</button></div>"
+            if(key!=="keyListening" && key!=="keyDone")
+          html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' onclick='keybinds.keyListening=\""+key+"\"'>"+keybinds[key]+"</button></div>"
         })
         html+= "</div>"
         elements.appSettings.innerHTML = html
+    } else if (menus[id]==="galaxyMap") {
+        html+=""
+        elements.appSettings.innerHTML = html
+    } else if (menus[id]==="shipInfo") {
+        html+=""
+        elements.appSettings.innerHTML = html
+    } else if (menus[id]==="load") {
+        html+=""
+        elements.appSettings.innerHTML = html
+    } else if (menus[id]==="save") {
+        html+=""
+        elements.appSettings.innerHTML = html
     }
+
 
 
 }
@@ -257,7 +273,6 @@ let updateSettingsHTML = function() {
             }
         }
     }
-
 }
 
 let drawSettings = function() {
@@ -274,6 +289,12 @@ let drawSettings = function() {
             elements.appSettings.style.display = "flex"
             elements.appSettings.style.filter = "opacity(1)"
             settingsHTML = true
+        }
+    }
+    if (menuIn==="keybinds") {
+        if (!keybinds.keyDone) {
+            updateMenu(3)
+            keybinds.keyDone = true
         }
     }
 }

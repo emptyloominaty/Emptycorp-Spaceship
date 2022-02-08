@@ -180,42 +180,43 @@ let keyLoop = () => {
 
     //TODO:Autopilot
 
+
     //rotation
-    if (keyPressed["KeyA"]) {
+    if (keyPressed[keybinds["Yaw Left"]]) {
         playerShip.position.yaw.targetDirection+=val
-    } else if (keyPressed["KeyD"]) {
+    } else if (keyPressed[keybinds["Yaw Right"]]) {
         playerShip.position.yaw.targetDirection-=val
     }
-    if (keyPressed["KeyW"]) {
+    if (keyPressed[keybinds["Pitch Up"]]) {
         playerShip.position.pitch.targetDirection+=val
-    } else if (keyPressed["KeyS"]) {
+    } else if (keyPressed[keybinds["Pitch Down"]]) {
         playerShip.position.pitch.targetDirection-=val
     }
 
     //weapons
-    if(keyPressed["Digit1"]) {
+    if(keyPressed[keybinds["Weapon 1"]]) {
         if (playerShip.weapons[0]!==undefined) {
             playerShip.weapons[0].doDamage(0,0,0)
         }
     }
-    if(keyPressed["Digit2"]) {
+    if(keyPressed[keybinds["Weapon 2"]]) {
         if (playerShip.weapons[1]!==undefined) {
             playerShip.weapons[1].doDamage(0,0,0)
         }
     }
-    if(keyPressed["Digit3"]) {
+    if(keyPressed[keybinds["Weapon 3"]]) {
         if (playerShip.weapons[2]!==undefined) {
             playerShip.weapons[2].doDamage(0,0,0)
         }
     }
-    if(keyPressed["Digit4"]) {
+    if(keyPressed[keybinds["Weapon 4"]]) {
         if (playerShip.weapons[3]!==undefined) {
             playerShip.weapons[3].doDamage(0,0,0)
         }
     }
 
     //speed
-    if (keyPressed["ShiftLeft"]) {
+    if (keyPressed[keybinds["Increase Speed"]]) {
         playerShip.targetSpeed+=valSpeed
         playerShip.propulsion="on"
         if (playerShip.speedMode==="Sublight") {
@@ -225,7 +226,7 @@ let keyLoop = () => {
                 playerShip.acc = 0
             }
         }
-    } else if (keyPressed["ControlLeft"]) {
+    } else if (keyPressed[keybinds["Decrease Speed"]]) {
         playerShip.targetSpeed-=valSpeed
         if (playerShip.speedMode==="Sublight") {
             playerShip.propulsion="on"
@@ -236,9 +237,9 @@ let keyLoop = () => {
             }
         }
     }
-    if (keyPressed["Tab"]) {
+    if (keyPressed[keybinds["Target Nearest Enemy"]]) {
         playerShip.computers[0].functions.findNearestEnemyTarget()
-        keyPressed["Tab"] = false
+        keyPressed[keybinds["Target Nearest Enemy"]] = false
     }
 
     if (keyPressed["Escape"]) {
@@ -268,11 +269,18 @@ let keyLoop = () => {
     }
 }
 
-let keyup= (e)=> {
+let keyup = (e)=> {
     keyPressed[e.code]=false
 }
-let keydown= (e)=> {
+let keydown = (e)=> {
     keyPressed[e.code]=true
+    if (menuIn==="keybinds" && keybinds.keyListening!==0) {
+        console.log(keybinds.keyListening+" set to "+e.code)
+        keybinds[keybinds.keyListening]=e.code
+        keybinds.keyListening = 0
+        keyPressed[e.code]=false
+        keybinds.keyDone = false
+    }
 }
 document.addEventListener('keydown', keydown)
 document.addEventListener('keyup', keyup)
