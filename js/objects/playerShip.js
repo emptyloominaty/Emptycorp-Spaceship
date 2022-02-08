@@ -784,8 +784,8 @@ let shipDefaultParts = {
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"weapon"},
                 {weight:10, capacity: 0.0035, /* MWh */name:"Capacitor 3.5kWh",powerGroup:"engine"},
                 {weight:17, capacity: 0.0050, /* MWh */name:"Capacitor 5kWh",powerGroup:"everything"}],
-    generators: [{weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0,efficiency:80},
-        {weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0,efficiency:85}], //
+    generators: [{weight:460, type:"UraniumReactor", output: 0.15 /* MW */,defaultOn:0,efficiency:85},
+        {weight:18, type:"H2FuelCell", output: 0.0113 /* MW */,defaultOn:0,efficiency:80}], //
     engines: [{weight:1500, fuelType:"fuel1", type:"FTL", minSpeed:0.000000099 /* c */, thrust: 147987520000,/* MN */ maxSpeed:50*8765.812756 /* c */, consumptionFuel:[0,40,150] /* kg/h */ , consumptionPower:[0.008,0.13] /* MW*/},
         {weight:320, fuelType:"fuel1", type:"Sublight", minSpeed:0, maxSpeed:46000000/299792458 /* c */ , thrust: 0.75 /* MN */, consumptionFuel:[0,1,3] /* kg/h */ , consumptionPower:[0.0004,0.1] /* MW*/  },
         {weight:80, fuelType:"fuel1", type:"RCS", minSpeed:0,  maxSpeed:46000000/299792458 /* c */ , thrust: 0.1 /* MN */, consumptionFuel:[0,0.09,0.15] /* kg/h */ , consumptionPower:[0.00005,0.06] /* MW*/  }],
@@ -810,7 +810,7 @@ let shipDefaultParts = {
 }
 
 let shipStats = {
-    armor:100, weight:5500/*kg*/, ercsThrust: 0.01/*MN*/,
+    armor:50, weight:5500/*kg*/, ercsThrust: 0.01/*MN*/,
     surfaceArea:128/*m2*/,size:{l:7,h:3.5,w:3.5}/*m*/ ,
 }
 

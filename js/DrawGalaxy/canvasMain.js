@@ -1,5 +1,4 @@
 class CanvasMain {
-    fxaa = false
     motionBlur = false
     smaa = false
     materials = {}
@@ -106,14 +105,15 @@ class CanvasMain {
 
         this.render = () => {
             requestAnimationFrame(this.render)
-            this.renderer.render(this.scene, this.camera)
-            if (this.motionBlur) {
-                this.composerMotionBlur.render()
+            if (!settingsOpen) {
+                this.renderer.render(this.scene, this.camera)
+                if (this.motionBlur) {
+                    this.composerMotionBlur.render()
+                }
+                if (this.smaa) {
+                    this.composerSMAA.render()
+                }
             }
-            if (this.smaa) {
-                this.composerSMAA.render()
-            }
-
         }
 
         this.render()

@@ -1,4 +1,4 @@
-let settingsOpen = false
+
 let settingsHTML = true
 
 
@@ -80,20 +80,6 @@ let settingsList = {
         ]
 }
 
-//TODO
-let keybindNames = {
-    keyA:"A",
-    keyD:"D",
-    keyW:"W",
-    keyS:"S",
-    Digit1:"1",
-    Digit2:"2",
-    Digit3:"3",
-    Digit4:"4",
-    ShiftLeft:"Shift",
-    ControlLeft:"Ctrl",
-    Tab:"Tab",
-}
 
 let keybinds = {
     keyListening:0,
@@ -167,7 +153,7 @@ let generateMenu = function(id) {
         " <button class='menuButton' onclick='updateMenu(5)' id='menu_load'>Load</button>" +
         "</div>"
 
-    if (menus[id]==="settings") {
+    if (menus[id]==="settings") {//-----------------------------------------------------------------------------------Settings
         //settings
         let categoryArray = []
         Object.keys(settingsList).forEach(key => {
@@ -191,7 +177,7 @@ let generateMenu = function(id) {
             document.getElementById("settingCategory"+categoryArray[i]).innerHTML += html
         }
         updateSettingsHTML()
-    } else if (menus[id]==="keybinds") {
+    } else if (menus[id]==="keybinds") {//-----------------------------------------------------------------------------------Keybinds
         html += "<div class='keybinds'>"
         //keybinds
         Object.keys(keybinds).forEach(key => {
@@ -200,16 +186,33 @@ let generateMenu = function(id) {
         })
         html+= "</div>"
         elements.appSettings.innerHTML = html
-    } else if (menus[id]==="galaxyMap") {
+    } else if (menus[id]==="galaxyMap") {//-----------------------------------------------------------------------------------Galaxy Map
         html+=""
         elements.appSettings.innerHTML = html
-    } else if (menus[id]==="shipInfo") {
+    } else if (menus[id]==="shipInfo") { //-----------------------------------------------------------------------------------Ship Info
+        html+="<div class='flex-column'> "
+        html+="<span>Max Speed: "+(playerShip.maxSpeed/8765.812756).toFixed(1)+"ly</span>"
+        html+="<span>Armor: "+playerShip.armor.toFixed(0)+"/"+playerShip.armorMax+"</span>"
+        html+="<span>Shield: "+playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge+"</span>"
+
+        html+="<span>Antenna: "+playerShip.antennas[0].maxSpeed+"Mbit"+"</span>"
+
+        html+="<span>Battery: "+Math.round(playerShip.batteries[0].charge*1000)+"/"+playerShip.batteries[0].maxCharge*1000+"kWh</span>"
+
+        for (let i = 0; i<playerShip.generators.length; i++) {
+            let generatorFuelLeft = playerShip.checkTank(playerShip.generators[i].generatorFuelType)/playerShip.generators[i].consumption
+            let totalPowerLeft = (generatorFuelLeft*playerShip.generators[i].output)/3600
+
+            html+="<span>"+playerShip.generators[i].type+" Total Power Left: "+(totalPowerLeft).toFixed(0)+" MWh </span>"
+        }
+
+
+        html+="</div>"
+        elements.appSettings.innerHTML = html
+    } else if (menus[id]==="load") { //--------------------------------------------------------------------------------------------Load
         html+=""
         elements.appSettings.innerHTML = html
-    } else if (menus[id]==="load") {
-        html+=""
-        elements.appSettings.innerHTML = html
-    } else if (menus[id]==="save") {
+    } else if (menus[id]==="save") { //--------------------------------------------------------------------------------------------Save
         html+=""
         elements.appSettings.innerHTML = html
     }

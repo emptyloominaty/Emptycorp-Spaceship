@@ -138,6 +138,10 @@ class StarSystem {
                 this.resources[key].maxPrice = this.resources[key].price/((1-this.resources[key].ratios[1])+ratio)
                 this.resourcesNeed[this.resources[key].need] = this.resources[key].maxPrice
             }
+
+            if (this.resources[key].val<0) {
+                this.resources[key].val=0
+            }
             this.updateSellingPrice(key,ratio)
         })
     }
@@ -146,6 +150,7 @@ class StarSystem {
         let rr = (1-this.resources[name].ratios[2])*(-1)
         ratio = 0.4+ratio+rr
         if (ratio>1.4) {ratio = 1.4}
+        if (ratio<0.15) {ratio = 0.15}
         this.resources[name].price = globalPrices[name]/(ratio)
         //console.log(name," ",this.resources[name].price,"cr global:", globalPrices[name]," (",ratio," ratio)")
     }

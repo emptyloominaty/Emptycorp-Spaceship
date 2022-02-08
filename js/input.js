@@ -180,6 +180,9 @@ let keyLoop = () => {
 
     //TODO:Autopilot
 
+    //TODO:Main generator
+
+    //
 
     //rotation
     if (keyPressed[keybinds["Yaw Left"]]) {
