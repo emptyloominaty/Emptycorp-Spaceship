@@ -164,7 +164,7 @@ let threads = []
 let threadIdx = 0
 
 for (let i = 0; i<numberOfThreads-1; i++) {
-    threads[i] = {worker:new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'}))),available:true, usage:0, loaded: false}
+    threads[i] = {worker:new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'}))),available:true, done:true, loaded: false}
     threads[i].worker.addEventListener('message', function(e) {
         let id = i
         switch(e.data.do) {
@@ -202,10 +202,10 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                         } else {
                             aiShips[shipId].positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
                         }
-
                     }
                 }
                 threads[id].available = true
+                threads[id].done = true
                 break
             }
             case "initDone": {

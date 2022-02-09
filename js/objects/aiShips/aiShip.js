@@ -379,9 +379,6 @@ let aiShipsFarInc = 10
 let aiShipsMidIdx = 0
 let aiShipsMidInc = 60
 
-let shipIdxDistance = 0
-
-
 let checkDistanceToPlayer = function(i) {
     if (aiShips[i]!==undefined) {
         let distance = calcDistance2D(aiShips[i],playerShip)
@@ -414,22 +411,9 @@ let checkDistanceToPlayer = function(i) {
     }
 }
 
-let checkDistanceToPlayerLoop = function() {
-    let ships = aiShips.length
-    for (let i = 0; i<10; i++) {
-        checkDistanceToPlayer(shipIdxDistance)
-        shipIdxDistance++
-        if(shipIdxDistance>ships) {
-            shipIdxDistance = 0
-        }
-    }
-}
-
-
 
 let aiShipsRun = function() {
     //testTime = performance.now()
-    checkDistanceToPlayerLoop()
     let aiShipsMT = []
     let aiShipsFps = gameFPS
     for (let i = 0; i<aiShips.length; i++) {
@@ -468,6 +452,7 @@ let aiShipsRun = function() {
             } else {
                 aiShips[i].move(aiShipsFps)
             }
+            checkDistanceToPlayer(i)
             aiShips[i].run(aiShipsFps)
             aiShips[i].run2(aiShipsFps)
         }
@@ -488,8 +473,10 @@ let aiShipsRun = function() {
             } else {
                 aiShips[aiShipsMidIdx].move(aiShipsFps)
             }
+            checkDistanceToPlayer(aiShipsMidIdx)
             aiShips[aiShipsMidIdx].run(aiShipsFps)
             aiShips[aiShipsMidIdx].run2(aiShipsFps)
+
         }
         aiShipsMidIdx++
         if(aiShipsMidIdx>aiShips.length) {aiShipsMidIdx = 0}
@@ -507,6 +494,7 @@ let aiShipsRun = function() {
             } else {
                 aiShips[aiShipsFarIdx].move(aiShipsFps)
             }
+            checkDistanceToPlayer(aiShipsFarIdx)
             aiShips[aiShipsFarIdx].run(aiShipsFps)
             aiShips[aiShipsFarIdx].run2(aiShipsFps)
         }
@@ -521,6 +509,7 @@ let aiShipsRun = function() {
 
         threads[threadIdx].worker.postMessage(postMsgData, [aiShipsMTFloat64Array.buffer])
         threads[threadIdx].available = false
+        threads[threadIdx].done = false
         threadIdx++
         if (threadIdx > idxNumberOfThreads) {
             threadIdx = 0

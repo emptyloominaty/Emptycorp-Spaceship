@@ -40,7 +40,11 @@ let doBeforeStart =  function() {
         starSystems[i].checkResources()
     }
     //------------------------------
+    for (let i = 0; i<aiShips.length; i++) {
+        aiShipsNear[i]=true
+        //checkDistanceToPlayer(i)
     }
+}
 
 let elements = {
     inputRange_speed: document.getElementById("inputRange_speed"),
@@ -119,10 +123,11 @@ function update(progress) {
     avgFPSSec = avgFPSSec / avgFPSlastSec.length
     //---------------------------------------------
 
+    aiShipsRun()
     playerShip.everyFrame(gameFPS)
     mainServer.run()
     projectilesRun()
-    aiShipsRun()
+
 
 
     timers[0].val+=1/gameFPS

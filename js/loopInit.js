@@ -1,15 +1,24 @@
 function loop(timestamp) {
-    progress = timestamp - lastRender
-    if (progress > 250) {
-        progress = 250
+    //TODO:FIX SYNC
+    let wait = false
+    for (let i = 0; i<threads.length; i++) {
+        if(!threads[i].done) {
+            wait = true
+        }
     }
-    keyLoop() //keyboard inputs
-    if (!settingsOpen) {
-        update(progress)
-    }
-    draw(progress)
+    if (!wait) {
+        progress = timestamp - lastRender
+        if (progress > 250) {
+            progress = 250
+        }
+        keyLoop() //keyboard inputs
+        if (!settingsOpen) {
+            update(progress)
+        }
+        draw(progress)
 
-    lastRender = timestamp
+        lastRender = timestamp
+    }
     window.requestAnimationFrame(loop)
 }
 
@@ -26,7 +35,6 @@ let start = function() {
             }
             if (t===threads.length) {
                 console.log("Workers loaded after "+(performance.now()-timeWorkers).toFixed(1)+"ms")
-                timeWorkers = null
                 clearInterval(waitForWorkersInit)
                 window.requestAnimationFrame(loop)
             }
