@@ -17,16 +17,13 @@ class CanvasMain {
     constructor() {
         this.scene = new THREE.Scene()
         this.camera = new THREE.PerspectiveCamera(50, 1900 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
-        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false} ) //,antialias: false
+        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
         //this.renderer.setPixelRatio(2)
 
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 
-        this.materials["Class G"] = new THREE.MeshBasicMaterial()
-        this.materials["Class K"] = new THREE.MeshBasicMaterial()
-
-        this.materials["Class G"].color.setHex("0xf1ffa5")
-        this.materials["Class K"].color.setHex("0xffd69c")
+        this.materials["Class G"] = new THREE.MeshBasicMaterial( {color:0xf1ffa5} )
+        this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c})
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
@@ -47,9 +44,17 @@ class CanvasMain {
 
                 this.scene.add(this.planets[i][j])
             }
-
             //TODO MOONS
         }
+
+        //TEST
+        /*this.stars2 = []
+        let geometry = new THREE.SphereGeometry(0.005, 30, 30, 0, Math.PI * 2, 0, Math.PI * 2)
+        for (let i = 0; i<100; i++) {
+            this.stars2[i] = new THREE.Mesh(geometry, this.materials["Class G"])
+            this.stars2[i].position.set(0.5+Math.random()*(-15),1.5-Math.random()*3,0.5+Math.random()*(-15))
+            this.scene.add(this.stars2[i])
+        }*/
 
         /*let test = this.test
         if (0===0) {
@@ -68,8 +73,6 @@ class CanvasMain {
         //-------------Bloom
 
         const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1900, 550 ), 1.5, 0.4, 0.5 )
-
-
 
         this.composer.addPass( bloomPass )
 
@@ -112,6 +115,16 @@ class CanvasMain {
         this.camera.position.z = 0   //y
 
 
+        //update Aspect Ratio
+        let reportWindowSize = () => {
+            this.camera.aspect = window.innerWidth/550
+            this.camera.updateProjectionMatrix()
+        }
+
+        window.onresize = reportWindowSize
+
+
+
         this.render = () => {
             requestAnimationFrame(this.render)
             if (!settingsOpen) {
@@ -119,7 +132,6 @@ class CanvasMain {
                 this.composer.render()
             }
         }
-
         this.render()
 
     }

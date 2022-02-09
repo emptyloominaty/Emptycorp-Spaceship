@@ -504,15 +504,23 @@ let aiShipsRun = function() {
 
     //send data to worker
     if (settings.multiThreading===1) {
-        let aiShipsMTFloat64Array = Float64Array.from(aiShipsMT)
-        let postMsgData = {do: "move", array: aiShipsMTFloat64Array}
+        let slice = (aiShipsMT.length/numberOfThreads)
+        let a = slice % 11
+        if (!(a===0)) {
+            slice-=a
+        }
 
-        threads[threadIdx].worker.postMessage(postMsgData, [aiShipsMTFloat64Array.buffer])
-        threads[threadIdx].available = false
-        threads[threadIdx].done = false
-        threadIdx++
-        if (threadIdx > idxNumberOfThreads) {
-            threadIdx = 0
+        let mt = []
+        for (let i = 0 ; i<numberOfThreads-1; i++) {
+            mt[i] = aiShipsMT.slice(slice*i,slice*(i+1))
+        }
+
+        for (let i = 0; i<numberOfThreads-1; i++) {
+            let aiShipsMTFloat64Array = Float64Array.from(mt[i])
+            let postMsgData = {do: "move", array: aiShipsMTFloat64Array}
+            threads[i].worker.postMessage(postMsgData, [aiShipsMTFloat64Array.buffer])
+            threads[i].available = false
+            threads[i].done = false
         }
     }
 

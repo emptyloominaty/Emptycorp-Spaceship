@@ -20,7 +20,7 @@ function worker_function() {
         return new BigNumber({ s: number.s, e: number.e, c: number.c, _isBigNumber: true })
     }
 
-    let move = function(yaw,pitch,shipSpeed,fps,positionPrecise2) {
+    let move = function(yaw,pitch,shipSpeed,fps,positionPrecise) {
         let position = {x:0,y:0,z:0}
         let positionHi = {x:0,y:0,z:0}
         let positionLo = {x:0,y:0,z:0}
@@ -36,12 +36,6 @@ function worker_function() {
         let vx = (Math.sin(theta) * Math.sin(phi)) * speed
         let vy = (Math.sin(theta) * Math.cos(phi)) * speed
         let vz = (Math.cos(theta)) * speed
-
-        let positionPrecise = {
-            x: convertToBigNumber(positionPrecise2.x),
-            y: convertToBigNumber(positionPrecise2.y),
-            z: convertToBigNumber(positionPrecise2.z)
-        }
 
         positionPrecise.x = positionPrecise.x.plus(vx)
         positionPrecise.y = positionPrecise.y.plus(vy)
@@ -60,9 +54,8 @@ function worker_function() {
     }
 
     let numbersToBigNumber = function(positionHi,positionLo) {
-        let bignumberLo = new BigNumber(positionLo)
         let bignumber = new BigNumber(positionHi)
-        return bignumber.plus(bignumberLo)
+        return bignumber.plus(positionLo)
     }
 
     self.addEventListener('message', function(e) {
@@ -197,7 +190,9 @@ for (let i = 0; i<numberOfThreads-1; i++) {
                         aiShips[shipId].positionHi = positionHi
                         aiShips[shipId].positionLo = positionLo
                         if (!aiShipsNear[shipId] && !aiShipsMid[shipId]) {
-                            //80% better performance
+
+                            bigNumObj
+
                             aiShips[shipId].positionPrecise = {x:new BigNumber(positionHi.x + positionLo.x), y:new BigNumber(positionHi.y + positionLo.y), z:new BigNumber(positionHi.z + positionLo.z)}
                         } else {
                             aiShips[shipId].positionPrecise = {x:numbersToBigNumber(positionHi.x, positionLo.x), y:numbersToBigNumber(positionHi.y, positionLo.y), z:numbersToBigNumber(positionHi.z, positionLo.z)}
