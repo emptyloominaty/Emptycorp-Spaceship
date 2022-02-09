@@ -40,7 +40,7 @@ let settings = {
     modelsQuality:2,
     renderQuality:2,
     renderDistance:2,
-    glowQuality:2,
+    bloom:1,
     motionBlur:0,
     //dev/experimental
     maxTimeSpeed:4,
@@ -61,11 +61,10 @@ let settingsList = {
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
         new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,1000,100000],2),
-        new Setting("MSAA (TODO, idk how)","antialiasing",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("SMAA","antialiasingsmaa",[0,1],{0:"Off",1:"On"},[0,1],0),
-        new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
-        new Setting("Glow (TODO)","glowQuality",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,1,2],2),
+        new Setting("Bloom","bloom",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,0.8,1.6],1),
         new Setting("Motion Blur","motionBlur",[0,1],{0:"Off",1:"On"},[0,1],0),
+        new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
      ],
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
@@ -110,9 +109,19 @@ let updateSettings = function() {
             shipWindow3D.motionBlur = false
         }
     }
-    //msaa
+    //bloom
+    if (settings.bloom!==0) {
+        let bl = settingsList["Graphics"][3].values[settingsList["Graphics"][3].value]
+        shipWindow3D.enableBloom(bl)
+    } else {
+        shipWindow3D.disableBloom()
+    }
     //smaa
-    shipWindow3D.smaa = Boolean(settings.antialiasingsmaa)
+    if (settings.antialiasingsmaa===1) {
+        shipWindow3D.enableSMAA()
+    } else {
+        shipWindow3D.disableSMAA()
+    }
     //shipWindow3D.resetRenderer(Boolean(settingsList["Graphics"][2].values[settingsList["Graphics"][2].value]))
     //render distance
     shipWindow3D.camera.far = settingsList["Graphics"][1].values[settingsList["Graphics"][1].value]

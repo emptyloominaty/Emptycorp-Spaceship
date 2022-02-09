@@ -1,6 +1,8 @@
 class CanvasMain {
     motionBlur = false
     smaa = false
+    bloom = false
+
     materials = {}
 
     stars = []
@@ -49,7 +51,7 @@ class CanvasMain {
             //TODO MOONS
         }
 
-      /*  let test = this.test
+        /*let test = this.test
         if (0===0) {
             let geometry = new THREE.CylinderGeometry( 0.0000000000000001, 0.0000000000000001, 0.0000000000000001, 12, 1 )  //0.01, 0.01, 0.1  //0.1, 0.1, 100
             let material = new THREE.MeshBasicMaterial( {color: 0x222222} )
@@ -59,44 +61,51 @@ class CanvasMain {
             test[0].position.y = 0
             this.scene.add(test[0])
         }*/
+        //------------------------------------------------------------------------------------------Post Processing
+        this.composer = new EffectComposer( this.renderer )
+        let renderScene = new RenderPass( this.scene, this.camera )
+        this.composer.addPass( renderScene )
+        //-------------Bloom
+
+        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1900, 550 ), 1.5, 0.4, 0.5 )
 
 
-        //------------------------------------------------------------------------------------------SMAA
-        this.composerSMAA = new EffectComposer( this.renderer )
-        this.composerSMAA.addPass( new RenderPass( this.scene, this.camera ) )
 
+        this.composer.addPass( bloomPass )
+
+        //-------------SMAA
         this.passSMAA = new SMAAPass( 1900, 550 )
-        this.composerSMAA.addPass( this.passSMAA )
+        this.passSMAA.renderToScreen = false
 
-        this.passSMAA.renderToScreen = true;
-        this.passSMAA.clear = false;
-        this.passSMAA.clearColor = false;
-        this.passSMAA.clearDepth = false;
+        this.composer.addPass( this.passSMAA )
+        this.composer.passes[2].enabled = false
 
-        //------------------------------------------------------------------------------------------Motion Blur
-        this.composerMotionBlur = new EffectComposer( this.renderer )
-
-        // render pass
-        this.renderPassMotionBlur = new THREE.RenderPass( this.scene, this.camera )
-
+        //-------------Motion Blur //TODO:REPLACE WITH BETTER MOTION BLUR (RN DOESNT WORK WITH SMAA)
         // save pass
         let renderTargetParameters = {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
             stencilBuffer: false
         }
-
         this.savePassMotionBlur = new THREE.SavePass( new THREE.WebGLRenderTarget( 1900, 550, renderTargetParameters ) )
-
         // blend pass
         this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
         this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
-        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.8 //0.4
+        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
 
         // output pass
         this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
         this.outputPassMotionBlur.renderToScreen = true
-        //-----------------------------------------------------------------------------------------
+
+        this.composer.addPass( this.blendPassMotionBlur )
+        this.composer.addPass( this.savePassMotionBlur  )
+        this.composer.addPass( this.outputPassMotionBlur )
+        this.composer.passes[3].enabled = false
+        this.composer.passes[4].enabled = false
+        this.composer.passes[5].enabled = false
+
+        //----------------------------------------
+
 
         this.camera.position.x = 0   //x
         this.camera.position.y = 0   //z
@@ -106,13 +115,8 @@ class CanvasMain {
         this.render = () => {
             requestAnimationFrame(this.render)
             if (!settingsOpen) {
-                this.renderer.render(this.scene, this.camera)
-                if (this.motionBlur) {
-                    this.composerMotionBlur.render()
-                }
-                if (this.smaa) {
-                    this.composerSMAA.render()
-                }
+                //this.renderer.render(this.scene, this.camera)
+                this.composer.render()
             }
         }
 
@@ -212,17 +216,32 @@ class CanvasMain {
 
 
     enableMotionBlur() {
-        this.composerMotionBlur.addPass( this.renderPassMotionBlur )
-        this.composerMotionBlur.addPass( this.blendPassMotionBlur )
-        this.composerMotionBlur.addPass( this.savePassMotionBlur  )
-        this.composerMotionBlur.addPass( this.outputPassMotionBlur )
+        this.composer.passes[3].enabled = true
+        this.composer.passes[4].enabled = true
+        this.composer.passes[5].enabled = true
     }
 
     disableMotionBlur() {
-        this.composerMotionBlur.removePass( this.renderPassMotionBlur )
-        this.composerMotionBlur.removePass( this.blendPassMotionBlur )
-        this.composerMotionBlur.removePass( this.savePassMotionBlur  )
-        this.composerMotionBlur.removePass( this.outputPassMotionBlur )
+        this.composer.passes[3].enabled = false
+        this.composer.passes[4].enabled = false
+        this.composer.passes[5].enabled = false
+    }
+
+    enableBloom(bl) {
+        this.composer.passes[1].enabled = true
+        this.composer.passes[1].strength = bl
+    }
+
+    disableBloom() {
+        this.composer.passes[1].enabled = false
+    }
+
+    enableSMAA() {
+        this.composer.passes[2].enabled = true
+    }
+
+    disableSMAA() {
+        this.composer.passes[2].enabled = false
     }
 
 
