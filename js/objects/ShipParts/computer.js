@@ -94,16 +94,44 @@ class Computer extends Part {
             this.data.priceData={"Downloading Data...":""}
         },
         findNearestEnemyTarget: ()=>{
+            let distances = []
+
             for (let i = 0; i<aiShips.length;i++) {
-                let ship = aiShips[i]
-                let faction = ship.faction
-                if (factionList[faction].playerRelations<-50) {
-                    if (calcDistance(playerShip,ship)<1) {
-                        this.targetObj = ship
-                        this.target = "Unidentified Ship"
-                        this.targetType = "ship"
+                if (aiShipsNear[i]) {
+                    let ship = aiShips[i]
+                    let faction = ship.faction
+                    if (factionList[faction].playerRelations<-50) {
+                        distances.push({dist:calcDistance(playerShip,ship),id:i})
                     }
                 }
+            }
+
+            if (distances.length>0) {
+                distances = distances.sort((a, b) => a.dist> b.dist ? 1 : -1)
+                this.targetObj = aiShips[distances[0].id]
+                this.target = "Unidentified Ship"
+                this.targetType = "ship"
+                return true
+            } else {
+                for (let i = 0; i<aiShips.length;i++) {
+                    if (aiShipsMid[i]) {
+                        let ship = aiShips[i]
+                        let faction = ship.faction
+                        if (factionList[faction].playerRelations<-50) {
+                            distances.push(calcDistance(playerShip,ship))
+                        }
+                    }
+                }
+            }
+
+            if (distances.length>0) {
+                distances = distances.sort((a, b) => a.dist> b.dist ? 1 : -1)
+                this.targetObj = aiShips[distances[0].id]
+                this.target = "Unidentified Ship"
+                this.targetType = "ship"
+                return true
+            } else {
+                return false
             }
         }
     }

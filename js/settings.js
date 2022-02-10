@@ -200,6 +200,18 @@ let generateMenu = function(id) {
         elements.appSettings.innerHTML = html
     } else if (menus[id]==="shipInfo") { //-----------------------------------------------------------------------------------Ship Info
         html+="<div class='flex-column'> "
+        html+="<h3>Player</h3>"
+        html+="<span>Credits: "+Math.round(playerShip.credits)+"Cr </span>"
+        html+="<span>Relations: </span>"
+        Object.keys(factionList).forEach(key => {
+            if (key!=="Player") {
+                html+="<span>&nbsp;&nbsp;"+key+": "+(factionList[key].relations["Player"]).toFixed(0)+"</span>"
+            }
+        })
+
+        html+="<br><h3>Ship</h3>"
+        html+="<span> Length:"+playerShip.size.l+"m |  Height:"+playerShip.size.h+"m | Width:"+playerShip.size.w+"m  </span>"
+        html+="<span>Weight: "+(playerShip.weight).toFixed(0)+"kg</span>"
         html+="<span>Max Speed: "+(playerShip.maxSpeed/8765.812756).toFixed(1)+"ly</span>"
         html+="<span>Armor: "+playerShip.armor.toFixed(0)+"/"+playerShip.armorMax+"</span>"
         html+="<span>Shield: "+playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge+"</span>"
@@ -213,6 +225,15 @@ let generateMenu = function(id) {
             let totalPowerLeft = (generatorFuelLeft*playerShip.generators[i].output)/3600
 
             html+="<span>"+playerShip.generators[i].type+" Total Power Left: "+(totalPowerLeft).toFixed(0)+" MWh </span>"
+        }
+        html+="<span>Weapons: </span>"
+        for (let i = 0; i<playerShip.weapons.length; i++) {
+            html+="<span>&nbsp;&nbsp;"+playerShip.weapons[i].type+"</span>"
+        }
+
+        html+="<span>Crew: </span>"
+        for (let i = 0; i<playerShip.crew.length; i++) {
+            html+="<span>&nbsp;&nbsp;"+playerShip.crew[0].name+"</span>"
         }
 
 

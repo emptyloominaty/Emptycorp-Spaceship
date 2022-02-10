@@ -322,3 +322,10 @@ let changeSpeedSensitivity = function(event) {
 
 elements.speedSensitivity.onwheel = changeSpeedSensitivity
 
+let resetInputs = function() {
+    Object.keys(keyPressed).forEach(key => {
+        keyPressed[key] = false
+    })
+}
+
+window.addEventListener('blur', resetInputs)

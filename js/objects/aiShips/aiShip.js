@@ -530,7 +530,6 @@ let aiShipsRun = function() {
                 mt[i] = aiShipsMT.slice(slice*i)
             }
         }
-        console.log(mt[0].length," - ",mt[1].length," - ",mt[2].length," - ")
         for (let i = 0; i<numberOfThreads-1; i++) {
             let aiShipsMTFloat64Array = Float64Array.from(mt[i])
             let postMsgData = {do: "move", array: aiShipsMTFloat64Array}

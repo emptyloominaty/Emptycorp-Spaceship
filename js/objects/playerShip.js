@@ -1,8 +1,9 @@
 class Ship {
     myAddress = 1
     faction = "Player"
+    credits = 0
     //---------------------------------------------
-    crew = [{name:"Empty",status:"alive",dying:0}]
+    crew = [{name:"Empty",status:"alive",dying:0,player:true,faction:"Player"}] //todo:health
     baseWeight = 5500 //kg
     armor = 500
     armorMax = 500
@@ -801,7 +802,8 @@ let shipDefaultParts = {
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
     ],
     missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30,damage:100,shieldDmgBonus:0,ignoreShield:false, speed:0.00002, color: 0x555555, maxSpeed:100000, guided:true}}],
-    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}},{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:0.00002, color: 0x555555,maxSpeed:100000,guided:false}}
+    weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
+    ,{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:0.00002, color: 0x555555,maxSpeed:100000,guided:false}}
         //{weight:70 ,type:"missile",damageData:{power:0.001/* MW */, length:0.001 /*seconds*/,cd:2 /*seconds*/,life: 30, speed:50, color: 0x555555,maxSpeed:100000,guided:false}}
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
