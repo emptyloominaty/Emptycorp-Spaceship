@@ -1,8 +1,27 @@
 let hudEnabled = true
 let hudGenerated = false
+let flashmessage = {
+    messages:[],
+    add: function(text) {
+       this.messages.push({text:text,duration:3,time:0})
+    },
+    run: function() {
+        elements.flashMessage.textContent = ""
+        let timeChange = 1/gameFPS
+        for (let i = 0; i<this.messages.length; i++) {
+            elements.flashMessage.textContent += this.messages[i].text+"\r\n"
+            this.messages[i].time+=timeChange
+            if(this.messages[i].time>this.messages[i].duration) {
+                this.messages.shift()
+            }
+        }
+    }
+}
+
 let drawHud = function () {
  if (hudEnabled) {
      if (!hudGenerated) {
+         flashmessage.messages = []
          elements.hud.innerHTML = "<div id='weaponBar'></div>"
          elements.weaponBar = document.getElementById("weaponBar")
 
@@ -57,7 +76,8 @@ let drawHud = function () {
      elements.armorBar.style.width = (playerShip.armor/playerShip.armorMax*100)+"px"
      elements.shieldBar.style.width = (playerShip.shields[0].charged/playerShip.shields[0].maxCharge*100)+"px"
 
-
+     //flashmessage
+     flashmessage.run()
  } else {
      hudGenerated=false
      elements.hud.innerHTML = ""

@@ -58,7 +58,7 @@ class NavigationModule {
 
             if (playerShip.computers[0].targetType==="system") {
                 if (distanceToObject<0.15) {
-                    playerShip.computers[0].autopilot=0
+                    playerShip.computers[0].toggleAutopilot(0)
                     playerShip.targetSpeed = 0
                     playerShip.propulsion = "off"
                 }
@@ -84,7 +84,7 @@ class NavigationModule {
             }
 
         } else if (playerShip.computers[0].autopilot===1) {
-            playerShip.computers[0].autopilot=0
+            playerShip.computers[0].toggleAutopilot(0)
             playerShip.targetSpeed = 0
             playerShip.propulsion = "off"
         }

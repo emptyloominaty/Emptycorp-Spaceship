@@ -18,7 +18,6 @@ class DisplayModule {
         this.canvas.stroke()
         this.canvas.closePath()
         this.canvas.restore()
-
     }
 
     drawRect(x,y,w,h,color) {

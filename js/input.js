@@ -179,6 +179,11 @@ let keyLoop = () => {
     //TODO:Shutdown engines
 
     //TODO:Autopilot
+    if (keyPressed[keybinds["Autopilot"]]) {
+        playerShip.computers[0].toggleAutopilot()
+        keyPressed[keybinds["Autopilot"]] = false
+    }
+
 
     //TODO:Main generator
 

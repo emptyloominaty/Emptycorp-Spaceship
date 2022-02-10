@@ -137,6 +137,22 @@ class Computer extends Part {
     }
 
 
+    toggleAutopilot(forceAutopilot = 2) {
+        if (forceAutopilot===2) {
+            this.autopilot = 1 - this.autopilot
+        } else {
+            this.autopilot = forceAutopilot
+        }
+
+        if (this.autopilot===1) {
+            flashmessage.add("Autopilot Activated")
+        } else {
+            playerShip.targetSpeed = 0
+            flashmessage.add("Autopilot Deactivated")
+        }
+    }
+
+
     getTimeString(time) {
         time = time/1000
         if (time>31536000) {
@@ -517,6 +533,7 @@ class Computer extends Part {
         }
     }
 
+
     touchScreen(x,y) {
         //TODO:START OPTIMIZE
         let buttons = [
@@ -531,7 +548,7 @@ class Computer extends Part {
             //target (nav2)
             {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetType="system";this.targetObj=starSystems[this.nav2PlanetView]}}},
             //autopilot (nav2)
-            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot;this.targetType="system";this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
+            {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.toggleAutopilot();this.targetType="system";this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
 
             //----------
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
@@ -550,7 +567,7 @@ class Computer extends Part {
             }}})
             buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
                 if (this.tab==="nav3") {
-                    this.autopilot = 1 - this.autopilot
+                    this.toggleAutopilot()
                     this.targetType="system"
                     this.target=starSystems[id].name
                     this.targetObj=starSystems[id]

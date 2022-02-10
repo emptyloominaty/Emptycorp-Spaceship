@@ -94,7 +94,8 @@ let keybinds = {
     "Increase Speed":"ShiftLeft",
     "Decrease Speed" :"ControlLeft",
     "Target Nearest Enemy":"Tab",
-    "Toggle Hud":"KeyZ"
+    "Toggle Hud":"KeyZ",
+    "Autopilot":"KeyH",
     }
 
 let updateSettings = function() {
