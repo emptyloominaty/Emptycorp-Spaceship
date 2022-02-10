@@ -85,6 +85,7 @@ let elements = {
     speedSensitivityValue: document.getElementById("speedSensitivityValue"),
     speedSensitivity: document.getElementById("speedSensitivity"),
     appSettings:document.getElementById("appSettings"),
+    hud: document.getElementById("hud"),
 }
 
 for (let i = 0; i<11; i++) {

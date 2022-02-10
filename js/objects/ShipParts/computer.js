@@ -5,7 +5,7 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}}
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""},startId: 0}
 
     //network
     listeningPort = [0]
@@ -241,7 +241,7 @@ class Computer extends Part {
                     this.drawMap()
                     //ship
                     this.display.drawCircle(300, 180, 8, colorShip)
-                    this.display.drawPlayerShipDirection(0,0,6,3,"#999f9a",this.data.shipDirection)
+                    this.display.drawPlayerShipDirection(0, 0, 6, 3, "#999f9a", this.data.shipDirection)
                     //x,y,distance
                     this.display.drawText(5, 20, "x: ", font1, color1, 'left')
                     this.display.drawText(25, 20, this.nav.position.x.toFixed(2) + "ly", font1, color5, 'left')
@@ -262,6 +262,9 @@ class Computer extends Part {
                     this.display.drawText(10, 170, "↑", font1, color1, 'left')
                     this.display.drawText(5, 185, this.mapScaling, font1, color1, 'left')
                     this.display.drawText(10, 200, "↓", font1, color1, 'left')
+
+                    this.display.drawRect(580, 0, 20, 20, "#666666")
+                    this.display.drawText(590, 15, "S", font1, color1, 'center')
 
                 } else {
                         this.display.drawText(5,20,"Off",font1,colorError,'left')
@@ -304,11 +307,37 @@ class Computer extends Part {
                 this.display.drawText(50, 340, "Target", font1, color1, 'center')
                 this.display.drawRect(100,325,100,20,"#494949") //test
                 this.display.drawText(150, 340, "Autopilot", font1, color1, 'center')
+            } else if (this.tab==="nav3") {//---------------------------------------------------------------------------------------Star Systems list
+                //this.data.startId = 0
+                let hColor = "#546db3"
+                let y = 10
+                this.display.drawText(10, 15, "ID", font1, hColor, 'left')
+                this.display.drawText(55, 15, "Name", font1, hColor, 'left')
+                this.display.drawText(135, 15, "Distance", font1, hColor, 'left')
+                this.display.drawText(225, 15, "Faction", font1, hColor, 'left')
+                this.display.drawLine(0,24,600,24,1,hColor)
+                for (let i = this.data.startId; i<this.data.startId+9; i++) {
+                    if (starSystems[i]!==undefined) {
+                        y+=35
+                        let dist = calcDistance(playerShip,starSystems[i])
+                        this.display.drawText(5, y, "["+i+"] "+starSystems[i].name, font1, color1, 'left')
+                        this.display.drawText(135, y, dist.toFixed(2)+"ly", font1, color1, 'left')
+                        this.display.drawText(225, y, starSystems[i].faction, font1, color1, 'left')
+
+                        this.display.drawRect(410,y-10,70,20,"#494949")
+                        this.display.drawText(445,y+5, "Target", font1, color1, 'center')
+                        this.display.drawRect(490,y-10,100,20,"#494949")
+                        this.display.drawText(540,y+5, "Autopilot", font1, color1, 'center')
+                    }
+
+                }
+
+
             }
 
 
             //-----------------------------------------------------------------------------------------------------------------bottom
-            this.display.drawRect(0,height-40,width,height,"#000000") //test
+            this.display.drawRect(0,height-40,width,height,"#000000")
             this.display.drawLine(0,height-40,width,height-40,2,color1)
             this.display.drawText(50,height-15,"Main",font1,color1,'center')
             this.display.drawLine(100,height-40,100,height,2,color1)
@@ -489,6 +518,7 @@ class Computer extends Part {
     }
 
     touchScreen(x,y) {
+        //TODO:START OPTIMIZE
         let buttons = [
             {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main";this.starSystems = []}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav";this.starSystems = []}},
@@ -496,15 +526,38 @@ class Computer extends Part {
 
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.defaultMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.zoomMapScaling()}}},
+            {x1:580, y1:0,x2:600,y2:20,function: () => {if (this.tab==="nav") {this.tab="nav3"}}},
             {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
-            //target
+            //target (nav2)
             {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetType="system";this.targetObj=starSystems[this.nav2PlanetView]}}},
-            //autopilot
+            //autopilot (nav2)
             {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.autopilot = 1 - this.autopilot;this.targetType="system";this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
 
+            //----------
             {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
         ]
+        //nav 3 buttons
+        for (let i = 0; i<9; i++) {
+            let y = ((this.data.startId+i)*35)+35
+            let id = (this.data.startId+i)
+            //45-10 = 35 (y1)
+            buttons.push({x1:410, y1:y,x2:480,y2:y+20,function: () => {
+                if (this.tab==="nav3") {
+                    this.target=starSystems[id].name
+                    this.targetType="system"
+                    this.targetObj=starSystems[id]
+            }}})
+            buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
+                if (this.tab==="nav3") {
+                    this.autopilot = 1 - this.autopilot
+                    this.targetType="system"
+                    this.target=starSystems[id].name
+                    this.targetObj=starSystems[id]
+            }}})
+        }
+        //TODO:END
+
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
             if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {

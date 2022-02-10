@@ -182,7 +182,11 @@ let keyLoop = () => {
 
     //TODO:Main generator
 
-    //
+    //Hide HUD
+    if (keyPressed[keybinds["Toggle Hud"]]) {
+        hudEnabled = Boolean(1 - hudEnabled)
+        keyPressed[keybinds["Toggle Hud"]] = false
+    }
 
     //rotation
     if (keyPressed[keybinds["Yaw Left"]]) {
@@ -292,13 +296,20 @@ document.addEventListener('keyup', keyup)
 let zoom = function(event) {
     event.preventDefault()
     let val = event.deltaY * -0.01
-    if ( playerShip.computers[0].tab!=="nav") {
-        val = 0
-    }
-    if (val>0) {
-        playerShip.computers[0].incMapScaling()
-    } else if((val<0)) {
-        playerShip.computers[0].decMapScaling()
+    if (playerShip.computers[0].tab==="nav") {
+        if (val>0) {
+            playerShip.computers[0].incMapScaling()
+        } else if(val<0) {
+            playerShip.computers[0].decMapScaling()
+        }
+    } else if (playerShip.computers[0].tab==="nav3") {
+        if (val<0) {
+            playerShip.computers[0].data.startId ++
+        } else if (val>0) {
+            if (playerShip.computers[0].data.startId>0) {
+                playerShip.computers[0].data.startId --
+            }
+        }
     }
 }
 

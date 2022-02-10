@@ -71,23 +71,13 @@ elements.navControlTarget = document.getElementById("navControlTarget")
 elements.navControlDistance = document.getElementById("navControlDistance")
 elements.navControlAngleYaw = document.getElementById("navControlAngleYaw")
 elements.navControlAnglePitch = document.getElementById("navControlAnglePitch")
-//-------------------------------------Weapon Bar---------------------------------------------------------
-let wbHtml = ""
-for (let i = 0; i<playerShip.weapons.length; i++) {
-    let wep = playerShip.weapons[i]
-    wbHtml +="<div class='weaponBar'> "+wep.type+"("+Number(i+1)+")<br><span id='wepMissiles"+i+"'></span><br> <div class='wepCdBorder'><div class='wepCd' id='wepCd"+i+"'> </div></div> </div>"
-}
-elements.weaponBar.innerHTML = wbHtml
-for (let i = 0; i<playerShip.weapons.length; i++) {
-    elements["wepCd"+i] = document.getElementById("wepCd"+i)
-    elements["wepMissiles"+i] = document.getElementById("wepMissiles"+i)
-}
 //----------------------------------------------------------------------------------------------
 
 
 function draw(progress) {
     //---------------------------------------------Settings---------------------------------------
     drawSettings()
+    drawHud()
     //------------------------------------------------UI------------------------------------------
     elements.atmosphereComposition.textContent = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
     elements.pressureAndTemperature.textContent =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
@@ -134,17 +124,6 @@ function draw(progress) {
     elements.antennaTx.textContent = (playerShip.antennas[0].tx[0]*1000).toFixed(0)+" kB/s"
     //Shield
     elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)+" MJ"
-    //weapons
-    for (let i = 0; i<playerShip.weapons.length; i++) {
-        if (playerShip.weapons[i].type === "missile") {
-            if (playerShip.missileCargo[0].count>0) {
-                elements["wepMissiles"+i].textContent = playerShip.missileCargo[0].count+" / "+playerShip.missileCargo[0].maxCount
-            } else {
-                elements["wepMissiles"+i].textContent = "no missiles"
-            }
-        }
-        elements["wepCd"+i].style.width = (playerShip.weapons[i].cooldown/playerShip.weapons[i].maxCooldown*100)+"%"
-    }
     //Nav
     if (playerShip.computers[0].nav.on===1 && playerShip.computers[0].on===1) {
         let comp = playerShip.computers[0]
