@@ -439,16 +439,26 @@ let aiShipsRun = function() {
                 2=pitch
                 3=speed
                 4=fps
-                5=pl.x
-                6=pl.y
-                7=pl.z
-                8=ph.x
-                9=ph.y
-                10=ph.z
+                5=p.x.s
+                6=p.x.e
+                7=p.x.c1
+                8=p.x.c2
+                9=p.x.c3
+                10=p.y.s
+                11=p.y.e
+                12=p.y.c1
+                13=p.y.c2
+                14=p.y.c3
+                15=p.z.s
+                16=p.z.e
+                17=p.z.c1
+                18=p.z.c2
+                19=p.z.c3
                  */
-                let pl = ship.positionLo
-                let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                let px = ship.positionPrecise.x
+                let py = ship.positionPrecise.y
+                let pz = ship.positionPrecise.z
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, px.s, px.e, px.c[0] || 0, px.c[1] || 0, px.c[2] || 0, py.s, py.e, py.c[0] || 0, py.c[1] || 0, py.c[2] || 0 , pz.s, pz.e, pz.c[0] || 0, pz.c[1] || 0, pz.c[2] || 0)
             } else {
                 aiShips[i].move(aiShipsFps)
             }
@@ -467,9 +477,10 @@ let aiShipsRun = function() {
         if (aiShipsMid[aiShipsMidIdx] && aiShips[aiShipsMidIdx]!==undefined) {
             if (settings.multiThreading===1) {
                 let ship = aiShips[aiShipsMidIdx]
-                let pl = ship.positionLo
-                let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                let px = ship.positionPrecise.x
+                let py = ship.positionPrecise.y
+                let pz = ship.positionPrecise.z
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, px.s, px.e, px.c[0] || 0, px.c[1] || 0, px.c[2] || 0, py.s, py.e, py.c[0] || 0, py.c[1] || 0, py.c[2] || 0 , pz.s, pz.e, pz.c[0] || 0, pz.c[1] || 0, pz.c[2] || 0)
             } else {
                 aiShips[aiShipsMidIdx].move(aiShipsFps)
             }
@@ -488,9 +499,10 @@ let aiShipsRun = function() {
         if (aiShipsFar[aiShipsFarIdx] && aiShips[aiShipsFarIdx]!==undefined) {
             if (settings.multiThreading === 1) {
                 let ship = aiShips[aiShipsFarIdx]
-                let pl = ship.positionLo
-                let ph = ship.positionHi
-                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, pl.x, pl.y, pl.z, ph.x, ph.y, ph.z)
+                let px = ship.positionPrecise.x
+                let py = ship.positionPrecise.y
+                let pz = ship.positionPrecise.z
+                aiShipsMT.push(ship.id, ship.yaw, ship.pitch, ship.speed, aiShipsFps, px.s, px.e, px.c[0] || 0, px.c[1] || 0, px.c[2] || 0, py.s, py.e, py.c[0] || 0, py.c[1] || 0, py.c[2] || 0 , pz.s, pz.e, pz.c[0] || 0, pz.c[1] || 0, pz.c[2] || 0)
             } else {
                 aiShips[aiShipsFarIdx].move(aiShipsFps)
             }
@@ -504,17 +516,21 @@ let aiShipsRun = function() {
 
     //send data to worker
     if (settings.multiThreading===1) {
-        let slice = (aiShipsMT.length/numberOfThreads)
-        let a = slice % 11
+        let slice = (aiShipsMT.length/(numberOfThreads-1))
+        let a = slice % 20
         if (!(a===0)) {
             slice-=a
         }
 
         let mt = []
         for (let i = 0 ; i<numberOfThreads-1; i++) {
-            mt[i] = aiShipsMT.slice(slice*i,slice*(i+1))
+            if (i!==numberOfThreads-2) {
+                mt[i] = aiShipsMT.slice(slice*i,slice*(i+1))
+            } else {
+                mt[i] = aiShipsMT.slice(slice*i)
+            }
         }
-
+        console.log(mt[0].length," - ",mt[1].length," - ",mt[2].length," - ")
         for (let i = 0; i<numberOfThreads-1; i++) {
             let aiShipsMTFloat64Array = Float64Array.from(mt[i])
             let postMsgData = {do: "move", array: aiShipsMTFloat64Array}

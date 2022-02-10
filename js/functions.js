@@ -1,5 +1,3 @@
-let bigNumObj = {x:new BigNumber(0), y:new BigNumber(0), z:new BigNumber(0)}
-
 let linearInterpolation = function(x,stepX,array) {
     if (x<0) {x=0}
     let maxX = (array.length-1)*stepX
@@ -130,9 +128,12 @@ let sortAllSystemsByDistance = function(obj,position,systems) {
     return systemsSorted
 }
 
-let numbersToBigNumber = function(positionHi,positionLo) {
-    let bignumber = new BigNumber(positionHi)
-    return bignumber.plus(positionLo)
+let convertToBigNum = function(s,e,c1,c2,c3,i,obj) {
+    obj[i].s = s
+    obj[i].e = e
+    obj[i].c[0] = c1
+    obj[i].c[1] = c2
+    obj[i].c[2] = c3
 }
 
 /*
