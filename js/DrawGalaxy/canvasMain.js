@@ -3,6 +3,8 @@ class CanvasMain {
     smaa = false
     bloom = false
 
+    drawStarSystemsText = false
+
     materials = {}
 
     stars = []
@@ -24,73 +26,41 @@ class CanvasMain {
 
         const loader = new FontLoader()
         loader.load( threeJSFont, ( font )=> {
+            this.font = font
+        } )
 
-            const color = 0xFFFFFF
+        const matFont = new THREE.MeshBasicMaterial({
+            color: 0xFFFFFF,
+            transparent: true,
+            opacity: 0.9,
+            side: THREE.DoubleSide
+        })
 
-            const matDark = new THREE.LineBasicMaterial( {
-                color: color,
-                side: THREE.DoubleSide
-            } );
-
-            const matLite = new THREE.MeshBasicMaterial( {
-                color: color,
-                transparent: true,
-                opacity: 0.4,
-                side: THREE.DoubleSide
-            } );
-
-            const message = 'TEST TEXT\ntext\ntext\ntext\ntext'
-
-            const shapes = font.generateShapes( message, 0.05)
-
+        let drawText = (x,y,z,size,text,id) => {
+            const shapes = this.font.generateShapes( text, size)
             const geometry = new THREE.ShapeGeometry( shapes )
 
             geometry.computeBoundingBox()
-
             const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x )
-
             geometry.translate( xMid, 0, 0 )
 
-            // make shape ( N.B. edge view not visible )
 
-            this.texts[0] = new THREE.Mesh( geometry, matLite )
-            this.texts[0].position.x = 0
-            this.texts[0].position.y = 0
-            this.texts[0].position.z = 1
+            this.texts[id] = new THREE.Mesh( geometry, matFont )
 
-            this.texts[0].rotation.x = 2.909
-            this.texts[0].rotation.y = 0
-            this.texts[0].rotation.z = 3.109
-            this.scene.add( this.texts[0] )
+            this.texts[id].position.x = x
+            this.texts[id].position.y = y
+            this.texts[id].position.z = z
 
-            // make line shape ( N.B. edge view remains visible )
+            this.scene.add( this.texts[id] )
+            this.texts[id].lookAt(this.camera.position)
+        }
 
-            const holeShapes = []
-
-            for ( let i = 0; i < shapes.length; i ++ ) {
-
-                const shape = shapes[ i ]
-
-                if ( shape.holes && shape.holes.length > 0 ) {
-
-                    for ( let j = 0; j < shape.holes.length; j ++ ) {
-
-                        const hole = shape.holes[ j ]
-                        holeShapes.push( hole )
-
-                    }
-
-                }
-
-            }
-
-            shapes.push.apply( shapes, holeShapes );
-
-        } ); //end load function
-
-
-
-
+        this.updateTextPosition = (x,y,z,id)=> {
+            this.texts[id].position.x = x
+            this.texts[id].position.y = y
+            this.texts[id].position.z = z
+            this.texts[id].lookAt(this.camera.position)
+        }
 
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 
@@ -106,6 +76,8 @@ class CanvasMain {
             this.stars[i].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
 
             this.scene.add(this.stars[i])
+
+            drawText(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y,0.08,starSystems[i].name,i)
 
             if (this.planets[i]===undefined) {this.planets[i]=[]}
             for (let j = 0; j<starSystems[i].planets.length; j++) {
@@ -144,7 +116,7 @@ class CanvasMain {
         this.composer.addPass( renderScene )
         //-------------Bloom
 
-        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1900, 550 ), 1.5, 0.4, 0.5 )
+        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1900, 550 ), 1.5, 0.4, 0.4 )
 
         this.composer.addPass( bloomPass )
 
@@ -276,8 +248,23 @@ class CanvasMain {
             }
         }
 
+        if (this.drawStarSystemsText) {
+            for (let i = 0; i<this.texts.length; i++) {
+                this.texts[i].visible = true
+            }
+        } else {
+            for (let i = 0; i<this.texts.length; i++) {
+                this.texts[i].visible = false
+            }
+        }
+
         //stars
         for (let i = 0; i<starSystems.length; i++) {
+
+            if (this.drawStarSystemsText) {
+                this.updateTextPosition((starSystems[i].position.x)-camHi.x-camLo.x,(starSystems[i].position.z+0.05)-camHi.y-camLo.y,(starSystems[i].position.y)-camHi.z-camLo.z,i)
+            }
+
             this.stars[i].position.set(
                 (starSystems[i].position.x)-camHi.x-camLo.x,
                 (starSystems[i].position.z)-camHi.y-camLo.y,

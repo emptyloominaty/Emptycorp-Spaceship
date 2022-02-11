@@ -97,6 +97,7 @@ let keybinds = {
     "Toggle Hud":"KeyH",
     "Autopilot":"KeyX",
     "Main Generator":"KeyG",
+    "Show System Name":"KeyC",
     }
 
 let updateSettings = function() {
