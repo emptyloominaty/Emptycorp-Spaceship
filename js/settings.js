@@ -228,6 +228,35 @@ let generateMenu = function(id) {
         const width = canvasElement.getBoundingClientRect().width
         const height = canvasElement.getBoundingClientRect().height
 
+        let isMoving = false
+        let mx = 0
+        let my = 0
+
+        canvasElement.addEventListener('mousedown', e => {
+            mx = e.offsetX
+            my = e.offsetY
+            isMoving = true
+        })
+
+        canvasElement.addEventListener('mousemove', e => {
+            if (isMoving === true) {
+                settingsData.centerX += ((e.offsetX-mx))/settingsData.mapScaling
+                settingsData.centerY += ((e.offsetY-my))/settingsData.mapScaling
+                reDraw()
+                mx = e.offsetX
+                my = e.offsetY
+            }
+        })
+
+        canvasElement.addEventListener('mouseup', e => {
+            if (isMoving === true) {
+                mx = 0
+                my = 0
+                isMoving = false
+            }
+        })
+
+
 
         let reDraw = function() {
             let scaling = settingsData.mapScaling
@@ -248,7 +277,6 @@ let generateMenu = function(id) {
                 canvas.fillStyle = color
                 canvas.fillText(text,x,y)
             }
-
 
             let centerScreen = {x:canvasElement.width/2, y:canvasElement.height/2}
             let center = {x:settingsData.centerX*scaling,y:settingsData.centerY*scaling}
