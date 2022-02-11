@@ -33,6 +33,7 @@ class Setting {
 
 let settings = {
     //Game
+    survival:1,
     //Graphics
     antialiasing:0,
     antialiasingfx:0,
@@ -57,6 +58,7 @@ let settings = {
 
 let settingsList = {
     "Game":[
+        new Setting("Survival (O2,Water,Food)","survival",[0,1],{0:"Off",1:"On"},[0,1],1),
     ],
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),

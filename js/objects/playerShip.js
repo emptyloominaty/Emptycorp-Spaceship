@@ -3,7 +3,7 @@ class Ship {
     faction = "Player"
     credits = 0
     //---------------------------------------------
-    crew = [{name:"Empty",status:"alive",dying:0,player:true,faction:"Player"}] //todo:health
+    crew = [{name:"Empty",status:"alive",dying:0,player:true,faction:"Player", id:0}]
     baseWeight = 5500 //kg
     armor = 500
     armorMax = 500
@@ -341,26 +341,39 @@ class Ship {
         }
     }
     doCrew() {
-        for(let i = 0; i<this.crew.length; i++) {
-            if (this.crew[i].status!=="death") {
-                this.atmosphere.carbonDioxideVolume += 0.0057/gameFPS
-                this.atmosphere.oxygenVolume -= 0.0057/gameFPS
+        if (settings.survival===1) {
+            for(let i = 0; i<this.crew.length; i++) {
+                if (this.crew[i].status!=="death") {
+                    this.atmosphere.carbonDioxideVolume += 0.0057/gameFPS
+                    this.atmosphere.oxygenVolume -= 0.0057/gameFPS
 
-                if (this.crew[i].dying>0) {this.crew.dying-=1/gameFPS}
+                    let a = this.crew[i].dying
 
-                if (this.atmosphere.carbonDioxide>8 || this.atmosphere.oxygen<10 || this.atmosphere.pressure<0.3) {
-                    this.crew[i].status = "unconscious"
-                    this.crew[i].dying+=2/gameFPS
-                } else if (this.crew[i].status==="unconscious") {this.crew[i].status = "alive"}
-                if (this.atmosphere.carbonDioxide>10 || this.atmosphere.oxygen<8 || this.atmosphere.pressure<0.2) {
-                    this.crew[i].dying+=10/gameFPS
-                }
-                if (this.atmosphere.carbonDioxide>14 || this.atmosphere.oxygen<3 || this.atmosphere.pressure<0.1) {
-                    this.crew[i].dying+=250/gameFPS
-                }
+                    if (!this.useTank("water",0.000025/gameFPS)) {
+                        this.crew[i].dying+=0.05/gameFPS
+                    }
+                    if (!this.useTank("food",0.0000065/gameFPS)) {
+                        this.crew[i].dying+=0.005/gameFPS
+                    }
 
-                if (this.crew[i].dying>1000) {
-                    this.crew[i].status = "death"
+                    if (this.atmosphere.carbonDioxide>8 || this.atmosphere.oxygen<10 || this.atmosphere.pressure<0.3) {
+                        this.crew[i].status = "unconscious"
+                        this.crew[i].dying+=2/gameFPS
+                    } else if (this.crew[i].status==="unconscious") {this.crew[i].status = "alive"}
+                    if (this.atmosphere.carbonDioxide>10 || this.atmosphere.oxygen<8 || this.atmosphere.pressure<0.2) {
+                        this.crew[i].dying+=10/gameFPS
+                    }
+                    if (this.atmosphere.carbonDioxide>14 || this.atmosphere.oxygen<3 || this.atmosphere.pressure<0.1) {
+                        this.crew[i].dying+=250/gameFPS
+                    }
+                    if (a===this.crew[i].dying) {
+                        if (this.crew[i].dying>0) {this.crew[i].dying-=1/gameFPS}
+                    }
+
+                    if (this.crew[i].dying>10000) {
+                        this.crew[i].status = "death"
+                        characters[this.crew[i].id].dead = true
+                    }
                 }
             }
         }
@@ -690,7 +703,7 @@ class Ship {
 
         //TODO: damage parts
         if(damage>0) {
-
+            //TODO:gameOver()
         }
     }
 
@@ -800,6 +813,8 @@ let shipDefaultParts = {
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:300,tankType:"fuel",type:"fuel1",fuelWeight:500 /* kg */ },
         {weight:100,tankType:"fuel",type:"uranium",fuelWeight:10 /* kg */},
+        {weight:50,tankType:"fuel",type:"water",fuelWeight:400 /* kg */},
+        {weight:100,tankType:"fuel",type:"food",fuelWeight:100 /* kg */},
     ],
     missileCargo:[{weight:0 ,name:"Missile 100MJ",count:5,maxCount:5,missileWeight:150,missiledata:{power:1000, length:0.1,life: 30,damage:100,shieldDmgBonus:0,ignoreShield:false, speed:0.00002, color: 0x555555, maxSpeed:100000, guided:true}}],
     weapons: [{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
