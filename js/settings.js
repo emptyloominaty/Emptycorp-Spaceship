@@ -64,7 +64,7 @@ let settingsList = {
         new Setting("SMAA","antialiasingsmaa",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Bloom","bloom",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,0.8,1.6],1),
         new Setting("Motion Blur","motionBlur",[0,1],{0:"Off",1:"On"},[0,1],0),
-        new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
+        //new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
      ],
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
@@ -145,7 +145,7 @@ let updateSettings = function() {
 }
 let menus = ["shipInfo","galaxyMap","settings","keybinds","save","load"]
 let menuIn = "settings"
-
+let settingsData = {centerX:0,centerY:0,mapScaling:50}
 
 let updateMenu = function(id) {
     generateMenu(id)
@@ -200,8 +200,85 @@ let generateMenu = function(id) {
         html+= "</div>"
         elements.appSettings.innerHTML = html
     } else if (menus[id]==="galaxyMap") {//-----------------------------------------------------------------------------------Galaxy Map
-        html+=""
+        html+="<canvas id='galaxyMapCanvas' style='margin:10px;'></canvas>" //TODO: WIDTH 3Modes?  1920x1080 / 1600x900 / 1366x768  (get window size -> change canvas width and height)
         elements.appSettings.innerHTML = html
+        let canvasElement = document.getElementById("galaxyMapCanvas")
+
+        let changeScaling = (event) => {
+            event.preventDefault()
+
+
+            let val = event.deltaY * -0.01
+            if (val>0) {
+                settingsData.mapScaling+=0.05*settingsData.mapScaling
+            } else if((val<0)) {
+                settingsData.mapScaling-=0.05*settingsData.mapScaling
+                if (settingsData.mapScaling<2) {
+                    settingsData.mapScaling = 2
+                }
+            }
+            reDraw()
+        }
+
+        canvasElement.onwheel = changeScaling
+
+        canvasElement.width = 1500
+        canvasElement.height = 700
+        let canvas = canvasElement.getContext("2d")
+        const width = canvasElement.getBoundingClientRect().width
+        const height = canvasElement.getBoundingClientRect().height
+
+
+        let reDraw = function() {
+            let scaling = settingsData.mapScaling
+            canvas.fillStyle = "#000000"
+            canvas.fillRect(0,0,width,height)
+
+            let drawCircle = function(x,y,radius,color) {
+                canvas.beginPath()
+                canvas.fillStyle = color
+                canvas.arc(x, y, radius, 0, 2 * Math.PI, false)
+                canvas.fill()
+                canvas.closePath()
+            }
+
+            let drawText = function(x,y,text,font,color,align = "center") {
+                canvas.textAlign = align
+                canvas.font = font
+                canvas.fillStyle = color
+                canvas.fillText(text,x,y)
+            }
+
+
+            let centerScreen = {x:canvasElement.width/2, y:canvasElement.height/2}
+            let center = {x:settingsData.centerX*scaling,y:settingsData.centerY*scaling}
+            let player = {x:playerShip.position.x*scaling,y:playerShip.position.y*scaling}
+
+            for (let i = 0; i<starSystems.length; i++) {
+                let x = ((starSystems[i].position.x*scaling*(-1))+centerScreen.x)+center.x
+                let y = ((starSystems[i].position.y*scaling*(-1))+centerScreen.y)+center.y
+                let size = 15
+                let color = factionList[starSystems[i].faction].color
+                drawCircle(x,y,size,color)
+                drawText(x,y-5,starSystems[i].name,"12px Consolas","#FFFFFF")
+            }
+
+            let x = ((player.x*(-1))+centerScreen.x)+center.x
+            let y = ((player.y*(-1))+centerScreen.y)+center.y
+            drawCircle(x,y,10,"#a70000")
+            drawText(x,y-5,"Player","12px Consolas","#FFFFFF")
+
+            drawText(5,15,"X: "+(settingsData.centerX).toFixed(2),"16px Consolas","#AAAAAA","left")
+            drawText(5,35,"Y: "+(settingsData.centerY).toFixed(2),"16px Consolas","#AAAAAA","left")
+
+            drawCircle(centerScreen.x,centerScreen.y,2,"#ffffff")
+
+        }
+
+        reDraw()
+
+
+
     } else if (menus[id]==="shipInfo") { //-----------------------------------------------------------------------------------Ship Info
         html+="<div class='flex-column'> "
         html+="<h3>Player</h3>"

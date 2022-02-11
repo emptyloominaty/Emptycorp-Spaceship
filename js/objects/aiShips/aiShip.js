@@ -55,8 +55,8 @@ class AiShip {
     run(fps) {
         this.transferCredits()
         let hitboxSize = 0.00000000000003 //280m
-        if (this.pos==="mid") {hitboxSize = 0.001}
-        if (this.pos==="far") {hitboxSize = 0.01}
+        if (this.pos==="mid") {hitboxSize = 0.002}
+        if (this.pos==="far") {hitboxSize = 0.02}
         this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,hitboxSize)
         if (this.shield<this.shieldMax) {
             this.shield+=this.shieldRecharge/fps
@@ -69,6 +69,13 @@ class AiShip {
         }
         if (this.task==="stop") {
             this.targetSpeed = 0
+            if (this.cargo.val > 0) {
+                for (let i = 0; i<this.cargo.items.length; i++) {
+                    let systems = sortAllSystemsByDistance(this,this.position,starSystems)
+                    this.tradeTodo.push({do:"sell", item:this.cargo.items[i].name, amount:this.cargo.items[i].val, systemId:systems[0].id})
+                    this.task = "trade"
+                }
+            }
         } else if (this.task==="trade") {
             this.doTrade()
         }

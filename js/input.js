@@ -158,113 +158,145 @@ let keyLoop = () => {
     let val = gameFPS/120
     let valSpeed = 1
 
-    if (speedInputSet==="Default") {
-        if (playerShip.speedMode==="FTL") {
+    if (!settingsOpen) {
+
+        if (speedInputSet==="Default") {
+            if (playerShip.speedMode==="FTL") {
+                valSpeed = 50*gameFPS
+            } else {
+                valSpeed = 0.000000001*gameFPS
+            }
+        } else if (speedInputSet==="VeryFast") {
+            valSpeed = 250*gameFPS
+        } else if (speedInputSet==="Fast") {
             valSpeed = 50*gameFPS
-        } else {
+        } else if (speedInputSet==="Medium") {
+            valSpeed = gameFPS
+        } else if (speedInputSet==="Slow") {
             valSpeed = 0.000000001*gameFPS
+        } else if (speedInputSet==="VerySlow") {
+            valSpeed = 0.0000000001*gameFPS
         }
-    } else if (speedInputSet==="VeryFast") {
-        valSpeed = 250*gameFPS
-    } else if (speedInputSet==="Fast") {
-        valSpeed = 50*gameFPS
-    } else if (speedInputSet==="Medium") {
-        valSpeed = gameFPS
-    } else if (speedInputSet==="Slow") {
-        valSpeed = 0.000000001*gameFPS
-    } else if (speedInputSet==="VerySlow") {
-        valSpeed = 0.0000000001*gameFPS
-    }
 
-    //Toggle Star Systems Name
-    if (keyPressed[keybinds["Show System Name"]]) {
-        shipWindow3D.drawStarSystemsText = true
-    } else {
-        shipWindow3D.drawStarSystemsText = false
-    }
-
-
-
-    //TODO:Shutdown engines
-
-    //Autopilot
-    if (keyPressed[keybinds["Autopilot"]]) {
-        playerShip.computers[0].toggleAutopilot()
-        keyPressed[keybinds["Autopilot"]] = false
-    }
-
-    //Main generator
-    if (keyPressed[keybinds["Main Generator"]]) {
-        playerShip.generators[0].on = 1 - playerShip.generators[0].on
-        keyPressed[keybinds["Main Generator"]] = false
-    }
-
-    //Hide HUD
-    if (keyPressed[keybinds["Toggle Hud"]]) {
-        hudEnabled = Boolean(1 - hudEnabled)
-        keyPressed[keybinds["Toggle Hud"]] = false
-    }
-
-    //rotation
-    if (keyPressed[keybinds["Yaw Left"]]) {
-        playerShip.position.yaw.targetDirection+=val
-    } else if (keyPressed[keybinds["Yaw Right"]]) {
-        playerShip.position.yaw.targetDirection-=val
-    }
-    if (keyPressed[keybinds["Pitch Up"]]) {
-        playerShip.position.pitch.targetDirection+=val
-    } else if (keyPressed[keybinds["Pitch Down"]]) {
-        playerShip.position.pitch.targetDirection-=val
-    }
-
-    //weapons
-    if(keyPressed[keybinds["Weapon 1"]]) {
-        if (playerShip.weapons[0]!==undefined) {
-            playerShip.weapons[0].doDamage(0,0,0)
+        //Toggle Star Systems Name
+        if (keyPressed[keybinds["Show System Name"]]) {
+            shipWindow3D.drawStarSystemsText = true
+        } else {
+            shipWindow3D.drawStarSystemsText = false
         }
-    }
-    if(keyPressed[keybinds["Weapon 2"]]) {
-        if (playerShip.weapons[1]!==undefined) {
-            playerShip.weapons[1].doDamage(0,0,0)
-        }
-    }
-    if(keyPressed[keybinds["Weapon 3"]]) {
-        if (playerShip.weapons[2]!==undefined) {
-            playerShip.weapons[2].doDamage(0,0,0)
-        }
-    }
-    if(keyPressed[keybinds["Weapon 4"]]) {
-        if (playerShip.weapons[3]!==undefined) {
-            playerShip.weapons[3].doDamage(0,0,0)
-        }
-    }
 
-    //speed
-    if (keyPressed[keybinds["Increase Speed"]]) {
-        playerShip.targetSpeed+=valSpeed
-        playerShip.propulsion="on"
-        if (playerShip.speedMode==="Sublight") {
-            if (playerShip.speed<playerShip.targetSpeed) {
-                playerShip.acc = 1
-            } else {
-                playerShip.acc = 0
+
+
+        //TODO:Shutdown engines
+
+        //Autopilot
+        if (keyPressed[keybinds["Autopilot"]]) {
+            playerShip.computers[0].toggleAutopilot()
+            keyPressed[keybinds["Autopilot"]] = false
+        }
+
+        //Main generator
+        if (keyPressed[keybinds["Main Generator"]]) {
+            playerShip.generators[0].on = 1 - playerShip.generators[0].on
+            keyPressed[keybinds["Main Generator"]] = false
+        }
+
+        //Hide HUD
+        if (keyPressed[keybinds["Toggle Hud"]]) {
+            hudEnabled = Boolean(1 - hudEnabled)
+            keyPressed[keybinds["Toggle Hud"]] = false
+        }
+
+        //rotation
+        if (keyPressed[keybinds["Yaw Left"]]) {
+            playerShip.position.yaw.targetDirection+=val
+        } else if (keyPressed[keybinds["Yaw Right"]]) {
+            playerShip.position.yaw.targetDirection-=val
+        }
+        if (keyPressed[keybinds["Pitch Up"]]) {
+            playerShip.position.pitch.targetDirection+=val
+        } else if (keyPressed[keybinds["Pitch Down"]]) {
+            playerShip.position.pitch.targetDirection-=val
+        }
+
+        //weapons
+        if(keyPressed[keybinds["Weapon 1"]]) {
+            if (playerShip.weapons[0]!==undefined) {
+                playerShip.weapons[0].doDamage(0,0,0)
             }
         }
-    } else if (keyPressed[keybinds["Decrease Speed"]]) {
-        playerShip.targetSpeed-=valSpeed
-        if (playerShip.speedMode==="Sublight") {
+        if(keyPressed[keybinds["Weapon 2"]]) {
+            if (playerShip.weapons[1]!==undefined) {
+                playerShip.weapons[1].doDamage(0,0,0)
+            }
+        }
+        if(keyPressed[keybinds["Weapon 3"]]) {
+            if (playerShip.weapons[2]!==undefined) {
+                playerShip.weapons[2].doDamage(0,0,0)
+            }
+        }
+        if(keyPressed[keybinds["Weapon 4"]]) {
+            if (playerShip.weapons[3]!==undefined) {
+                playerShip.weapons[3].doDamage(0,0,0)
+            }
+        }
+
+        //speed
+        if (keyPressed[keybinds["Increase Speed"]]) {
+            playerShip.targetSpeed+=valSpeed
             playerShip.propulsion="on"
-            if (playerShip.speed<playerShip.targetSpeed) {
-                playerShip.acc = 1
-            } else {
-                playerShip.acc = 0
+            if (playerShip.speedMode==="Sublight") {
+                if (playerShip.speed<playerShip.targetSpeed) {
+                    playerShip.acc = 1
+                } else {
+                    playerShip.acc = 0
+                }
+            }
+        } else if (keyPressed[keybinds["Decrease Speed"]]) {
+            playerShip.targetSpeed-=valSpeed
+            if (playerShip.speedMode==="Sublight") {
+                playerShip.propulsion="on"
+                if (playerShip.speed<playerShip.targetSpeed) {
+                    playerShip.acc = 1
+                } else {
+                    playerShip.acc = 0
+                }
             }
         }
+        if (keyPressed[keybinds["Target Nearest Enemy"]]) {
+            playerShip.computers[0].functions.findNearestEnemyTarget()
+            keyPressed[keybinds["Target Nearest Enemy"]] = false
+        }
+    } else {
+        if (menuIn==="galaxyMap") {
+            let s = settingsData.mapScaling
+            if (keyPressed[keybinds["Yaw Left"]]) {
+                settingsData.centerX += 10/s
+                generateMenu(1)
+            } else if (keyPressed[keybinds["Yaw Right"]]) {
+                settingsData.centerX -= 10/s
+                generateMenu(1)
+            }
+            if (keyPressed[keybinds["Pitch Up"]]) {
+                settingsData.centerY += 10/s
+                generateMenu(1)
+            } else if (keyPressed[keybinds["Pitch Down"]]) {
+                settingsData.centerY -= 10/s
+                generateMenu(1)
+            }
+
+            if (keyPressed[keybinds["Target Nearest Enemy"]]) {
+                settingsData.centerX = playerShip.position.x
+                settingsData.centerY = playerShip.position.y
+                generateMenu(1)
+                keyPressed[keybinds["Target Nearest Enemy"]] = false
+            }
+
+        }
+
+
     }
-    if (keyPressed[keybinds["Target Nearest Enemy"]]) {
-        playerShip.computers[0].functions.findNearestEnemyTarget()
-        keyPressed[keybinds["Target Nearest Enemy"]] = false
-    }
+
 
     if (keyPressed["Escape"]) {
         settingsOpen = !settingsOpen
