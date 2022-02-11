@@ -178,14 +178,34 @@ let keyLoop = () => {
 
     //TODO:Shutdown engines
 
-    //TODO:Autopilot
+    //Autopilot
     if (keyPressed[keybinds["Autopilot"]]) {
         playerShip.computers[0].toggleAutopilot()
         keyPressed[keybinds["Autopilot"]] = false
     }
 
+    //Test
+    if (keyPressed["KeyU"]) {
+        shipWindow3D.texts[0].rotation.x +=0.01
+    } else if (keyPressed["KeyJ"]) {
+        shipWindow3D.texts[0].rotation.x -=0.01
+    }
+    if (keyPressed["KeyI"]) {
+        shipWindow3D.texts[0].rotation.y +=0.01
+    } else if (keyPressed["KeyK"]) {
+        shipWindow3D.texts[0].rotation.y -=0.01
+    }
+    if (keyPressed["KeyO"]) {
+        shipWindow3D.texts[0].rotation.z +=0.01
+    } else if (keyPressed["KeyL"]) {
+        shipWindow3D.texts[0].rotation.z -=0.01
+    }
 
-    //TODO:Main generator
+    //Main generator
+    if (keyPressed[keybinds["Main Generator"]]) {
+        playerShip.generators[0].on = 1 - playerShip.generators[0].on
+        keyPressed[keybinds["Main Generator"]] = false
+    }
 
     //Hide HUD
     if (keyPressed[keybinds["Toggle Hud"]]) {

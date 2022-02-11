@@ -12,6 +12,8 @@ class CanvasMain {
     ships = []
     projectiles = []
 
+    texts = []
+
     test = []
 
     constructor() {
@@ -19,6 +21,76 @@ class CanvasMain {
         this.camera = new THREE.PerspectiveCamera(50, 1900 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
         //this.renderer.setPixelRatio(2)
+
+        const loader = new FontLoader()
+        loader.load( threeJSFont, ( font )=> {
+
+            const color = 0xFFFFFF
+
+            const matDark = new THREE.LineBasicMaterial( {
+                color: color,
+                side: THREE.DoubleSide
+            } );
+
+            const matLite = new THREE.MeshBasicMaterial( {
+                color: color,
+                transparent: true,
+                opacity: 0.4,
+                side: THREE.DoubleSide
+            } );
+
+            const message = 'TEST TEXT\ntext\ntext\ntext\ntext'
+
+            const shapes = font.generateShapes( message, 0.05)
+
+            const geometry = new THREE.ShapeGeometry( shapes )
+
+            geometry.computeBoundingBox()
+
+            const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x )
+
+            geometry.translate( xMid, 0, 0 )
+
+            // make shape ( N.B. edge view not visible )
+
+            this.texts[0] = new THREE.Mesh( geometry, matLite )
+            this.texts[0].position.x = 0
+            this.texts[0].position.y = 0
+            this.texts[0].position.z = 1
+
+            this.texts[0].rotation.x = 2.909
+            this.texts[0].rotation.y = 0
+            this.texts[0].rotation.z = 3.109
+            this.scene.add( this.texts[0] )
+
+            // make line shape ( N.B. edge view remains visible )
+
+            const holeShapes = []
+
+            for ( let i = 0; i < shapes.length; i ++ ) {
+
+                const shape = shapes[ i ]
+
+                if ( shape.holes && shape.holes.length > 0 ) {
+
+                    for ( let j = 0; j < shape.holes.length; j ++ ) {
+
+                        const hole = shape.holes[ j ]
+                        holeShapes.push( hole )
+
+                    }
+
+                }
+
+            }
+
+            shapes.push.apply( shapes, holeShapes );
+
+        } ); //end load function
+
+
+
+
 
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 

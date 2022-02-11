@@ -94,8 +94,9 @@ let keybinds = {
     "Increase Speed":"ShiftLeft",
     "Decrease Speed" :"ControlLeft",
     "Target Nearest Enemy":"Tab",
-    "Toggle Hud":"KeyZ",
-    "Autopilot":"KeyH",
+    "Toggle Hud":"KeyH",
+    "Autopilot":"KeyX",
+    "Main Generator":"KeyG",
     }
 
 let updateSettings = function() {
@@ -203,7 +204,7 @@ let generateMenu = function(id) {
     } else if (menus[id]==="shipInfo") { //-----------------------------------------------------------------------------------Ship Info
         html+="<div class='flex-column'> "
         html+="<h3>Player</h3>"
-        html+="<span>Credits: "+Math.round(playerShip.credits)+"Cr </span>"
+        html+="<span>Credits: "+Math.round(playerShip.credits)+" Cr </span>"
         html+="<span>Relations: </span>"
         Object.keys(factionList).forEach(key => {
             if (key!=="Player") {
@@ -213,14 +214,14 @@ let generateMenu = function(id) {
 
         html+="<br><h3>Ship</h3>"
         html+="<span> Length:"+playerShip.size.l+"m |  Height:"+playerShip.size.h+"m | Width:"+playerShip.size.w+"m  </span>"
-        html+="<span>Weight: "+(playerShip.weight).toFixed(0)+"kg</span>"
-        html+="<span>Max Speed: "+(playerShip.maxSpeed/8765.812756).toFixed(1)+"ly</span>"
+        html+="<span>Weight: "+(playerShip.weight).toFixed(0)+" kg</span>"
+        html+="<span>Max Speed: "+(playerShip.maxSpeed/8765.812756).toFixed(1)+" ly/h</span>"
         html+="<span>Armor: "+playerShip.armor.toFixed(0)+"/"+playerShip.armorMax+"</span>"
         html+="<span>Shield: "+playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge+"</span>"
 
-        html+="<span>Antenna: "+playerShip.antennas[0].maxSpeed+"Mbit"+"</span>"
+        html+="<span>Antenna: "+playerShip.antennas[0].maxSpeed+" Mbit"+"</span>"
 
-        html+="<span>Battery: "+Math.round(playerShip.batteries[0].charge*1000)+"/"+playerShip.batteries[0].maxCharge*1000+"kWh</span>"
+        html+="<span>Battery: "+Math.round(playerShip.batteries[0].charge*1000)+"/"+playerShip.batteries[0].maxCharge*1000+" kWh</span>"
 
         for (let i = 0; i<playerShip.generators.length; i++) {
             let generatorFuelLeft = playerShip.checkTank(playerShip.generators[i].generatorFuelType)/playerShip.generators[i].consumption
