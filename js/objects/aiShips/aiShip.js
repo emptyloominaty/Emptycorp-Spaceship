@@ -42,6 +42,8 @@ class AiShip {
     destroyed = false
     task = "stop" // stop,refuel,attack,fuel,trade,home,
     prevTask = "stop"
+    prevTarget = ""
+    prevtargetType = ""
     refuel = false
 
     tradeTodo = [] // [{do:"buy", item:"steel", amount:500, systemId:1},{do:"sell", item:"steel", amount:250, systemId:0},{do:"sell", item:"steel", amount:250, systemId:5}]
@@ -69,13 +71,13 @@ class AiShip {
         }
         if (this.task==="stop") {
             this.targetSpeed = 0
-            if (this.cargo.val > 0) {
+            /*if (this.cargo.val > 0) {
                 for (let i = 0; i<this.cargo.items.length; i++) {
                     let systems = sortAllSystemsByDistance(this,this.position,starSystems)
                     this.tradeTodo.push({do:"sell", item:this.cargo.items[i].name, amount:this.cargo.items[i].val, systemId:systems[0].id})
                     this.task = "trade"
                 }
-            }
+            }*/
         } else if (this.task==="trade") {
             this.doTrade()
         }
@@ -130,8 +132,6 @@ class AiShip {
             } else {
                 this.task = "stop"
             }
-        } else {
-
         }
     }
 
@@ -144,6 +144,8 @@ class AiShip {
             this.refuel = false
             this.task = this.prevTask
             this.changeTarget("","",true)
+            this.targetType = this.prevtargetType
+            this.target = this.prevTarget
         } else if (this.task==="trade") {
             //{max:50000,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
             //{do:"buy", item:"steel", amount:500, systemId:1}
@@ -266,7 +268,11 @@ class AiShip {
             }
         }
         prices = prices.sort((a, b) => a.totalPrice > b.totalPrice ? 1 : -1)
+        if (prices[0]===undefined) {prices.push({id:0})}
+        if (prices[0].id===undefined) {prices[0].id=0}
         this.prevTask = this.task
+        this.prevTarget = Object.assign({},this.target)
+        this.prevtargetType = this.targetType
         this.task = "refuel"
         return starSystems[prices[0].id]
     }

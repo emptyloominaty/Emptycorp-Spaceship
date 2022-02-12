@@ -20,7 +20,7 @@ class CanvasMain {
 
     constructor() {
         this.scene = new THREE.Scene()
-        this.camera = new THREE.PerspectiveCamera(50, 1900 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
+        this.camera = new THREE.PerspectiveCamera(50, 1920 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
         //this.renderer.setPixelRatio(2)
 
@@ -116,7 +116,7 @@ class CanvasMain {
         this.composer.addPass( renderScene )
         //-------------Bloom
 
-        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1900, 550 ), 1.5, 0.4, 0.4 )
+        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1920, 550 ), 1.5, 0.4, 0.4 )
 
         this.composer.addPass( bloomPass )
 
@@ -134,7 +134,7 @@ class CanvasMain {
             magFilter: THREE.LinearFilter,
             stencilBuffer: false
         }
-        this.savePassMotionBlur = new THREE.SavePass( new THREE.WebGLRenderTarget( 1900, 550, renderTargetParameters ) )
+        this.savePassMotionBlur = new THREE.SavePass( new THREE.WebGLRenderTarget( 1920, 550, renderTargetParameters ) )
         // blend pass
         this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
         this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
@@ -162,6 +162,7 @@ class CanvasMain {
         //update Aspect Ratio
         let reportWindowSize = () => {
             this.camera.aspect = window.innerWidth/550
+            this.renderer.setSize(window.innerWidth,550)
             this.camera.updateProjectionMatrix()
         }
 

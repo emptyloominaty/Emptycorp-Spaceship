@@ -51,7 +51,7 @@ let settings = {
 
     shipFar:1,
     shipMid:0.01,
-    shipFarUpdate:30,
+    shipFarUpdate:20,
     shipMidUpdate:6,
     disableResourceSim:0
 }
@@ -70,10 +70,10 @@ let settingsList = {
      ],
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
-        new Setting("Max Time Speed","maxTimeSpeed",[4,5,8,10,30,60],{4:"4x",5:"5x",8:"8x",10:"10x",30:"30x",60:"60x"},[4,5,8,10,30,60],4),
+        new Setting("Max Time Speed (DONT!)","maxTimeSpeed",[4,5,8,10,30,60],{4:"4x",5:"5x",8:"8x",10:"10x",30:"30x",60:"60x"},[4,5,8,10,30,60],4),
         new Setting("MultiThreading","multiThreading",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Draw ALL ships in Nav","drawAllShips",[0,1],{0:"Off",1:"On"},[0,1],1),
-        new Setting("Far Update (every x frames)","shipFarUpdate",[10,15,20,30],{10:"10",15:"15",20:"20",30:"30"},[10,15,20,30],30),
+        new Setting("Far Update (every x frames)","shipFarUpdate",[6,10,15,20,30],{6:"6",10:"10",15:"15",20:"20",30:"30"},[6,10,15,20,30],20),
         new Setting("Mid Update (every x frames)","shipMidUpdate",[2,3,4,5,6,10,30],{2:"2",3:"3",4:"4",5:"5",6:"6",10:"10",30:"30"},[2,3,4,5,6,10,30],6),
         new Setting("Far Distance (ly)","shipFar",[0.25,0.5,1,2,5],{0.25:"0.25",0.5:"0.5",1:"1",2:"2",5:"5"},[0.25,0.5,1,2,5],1),
         new Setting("Mid Distance (ly)","shipMid",[0.01,0.1,0.5,1,2],{0.01:"0.01",0.1:"0.1",0.5:"0.5",1:"1",2:"2"},[0.01,0.1,0.5,1,2],0.01),
