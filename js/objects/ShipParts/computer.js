@@ -5,7 +5,7 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""},startId: 0}
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0}
 
     //network
     listeningPort = [0]
@@ -282,6 +282,8 @@ class Computer extends Part {
                     this.display.drawRect(580, 0, 20, 20, "#666666")
                     this.display.drawText(590, 15, "S", font1, color1, 'center')
 
+                    this.display.drawRect(580, 20, 20, 20, "#666666")
+                    this.display.drawText(590, 35, "P", font1, color1, 'center')
                 } else {
                         this.display.drawText(5,20,"Off",font1,colorError,'left')
                 }
@@ -339,6 +341,28 @@ class Computer extends Part {
                         this.display.drawText(5, y, "["+i+"] "+starSystems[i].name, font1, color1, 'left')
                         this.display.drawText(135, y, dist.toFixed(2)+"ly", font1, color1, 'left')
                         this.display.drawText(225, y, starSystems[i].faction, font1, color1, 'left')
+
+                        this.display.drawRect(410,y-10,70,20,"#494949")
+                        this.display.drawText(445,y+5, "Target", font1, color1, 'center')
+                        this.display.drawRect(490,y-10,100,20,"#494949")
+                        this.display.drawText(540,y+5, "Autopilot", font1, color1, 'center')
+                    }
+                }
+            } else if (this.tab==="nav4") {//---------------------------------------------------------------------------------------Star Systems list
+                let hColor = "#546db3"
+                let y = 10
+                this.display.drawText(5, 15, "Name", font1, hColor, 'left')
+                this.display.drawText(120, 15, "System", font1, hColor, 'left')
+                this.display.drawText(215, 15, "Population", font1, hColor, 'left')
+                this.display.drawText(310, 15, "Faction", font1, hColor, 'left')
+                this.display.drawLine(0,24,600,24,1,hColor)
+                for (let i = this.data.startIdPlanets; i<this.data.startIdPlanets+9; i++) {
+                    if (planets[i]!==undefined) {
+                        y+=35
+                        this.display.drawText(5, y, planets[i].name, font1, color1, 'left')
+                        this.display.drawText(120, y, planets[i].system, font1, color1, 'left')
+                        this.display.drawText(215, y, planets[i].population/1000000+"M", font1, color1, 'left')
+                        this.display.drawText(310, y, planets[i].faction, font1, color1, 'left')
 
                         this.display.drawRect(410,y-10,70,20,"#494949")
                         this.display.drawText(445,y+5, "Target", font1, color1, 'center')
@@ -547,6 +571,7 @@ class Computer extends Part {
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.defaultMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.zoomMapScaling()}}},
             {x1:580, y1:0,x2:600,y2:20,function: () => {if (this.tab==="nav") {this.tab="nav3"}}},
+            {x1:580, y1:20,x2:600,y2:40,function: () => {if (this.tab==="nav") {this.tab="nav4"}}},
             {x1:40, y1:70,x2:80,y2:90,function: () => {if (this.tab==="nav") {this.gridEnabled = 1 - this.gridEnabled}}},
             //target (nav2)
             {x1:15, y1:325,x2:85,y2:345,function: () => {if (this.tab==="nav2") {this.target=starSystems[this.nav2PlanetView].name;this.targetType="system";this.targetObj=starSystems[this.nav2PlanetView]}}},
@@ -576,20 +601,37 @@ class Computer extends Part {
                     this.targetObj=starSystems[id]
             }}})
         }
+        //nav 4 buttons
+        for (let i = 0; i<9; i++) {
+            let y = ((this.data.startId+i)*35)+35
+            let id = (this.data.startId+i)
+            //45-10 = 35 (y1)
+            buttons.push({x1:410, y1:y,x2:480,y2:y+20,function: () => {
+                    if (this.tab==="nav4") {
+                        this.target=planets[id].name
+                        this.targetType="planet"
+                        this.targetObj=planets[id]
+                    }}})
+            buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
+                    if (this.tab==="nav4") {
+                        this.toggleAutopilot()
+                        this.targetType="planet"
+                        this.target=planets[id].name
+                        this.targetObj=planets[id]
+                    }}})
+        }
         //TODO:END
 
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
             if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {
                 b.function()
-                break
             }
         }
         for (let i = 0; i<this.starSystems.length; i++) {
             let b = this.starSystems[i]
             if (x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2) {
                 b.function()
-                break
             }
         }
     }

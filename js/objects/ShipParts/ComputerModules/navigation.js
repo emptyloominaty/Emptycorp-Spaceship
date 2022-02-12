@@ -81,6 +81,24 @@ class NavigationModule {
                     playerShip.targetSpeed = 0
                 }
 
+            } else if (playerShip.computers[0].targetType==="planet") {
+                if (distanceToObject<0.0000158) {
+                    playerShip.computers[0].autopilot=0
+                    playerShip.targetSpeed = 0
+                    playerShip.propulsion = "off"
+                } else if (distanceToObject<0.0001) {
+                    playerShip.targetSpeed = (distanceToObject*10000000)
+                } else if (distanceToObject<0.0003) {
+                    playerShip.targetSpeed = 2000
+                } else if (distanceToObject<0.001) {
+                    playerShip.targetSpeed = 10000
+                } else if (distanceToObject<0.005) {
+                    playerShip.targetSpeed = 40000
+                }
+
+                if (playerShip.position.yaw.direction-45>(angleYaw+360) || playerShip.position.yaw.direction+45<(angleYaw+360)) {
+                    playerShip.targetSpeed = 0
+                }
             }
 
         } else if (playerShip.computers[0].autopilot===1) {

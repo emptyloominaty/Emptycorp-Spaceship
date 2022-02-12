@@ -183,3 +183,12 @@ starSystems.push (new StarSystem(
     0.2,
     15,
 ))
+
+
+//Generate Planets Array
+let planets = []
+for (let i = 0; i<starSystems.length; i++) {
+    for (let j = 0; j<starSystems[i].planets.length; j++) {
+       planets.push(starSystems[i].planets[j])
+    }
+}

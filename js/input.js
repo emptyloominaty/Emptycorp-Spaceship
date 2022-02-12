@@ -386,6 +386,14 @@ let zoom = function(event) {
                 playerShip.computers[0].data.startId --
             }
         }
+    } else if (playerShip.computers[0].tab==="nav4") {
+        if (val<0) {
+            playerShip.computers[0].data.startIdPlanets ++
+        } else if (val>0) {
+            if (playerShip.computers[0].data.startIdPlanets>0) {
+                playerShip.computers[0].data.startIdPlanets --
+            }
+        }
     }
 }
 
