@@ -101,6 +101,8 @@ let keybinds = {
     "Main Generator":"KeyG",
     "Show System Name":"KeyC",
     "Shutdown Engine":"KeyX",
+    "Reset Target":"KeyN",
+    "Show Target":"KeyB",
     }
 
 let updateSettings = function() {

@@ -2,6 +2,7 @@ class CanvasMain {
     motionBlur = false
     smaa = false
     bloom = false
+    enableTargetTorus = true
 
     drawStarSystemsText = false
 
@@ -67,9 +68,9 @@ class CanvasMain {
         //star materials
         this.materials["Class G"] = new THREE.MeshBasicMaterial( {color:0xf1ffa5} )
         this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c} )
+
         //planet materials
         this.materials["Moon"] = new THREE.MeshPhongMaterial( {color:0x94908D, shininess:5} )
-
         this.materials["Mercury"] = new THREE.MeshPhongMaterial( {color:0x97979F, shininess:5} )
         this.materials["Venus"] = new THREE.MeshPhongMaterial( {color:0xBBB7AB, shininess:5} )
         this.materials["Earth"] = new THREE.MeshPhongMaterial( {color:0x8CB1DE, shininess:5} )
@@ -79,13 +80,21 @@ class CanvasMain {
         this.materials["Uranus"] = new THREE.MeshPhongMaterial( {color:0xBBE1E4, shininess:5} )
         this.materials["Neptune"] = new THREE.MeshPhongMaterial( {color:0x6081FF, shininess:5} )
 
+        //target
+        const geometry = new THREE.TorusGeometry( 10, 0.2, 2, 50 )
+        const material = new THREE.MeshBasicMaterial( { color: 0x8888bb } )
+        this.targetTorus = new THREE.Mesh( geometry, material )
+        this.scene.add( this.targetTorus )
+        this.targetTorus.visible = false
 
+
+        //lights
         const ambientLight = new THREE.AmbientLight( 0x202020 )
         this.scene.add( ambientLight )
 
-        this.light = new THREE.PointLight( 0xffffff, 0.15, 2 )
+        this.light = new THREE.PointLight( 0xffffff, 0.2, 2 )
         this.light.position.set( -1, 0, -1)
-        this.light.intensity = 1
+        this.light.intensity = 1.5
         this.scene.add( this.light )
 
         //stars
@@ -241,6 +250,25 @@ class CanvasMain {
         this.test[0].position.z = 1.000000000000001-camHi.z-camLo.z
         this.test[0].position.y = 0-camHi.y-camLo.y*/
 
+        //targetTorus
+        if (Object.keys(playerShip.target).length===0 || !this.enableTargetTorus) {
+            this.targetTorus.visible = false
+        } else {
+            let target = playerShip.target
+            this.targetTorus.position.set(
+                target.position.x-camHi.x-camLo.x,
+                target.position.z-camHi.y-camLo.y,
+                target.position.y-camHi.z-camLo.z,
+            )
+            this.targetTorus.lookAt(this.camera.position)
+            let scale = (playerShip.targetDistance)/150
+            this.targetTorus.scale.x = scale
+            this.targetTorus.scale.y = scale
+            this.targetTorus.scale.z = scale
+            this.targetTorus.visible = true
+        }
+
+
         //projectiles
         for (let i = 0; i<projectiles.length; i++) {
             if (projectiles[i]!==undefined) {
@@ -280,7 +308,6 @@ class CanvasMain {
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
-
             if (this.drawStarSystemsText) {
                 this.updateTextPosition((starSystems[i].position.x)-camHi.x-camLo.x,(starSystems[i].position.z+0.05)-camHi.y-camLo.y,(starSystems[i].position.y)-camHi.z-camLo.z,i)
             }

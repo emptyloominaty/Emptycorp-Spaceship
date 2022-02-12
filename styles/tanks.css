@@ -3,14 +3,12 @@
 }
 
 .tank_O2 {
-    background-color: #81c1c5;
+    background-color: #7db8bc;
 }
 
 .tank_N2 {
     background-color: #7c9e92;
 }
-
-
 
 .tank_water {
     background-color: #295e9e;
@@ -31,3 +29,8 @@
 .tank_fuel1 {
     background-color: #9e7a3c;
 }
+
+.dark_tanks {
+    filter: brightness(70%);
+}
+

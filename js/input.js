@@ -119,9 +119,11 @@ let toggleLights = function() {
     if (playerShip.lights.insideOn===1) {
         elements.root.style.setProperty("--background-color-light","#343434")
         elements.root.style.setProperty("--background-color-light2","#333")
+        document.getElementById("tanksDiv").classList.remove("dark_tanks")
     } else {
         elements.root.style.setProperty("--background-color-light","#171717")
         elements.root.style.setProperty("--background-color-light2","#151515")
+        document.getElementById("tanksDiv").classList.add("dark_tanks")
     }
 }
 
@@ -177,6 +179,21 @@ let keyLoop = () => {
         } else if (speedInputSet==="VerySlow") {
             valSpeed = 0.0000000001*gameFPS
         }
+
+
+        //Toggle Showing Target
+        if (keyPressed[keybinds["Show Target"]]) {
+            shipWindow3D.enableTargetTorus = Boolean(1 - shipWindow3D.enableTargetTorus)
+            keyPressed[keybinds["Show Target"]] = false
+        }
+
+
+        //Reset Target
+        if (keyPressed[keybinds["Reset Target"]]) {
+            playerShip.computers[0].resetTarget()
+            keyPressed[keybinds["Reset Target"]] = false
+        }
+
 
         //Toggle Star Systems Name
         if (keyPressed[keybinds["Show System Name"]]) {
@@ -399,3 +416,14 @@ let resetInputs = function() {
 }
 
 window.addEventListener('blur', resetInputs)
+
+
+//ctrl+w
+/*
+window.onbeforeunload = function (e) {
+    // Cancel the event
+    e.preventDefault()
+
+    // Chrome requires returnValue to be set
+    e.returnValue = 'Really want to quit the game?'
+}*/

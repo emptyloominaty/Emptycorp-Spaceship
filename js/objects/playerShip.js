@@ -40,6 +40,7 @@ class Ship {
     powerOutput = 0
     powerOutput2 = 0
     target = {}
+    targetDistance = 0
 
     powerInputArray = []
     powerOutputArray = []

@@ -139,6 +139,7 @@ function draw(progress) {
             let b = ss.position.y - nav.position.y //y1 - y2
             let c = ss.position.z - nav.position.z //z1 - z2
             d = Math.sqrt( a*a + b*b + c*c )
+            playerShip.targetDistance = d
             //yaw
             angle = ((((Math.atan2( nav.position.y - ss.position.y, nav.position.x - ss.position.x ) * 180)) / Math.PI)-270)
             angle = angle*(-1)
