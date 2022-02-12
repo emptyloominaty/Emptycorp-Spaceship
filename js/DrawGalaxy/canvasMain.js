@@ -68,21 +68,30 @@ class CanvasMain {
         this.materials["Class G"] = new THREE.MeshBasicMaterial( {color:0xf1ffa5} )
         this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c} )
         //planet materials
-        
+        this.materials["Moon"] = new THREE.MeshPhongMaterial( {color:0x94908D, shininess:5} )
+
+        this.materials["Mercury"] = new THREE.MeshPhongMaterial( {color:0x97979F, shininess:5} )
+        this.materials["Venus"] = new THREE.MeshPhongMaterial( {color:0xBBB7AB, shininess:5} )
+        this.materials["Earth"] = new THREE.MeshPhongMaterial( {color:0x8CB1DE, shininess:5} )
+        this.materials["Mars"] = new THREE.MeshPhongMaterial( {color:0xE27B58, shininess:5} )
+        this.materials["Jupiter"] = new THREE.MeshPhongMaterial( {color:0xDCD0B8, shininess:5} )
+        this.materials["Saturn"] = new THREE.MeshPhongMaterial( {color:0xA49B72, shininess:5} )
+        this.materials["Uranus"] = new THREE.MeshPhongMaterial( {color:0xBBE1E4, shininess:5} )
+        this.materials["Neptune"] = new THREE.MeshPhongMaterial( {color:0x6081FF, shininess:5} )
 
 
         const ambientLight = new THREE.AmbientLight( 0x202020 )
         this.scene.add( ambientLight )
 
-        this.light = new THREE.PointLight( 0xffffff, 0.2, 2 )
+        this.light = new THREE.PointLight( 0xffffff, 0.15, 2 )
         this.light.position.set( -1, 0, -1)
-        this.light.intensity = 2
+        this.light.intensity = 1
         this.scene.add( this.light )
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
             let starColor = starSystems[i].stars[0].starType
-            let starSize = starSystems[i].stars[0].radius/80000000 // /50000000 //TODO:FIX
+            let starSize = starSystems[i].stars[0].radius/80000000 // /50000000 //FIX?
             let geometry = new THREE.SphereGeometry(starSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
             this.stars[i] = new THREE.Mesh(geometry, this.materials[starColor])
             this.stars[i].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
@@ -93,11 +102,9 @@ class CanvasMain {
 
             if (this.planets[i]===undefined) {this.planets[i]=[]}
             for (let j = 0; j<starSystems[i].planets.length; j++) {
-                let planetColor = 0x666666
-                let planetSize = (starSystems[i].planets[j].radius/60528409678)*10 //TODO:FIX
+                let planetSize = (starSystems[i].planets[j].radius/60528409678) //FIX?
                 let planetGeometry = new THREE.SphereGeometry(planetSize, 40, 40, 0, Math.PI * 2, 0, Math.PI * 2) //50,50
-                let planetMaterial = new THREE.MeshPhongMaterial({color: planetColor})
-                //this.planets[i][j] = new THREE.Mesh(planetGeometry, new THREE.MeshBasicMaterial({color:planetColor}))
+                let planetMaterial = this.materials[starSystems[i].planets[j].planetColor]
                 this.planets[i][j] = new THREE.Mesh(planetGeometry, planetMaterial)
                 this.scene.add(this.planets[i][j])
             }

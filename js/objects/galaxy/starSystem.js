@@ -300,7 +300,7 @@ class StarSystem {
         //TODO:planets,moons positions
         for (let i = 0; i<planets.length; i++) {
             planets[i].position.x = this.position.x
-            planets[i].position.y = this.position.y+(planets[i].orbitHeight/9460528400000)+0.1
+            planets[i].position.y = this.position.y+(planets[i].orbitHeight/946052840000)+0.1
             planets[i].position.z = this.position.z
             for (let j = 0; j<planets[i].moons.length; j++) {
                 planets[i].moons[j].position.x = planets[i].position.x

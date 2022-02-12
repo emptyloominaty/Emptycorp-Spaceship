@@ -34,10 +34,11 @@ for (let i = 0; i<playerShip.capacitors.length; i++) {
 let gasTanksHTML = ""
 let fuelTanksHTML = ""
 for (let i = 0; i<playerShip.tanks.length; i++) {
+    let name = playerShip.tanks[i].type
     if (playerShip.tanks[i].tankType==="gas") {
-        gasTanksHTML += "<div class='flex-column' ><div id='tankBorder"+i+"' class='tankBorder' > <div id='tankValue"+i+"' class='tankValue gasTank'></div><span id='tankText2"+i+"'class='tankText2 whiteText'> </span></div> <span id='tankText"+i+"' class='tankText whiteText'></span> </div>"
+        gasTanksHTML += "<div class='flex-column' ><div id='tankBorder"+i+"' class='tankBorder' > <div id='tankValue"+i+"' class='tankValue gasTank tank_"+name+"'></div><span id='tankText2"+i+"'class='tankText2 whiteText'> </span></div> <span id='tankText"+i+"' class='tankText whiteText'></span> </div>"
     } else if (playerShip.tanks[i].tankType==="fuel") {
-        fuelTanksHTML += "<div class='flex-column' ><div id='tankBorder"+i+"' class='tankBorder' > <div id='tankValue"+i+"' class='tankValue fuelTank'></div><span id='tankText2"+i+"'class='tankText2 whiteText'> </span></div> <span id='tankText"+i+"'class='tankText whiteText'></span></div>"
+        fuelTanksHTML += "<div class='flex-column' ><div id='tankBorder"+i+"' class='tankBorder' > <div id='tankValue"+i+"' class='tankValue fuelTank tank_"+name+"'></div><span id='tankText2"+i+"'class='tankText2 whiteText'> </span></div> <span id='tankText"+i+"'class='tankText whiteText'></span></div>"
     }
 }
 elements.gasTanksDiv.innerHTML = gasTanksHTML
