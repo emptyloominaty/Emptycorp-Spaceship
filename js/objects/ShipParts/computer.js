@@ -520,6 +520,9 @@ class Computer extends Part {
                     if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
                         let color = factionList[ai.faction].color
                         this.display.drawRect(x,y,3,3,color)
+                        if (ai.showInNav) {
+                            this.display.drawText(x,y-5,ai.id,font,colorSystemText,"center")
+                        }
                         //this.display.drawCircle(x,y,3,color)
                     }
                 }

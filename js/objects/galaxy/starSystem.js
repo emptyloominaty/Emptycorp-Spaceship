@@ -297,6 +297,18 @@ class StarSystem {
         this.mapSize = mapSize
         this.position = position
         this.prosperity = prosperity
+        //TODO:planets,moons positions
+        for (let i = 0; i<planets.length; i++) {
+            planets[i].position.x = this.position.x
+            planets[i].position.y = this.position.y+(planets[i].orbitHeight/9460528400000)+0.1
+            planets[i].position.z = this.position.z
+            for (let j = 0; j<planets[i].moons.length; j++) {
+                planets[i].moons[j].position.x = planets[i].position.x
+                planets[i].moons[j].position.y = planets[i].position.y+(planets[i].moons[j].orbitHeight/9460528400000)
+                planets[i].moons[j].position.z = planets[i].position.z
+            }
+        }
+
         //population
         for (let i = 0; i<planets.length; i++) {
             this.totalPopulation += planets[i].population

@@ -106,7 +106,7 @@ let inputFunctions = {
         speedInc =  +(document.getElementById("inputRange_time").value)
     },
     toggleAutopilot() {
-        playerShip.computers[0].autopilot = 1 - playerShip.computers[0].autopilot
+        playerShip.computers[0].toggleAutopilot()
         this.toggleButtonText( document.getElementById("btn_autopilot"),playerShip.computers[0].autopilot)
     },
     toggleShield() {
@@ -171,7 +171,7 @@ let keyLoop = () => {
         } else if (speedInputSet==="Fast") {
             valSpeed = 50*gameFPS
         } else if (speedInputSet==="Medium") {
-            valSpeed = gameFPS
+            valSpeed = 0.05*gameFPS
         } else if (speedInputSet==="Slow") {
             valSpeed = 0.000000001*gameFPS
         } else if (speedInputSet==="VerySlow") {
@@ -185,9 +185,12 @@ let keyLoop = () => {
             shipWindow3D.drawStarSystemsText = false
         }
 
-
-
-        //TODO:Shutdown engines
+        //Shutdown engines
+        if (keyPressed[keybinds["Shutdown Engine"]]) {
+            playerShip.propulsion = "off"
+            playerShip.targetSpeed = 0
+            keyPressed[keybinds["Shutdown Engine"]] = false
+        }
 
         //Autopilot
         if (keyPressed[keybinds["Autopilot"]]) {
@@ -326,9 +329,16 @@ let keyLoop = () => {
 }
 
 let keyup = (e)=> {
+    if(e.code!=="F12" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
+        e.preventDefault()
+    }
     keyPressed[e.code]=false
 }
 let keydown = (e)=> {
+    //console.log(e.code)
+    if (e.code!=="F12" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
+        e.preventDefault()
+    }
     keyPressed[e.code]=true
     if (menuIn==="keybinds" && keybinds.keyListening!==0) {
         console.log(keybinds.keyListening+" set to "+e.code)

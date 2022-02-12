@@ -6,7 +6,7 @@ let globalPrices = {
         food:0.01, water:0.001, medicine:1.2, //pop resources
         iron:0.1, gold:1.4, silver:0.5, aluminium:0.2, titanium:0.6, silicon:0.05, chromium:0.12, carbon:0.075, polymer:0.5, lead:0.2, copper:0.25, tungsten:1, //building resources
         electronics:1.8, steel:1,  //other
-    }
+}
 
 let starSystems = []
 //--------------Sol

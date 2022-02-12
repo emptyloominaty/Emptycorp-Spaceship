@@ -4,6 +4,7 @@ class Ship {
     credits = 0
     //---------------------------------------------
     crew = [{name:"Empty",status:"alive",dying:0,player:true,faction:"Player", id:0}]
+    maxCrew = 2
     baseWeight = 5500 //kg
     armor = 500
     armorMax = 500

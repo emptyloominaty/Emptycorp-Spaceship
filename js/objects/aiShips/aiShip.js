@@ -1,5 +1,6 @@
 class AiShip {
     pos = "mid"
+    showInNav = false
     position = {x:0,y:0,z:0}
     positionPrecise = {x:new BigNumber(0),y:new BigNumber(0),z:new BigNumber(0)}
     positionHi = {x:0, y:0, z:0}
@@ -81,8 +82,8 @@ class AiShip {
         } else if (this.task==="trade") {
             this.doTrade()
         }
+        this.accelerate(fps)
         if (this.task!=="stop") {
-            this.accelerate(fps)
             this.navigate()
         }
 

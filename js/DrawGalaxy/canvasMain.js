@@ -64,8 +64,20 @@ class CanvasMain {
 
         this.camera.rotation.order = 'YXZ' // fixed rotation shitshow
 
+        //star materials
         this.materials["Class G"] = new THREE.MeshBasicMaterial( {color:0xf1ffa5} )
-        this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c})
+        this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c} )
+        //planet materials
+        
+
+
+        const ambientLight = new THREE.AmbientLight( 0x202020 )
+        this.scene.add( ambientLight )
+
+        this.light = new THREE.PointLight( 0xffffff, 0.2, 2 )
+        this.light.position.set( -1, 0, -1)
+        this.light.intensity = 2
+        this.scene.add( this.light )
 
         //stars
         for (let i = 0; i<starSystems.length; i++) {
@@ -82,10 +94,11 @@ class CanvasMain {
             if (this.planets[i]===undefined) {this.planets[i]=[]}
             for (let j = 0; j<starSystems[i].planets.length; j++) {
                 let planetColor = 0x666666
-                let planetSize = starSystems[i].planets[j].radius/60528409678 //TODO:FIX
-                let planetGeometry = new THREE.SphereGeometry(planetSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
-                this.planets[i][j] = new THREE.Mesh(planetGeometry, new THREE.MeshBasicMaterial({color:planetColor}))
-
+                let planetSize = (starSystems[i].planets[j].radius/60528409678)*10 //TODO:FIX
+                let planetGeometry = new THREE.SphereGeometry(planetSize, 40, 40, 0, Math.PI * 2, 0, Math.PI * 2) //50,50
+                let planetMaterial = new THREE.MeshPhongMaterial({color: planetColor})
+                //this.planets[i][j] = new THREE.Mesh(planetGeometry, new THREE.MeshBasicMaterial({color:planetColor}))
+                this.planets[i][j] = new THREE.Mesh(planetGeometry, planetMaterial)
                 this.scene.add(this.planets[i][j])
             }
             //TODO MOONS
@@ -211,7 +224,6 @@ class CanvasMain {
         let geometry = new THREE.BoxGeometry( 0.000000000000255702341, 0.000000000000105702341, 0.000000000000105702341 )
         this.ships[id] = new THREE.Mesh( geometry, material )
         this.scene.add(this.ships[id])
-
     }
 
     run() {
@@ -266,6 +278,15 @@ class CanvasMain {
                 this.updateTextPosition((starSystems[i].position.x)-camHi.x-camLo.x,(starSystems[i].position.z+0.05)-camHi.y-camLo.y,(starSystems[i].position.y)-camHi.z-camLo.z,i)
             }
 
+            if (i===0) {
+                this.light.position.set(
+                    (starSystems[i].position.x)-camHi.x-camLo.x,
+                    (starSystems[i].position.z)-camHi.y-camLo.y,
+                    (starSystems[i].position.y)-camHi.z-camLo.z,
+                )
+            }
+
+
             this.stars[i].position.set(
                 (starSystems[i].position.x)-camHi.x-camLo.x,
                 (starSystems[i].position.z)-camHi.y-camLo.y,
@@ -273,11 +294,10 @@ class CanvasMain {
                 )
             //planets
             for (let j = 0; j<starSystems[i].planets.length; j++) {
-                let orbitHeight = 0.013914+(starSystems[i].planets[j].orbitHeight/9460528409678.2681473440592957161)  //TODO:FIX
                 this.planets[i][j].position.set (
-                    (starSystems[i].position.x)-camHi.x-camLo.x,
-                    (starSystems[i].position.z)-camHi.y-camLo.y,
-                    (starSystems[i].position.y+orbitHeight)-camHi.z-camLo.z,
+                    (starSystems[i].planets[j].position.x)-camHi.x-camLo.x,
+                    (starSystems[i].planets[j].position.z)-camHi.y-camLo.y,
+                    (starSystems[i].planets[j].position.y)-camHi.z-camLo.z,
                 )
             }
         }

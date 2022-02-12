@@ -97,9 +97,10 @@ let keybinds = {
     "Decrease Speed" :"ControlLeft",
     "Target Nearest Enemy":"Tab",
     "Toggle Hud":"KeyH",
-    "Autopilot":"KeyX",
+    "Autopilot":"KeyT",
     "Main Generator":"KeyG",
     "Show System Name":"KeyC",
+    "Shutdown Engine":"KeyX",
     }
 
 let updateSettings = function() {
