@@ -5,7 +5,7 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0}
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0, aiShipsScanned:[], aiShipsLongScanned:[]}
 
     //network
     listeningPort = [0]
@@ -430,9 +430,20 @@ class Computer extends Part {
                 this.display.drawText(130, 125, (carbonDioxide).toFixed(2)+" %", font1, colorCarbonDioxide, 'left')
 
                 //Set
-                
+                //TODO:
 
 
+            } else if (this.tab==="modules") {//---------------------------------------------------------------------------------------Modules
+                let y = 15
+                //this.comm,this.fuelCons,this.display,this.nav,this.scanner
+
+                this.display.drawText(5, y, "Comm ", font1, color1, 'left') //[0]
+                y+=20
+                this.display.drawText(5, y, "Fuel Consumption ", font1, color1, 'left') //[1]
+                y+=20
+                this.display.drawText(5, y, "Nav ", font1, color1, 'left') //[3]
+                y+=20
+                this.display.drawText(5, y, "Scanner ", font1, color1, 'left') //[4]
             }
 
 
@@ -593,12 +604,25 @@ class Computer extends Part {
         }
 
         //ships
-        for (let i = 0; i<aiShips.length; i++) {
-            if (aiShips[i]!==undefined) {
-                if (!aiShipsFar[i] || settings.drawAllShips===1) {
-                    let ai = aiShips[i]
-                    let xx = ai.position.x
-                    let yy = ai.position.y
+
+        let drawShips = (obj,all) => {
+            for (let i = 0; i<obj.length; i++) {
+                if (obj[i]!==undefined) {
+                    let ai
+                    let xx
+                    let yy
+
+                    if (all===1) {
+                        ai = aiShips[i]
+                        xx = ai.position.x
+                        yy = ai.position.y
+                    } else {
+                        ai = aiShips[obj[i].id]
+                        xx = obj[i].position.x
+                        yy = obj[i].position.y
+                    }
+
+
                     let x = varX-(xx*this.mapScaling)
                     let y = varY-(yy*this.mapScaling)
                     if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
@@ -607,10 +631,16 @@ class Computer extends Part {
                         if (ai.showInNav) {
                             this.display.drawText(x,y-5,ai.id,font,colorSystemText,"center")
                         }
-                        //this.display.drawCircle(x,y,3,color)
                     }
                 }
             }
+        }
+
+        if (settings.drawAllShips===1) {
+            drawShips(aiShips,1)
+        } else {
+            drawShips(this.data.aiShipsScanned,0)
+            drawShips(this.data.aiShipsLongScanned,0)
         }
 
         //star systems
@@ -618,6 +648,7 @@ class Computer extends Part {
             let ss = starSystems[i]
             drawPlanet(ss.position.x,ss.position.y,ss.factionColor,ss.mapSize,ss.name,i)
         }
+
     }
 
 
@@ -788,7 +819,7 @@ class Computer extends Part {
     }
 
 
-    constructor(id,weight,name,modules,consumption,memorySize) {
+    constructor(id,weight,name,modules,consumption,memorySize,scanner = {distance:1.0/*ly*/, speed:3 /*ly/s*/, longrange:true/*can also long range scan*/, longrangeCharge:2 /*sec*/, longrangeDistance:10/*ly*/, longRangeNames:false}) {
         super(weight,name,"computer",id)
         this.consumption = consumption
 
@@ -796,8 +827,9 @@ class Computer extends Part {
         this.fuelCons = new FuelConsumptionModule()
         this.display = new DisplayModule()
         this.nav = new NavigationModule()
+        this.scanner = new ScannerModule(scanner,this)
 
-        this.modules = [this.comm,this.fuelCons,this.display,this.nav]
+        this.modules = [this.comm,this.fuelCons,this.display,this.nav,this.scanner]
 
         this.memorySize = memorySize
     }

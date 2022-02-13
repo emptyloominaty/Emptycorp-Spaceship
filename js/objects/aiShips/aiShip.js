@@ -7,6 +7,7 @@ class AiShip {
     positionLo = {x:0, y:0, z:0}
     hitbox = {x1:0,y1:0,z1:0,x2:0,y2:0,z2:0}
     role = "Civilian"
+    name = "Ship"
 
     yaw = 0
     targetYaw = 0
@@ -382,6 +383,7 @@ class AiShip {
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 let aiShips = []
+let aiShipsDistances = []
 
 let aiShipsFar = []
 let aiShipsMid = []
@@ -396,6 +398,7 @@ let aiShipsMidInc = 60
 let checkDistanceToPlayer = function(i) {
     if (aiShips[i]!==undefined) {
         let distance = calcDistance2D(aiShips[i],playerShip)
+        aiShipsDistances[i] = {id: i, distance:distance, name:aiShips[i].name, position:{x:aiShips[i].position.x, y:aiShips[i].position.y, z:aiShips[i].position.z}}
         if (distance>settings.shipFar) {
             aiShips[i].pos = "far"
             aiShipsFar[i]=true
