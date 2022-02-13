@@ -358,7 +358,7 @@ class Ship {
                         this.crew[i].dying+=0.005/gameFPS
                     }
 
-                    if (this.atmosphere.carbonDioxide>8 || this.atmosphere.oxygen<10 || this.atmosphere.pressure<0.3) {
+                    if (this.atmosphere.carbonDioxide>5 || this.atmosphere.oxygen<10 || this.atmosphere.pressure<0.3) {
                         this.crew[i].status = "unconscious"
                         this.crew[i].dying+=2/gameFPS
                     } else if (this.crew[i].status==="unconscious") {this.crew[i].status = "alive"}

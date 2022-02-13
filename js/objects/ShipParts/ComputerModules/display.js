@@ -25,6 +25,12 @@ class DisplayModule {
         this.canvas.fillRect(x,y,w,h)
     }
 
+    drawRectStroke(x,y,w,h,color,lineWidth = 1) {
+        this.canvas.lineWidth = lineWidth
+        this.canvas.strokeStyle = color
+        this.canvas.strokeRect(x,y,w,h)
+    }
+
     drawCircle(x,y,radius,color) {
         this.canvas.beginPath()
         this.canvas.fillStyle = color

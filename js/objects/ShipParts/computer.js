@@ -176,11 +176,12 @@ class Computer extends Part {
             //main
             let color1 = "#d7d7d7"
             let font1 = "16px Consolas"
+            let fontSmall = "14px Consolas"
             let fontBtn = "24px Consolas"
             let colorBtnText = "#424242"
             //current Tab
             let color2 = "#7e97d7"
-            let font2 = "18px Consolas"
+            let font2 = "16px Consolas"
             //fps,time
             let color3 = "#d7d7d7"
             let font3 = "12px Consolas"
@@ -348,7 +349,7 @@ class Computer extends Part {
                         this.display.drawText(540,y+5, "Autopilot", font1, color1, 'center')
                     }
                 }
-            } else if (this.tab==="nav4") {//---------------------------------------------------------------------------------------Star Systems list
+            } else if (this.tab==="nav4") {//---------------------------------------------------------------------------------------Planet list
                 let hColor = "#546db3"
                 let y = 10
                 this.display.drawText(5, 15, "Name", font1, hColor, 'left')
@@ -369,8 +370,67 @@ class Computer extends Part {
                         this.display.drawRect(490,y-10,100,20,"#494949")
                         this.display.drawText(540,y+5, "Autopilot", font1, color1, 'center')
                     }
-
                 }
+            } else if (this.tab==="lifeSupport") {
+                //Temperature
+                this.display.drawText(18, 190, "Temperature: ", font1, color1, 'left')
+                this.display.drawText(125, 190, (playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C ", font1, colorCold, 'left')
+
+                this.display.drawText(18, 210, "Heating: ", font1, color1, 'left')
+                this.display.drawText(90, 210, this.data.heating.toFixed(1)+"% ("+((this.data.heating/100)*playerShip.lifeSupport[1].heatConsumption*1000).toFixed(1)+"kW)", font1, colorHeat, 'left')
+                this.display.drawText(18, 230, "Cooling: ", font1, color1, 'left')
+                this.display.drawText(90, 230, this.data.cooling.toFixed(1)+"% ("+((this.data.cooling/100)*playerShip.lifeSupport[1].coldConsumption*1000).toFixed(1)+"kW)", font1, colorCold, 'left')
+
+                this.display.drawText(10, 160, "Temperature ", font1, color5, 'left')
+                this.display.drawRectStroke(10,170,230,70,color5,1)
+
+                //Atmosphere
+                this.display.drawText(10, 15, "Atmosphere ", font1, color5, 'left')
+                this.display.drawText(18, 45, "Pressure: ", font1, color1, 'left')
+                this.display.drawText(120, 45, (playerShip.atmosphere.pressure).toFixed(2)+"bar ", font1, color5, 'left')
+                this.display.drawText(18, 65, "Composition: ", font1, color1, 'left')
+
+                this.display.drawRectStroke(10,25,230,110,color5,1)
+
+                let colorGood = "#00FF00"
+                let colorOk = "#d6ff00"
+                let colorBad = "#ffd500"
+                let colorVeryBad = "#ff6100"
+                let colorCritical = "#ff1c00"
+
+                let colorOxygen = colorOk
+                let oxygen = playerShip.atmosphere.oxygen
+                if (oxygen>19) {
+                    colorOxygen = colorGood
+                } else if (oxygen<15) {
+                    colorOxygen = colorBad
+                } else if (oxygen<12) {
+                    colorOxygen = colorVeryBad
+                } else if (oxygen<10) {
+                    colorOxygen = colorCritical
+                }
+
+                let colorCarbonDioxide = colorOk
+                let carbonDioxide = playerShip.atmosphere.carbonDioxide
+                if (carbonDioxide<0.04) {
+                    colorCarbonDioxide = colorGood
+                } else if (carbonDioxide > 0.08) {
+                    colorCarbonDioxide = colorBad
+                } else if (carbonDioxide > 0.1) {
+                    colorCarbonDioxide = colorVeryBad
+                } else if (carbonDioxide > 5) {
+                    colorCarbonDioxide = colorCritical
+                }
+
+                this.display.drawText(80, 85, "N2: ", font1, color1, 'left')
+                this.display.drawText(130, 85, (playerShip.atmosphere.nitrogen).toFixed(2)+" %", font1, color5, 'left')
+                this.display.drawText(80, 105, "O2: ", font1, color1, 'left')
+                this.display.drawText(130, 105, (oxygen).toFixed(2)+" %", font1, colorOxygen, 'left')
+                this.display.drawText(80, 125, "CO2: ", font1, color1, 'left')
+                this.display.drawText(130, 125, (carbonDioxide).toFixed(2)+" %", font1, colorCarbonDioxide, 'left')
+
+                //Set
+                
 
 
             }
@@ -385,7 +445,7 @@ class Computer extends Part {
             this.display.drawLine(150,height-40,150,height,2,color1)
             this.display.drawText(175,height-15,"Comm",font1,color1,'center')
             this.display.drawLine(200,height-40,200,height,2,color1)
-            this.display.drawText(250,height-15,"2",font1,color1,'center')
+            this.display.drawText(250,height-15,"Life Support",fontSmall,color1,'center')
 
             this.display.drawLine(300,height-40,300,height,2,color1)
             this.display.drawText(350,height-15,"1",font1,color1,'center')
@@ -567,6 +627,8 @@ class Computer extends Part {
             {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main";this.starSystems = []}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav";this.starSystems = []}},
             {x1:150, y1:360,x2:200,y2:400,function: () => {this.tab = "comm";this.starSystems = []}},
+            {x1:200, y1:360,x2:300,y2:400,function: () => {this.tab = "lifeSupport";this.starSystems = []}},
+
 
             {x1:0, y1:150,x2:30,y2:175,function: () => {if (this.tab==="nav") {this.defaultMapScaling()}}},
             {x1:0, y1:175,x2:30,y2:200,function: () => {if (this.tab==="nav") {this.zoomMapScaling()}}},
