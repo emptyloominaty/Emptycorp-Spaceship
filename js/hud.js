@@ -17,8 +17,15 @@ let flashmessage = {
         }
     }
 }
+let powerConsumptionArray = new Array(500).fill(0)
 
 let drawHud = function () {
+    powerConsumptionArray.push(playerShip.powerOutput3)
+    playerShip.powerOutput3 = 0
+    if (powerConsumptionArray.length>500) {
+        powerConsumptionArray.shift()
+    }
+
  if (hudEnabled) {
      if (!hudGenerated) {
          flashmessage.messages = []
@@ -42,13 +49,18 @@ let drawHud = function () {
          //Flash Message
          html += "<div id='flashMessage'></div>"
 
+         html += "<canvas width='100' height='50' id='hudPowerConsumption'></canvas>"
+
          elements.hud.innerHTML += html
+
+
 
          for (let i = 0; i<playerShip.weapons.length; i++) {
              elements["wepCd"+i] = document.getElementById("wepCd"+i)
              elements["wepMissiles"+i] = document.getElementById("wepMissiles"+i)
          }
 
+         elements["hudPowerConsumption"] = document.getElementById("hudPowerConsumption")
          elements["shieldArmorBars"] = document.getElementById("shieldArmorBars")
          elements["shieldBar"] = document.getElementById("shieldBar")
          elements["armorBar"] = document.getElementById("armorBar")
@@ -59,6 +71,27 @@ let drawHud = function () {
          elements["flashMessage"] = document.getElementById("flashMessage")
          hudGenerated = true
      }
+     let powerConsCanvas = elements.hudPowerConsumption.getContext("2d")
+     //Power Consumption
+     let drawRect = function (x,y,w,h,color) {
+         powerConsCanvas.fillStyle = color
+         powerConsCanvas.fillRect(x,y,w,h)
+     }
+     powerConsCanvas.clearRect(0,0,100,50)
+     powerConsCanvas.globalAlpha = 0.3
+     for (let i = 0; i<powerConsumptionArray.length; i+=5) {
+         let x = i/5
+         let y = 0
+         for (let j = 0; j<5; j++) {
+             y+=powerConsumptionArray[i+j]
+         }
+         y=(y/50)
+         drawRect(x,50,1,y*(-1000),"#00FFFF")
+
+     }
+
+
+     //powerConsumptionArray
 
      //weapons
      for (let i = 0; i<playerShip.weapons.length; i++) {

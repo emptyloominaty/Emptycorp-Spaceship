@@ -39,6 +39,7 @@ class Ship {
     powerInput = 0
     powerOutput = 0
     powerOutput2 = 0
+    powerOutput3 = 0
     target = {}
     targetDistance = 0
 
@@ -497,6 +498,7 @@ class Ship {
                 if (this.capacitors[i].charge >= val / 3600) {
                     this.capacitors[i].charge -= val / 3600
                     this.powerOutput2 += val*gameFPS
+                    this.powerOutput3 +=val*gameFPS
                     this.atmosphere.temperature += (val / this.atmosphere.volume)/12
                     return true
                 }/* else {
