@@ -5,17 +5,20 @@ class Computer extends Part {
     time = 0
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
-        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0, aiShipsScanned:[], aiShipsLongScanned:[]}
+        lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0, aiShipsScanned:[], aiShipsLongScanned:[],
+        shipPings:[], systemPings:[]}
 
     //network
     listeningPort = [0]
-    receivedData = new Array(65536).fill([])
+    receivedData = []
 
     //display
     mapScaling = 60 //px per ly
     gridEnabled = false
     starSystems = []
     nav2PlanetView = ""
+
+    modulesButtons = []
 
     //autopilot
     target = ""
@@ -52,14 +55,22 @@ class Computer extends Part {
                                     } else if (data.data.var==="pingServerName") {  //port:0
                                         this.data.lastPingServerName = data.data.name
                                     } else if (data.data.var==="tradeData") {       //port:3
-                                        this.data.priceData = data.data.trade
+                                        this.data.priceData = {...data.data.trade}
                                     }
                                     //....
+                                }
+                                if (data.data.type==="shipPing") {
+                                    let address = data.data.address
+                                    let name = data.data.name
+                                    this.data.shipPings[address].ping = performance.now()-this.data.shipPings[address].startTime
+                                    this.data.shipPings[address].name = name
+                                    this.data.shipPings[address].started = false
                                 }
                                 if (this.listeningPort[i]!==0) {
                                     this.receivedData[this.listeningPort[i]].shift()
                                 }
                             }
+                            this.receivedData[this.listeningPort[i]]=[]
                         }
                     }
                 }
@@ -234,8 +245,13 @@ class Computer extends Part {
                 this.display.drawText(5, 200, "Cooling: ", font1, color1, 'left')
                 this.display.drawText(80, 200, this.data.cooling.toFixed(1)+"% ("+((this.data.cooling/100)*playerShip.lifeSupport[1].coldConsumption*1000).toFixed(1)+"kW)", font1, colorCold, 'left')
 
-                this.display.drawRect(250,250,50,50,"#77f2ff") //UPDATE TIME
-                this.display.drawRect(350,250,50,50,"#77f2ff") //UPDATE POSITION
+
+                this.display.drawRect(440, 20, 140, 20, "#666666")
+                this.display.drawText(510, 35, "Modules", font1, color1, 'center')
+                this.display.drawRect(440, 45, 140, 20, "#666666")
+                this.display.drawText(510, 60, "Get Time", font1, color1, 'center')
+                this.display.drawRect(440, 70, 140, 20, "#666666")
+                this.display.drawText(510, 85, "Recalc Position", font1, color1, 'center')
 
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
@@ -246,10 +262,35 @@ class Computer extends Part {
                 this.display.drawText(5, 340, "Dir Yaw:"+playerShip.position.yaw.direction, font1, color1, 'left')
                 this.display.drawText(300, 340, "Dir Pitch:"+playerShip.position.pitch.direction, font1, color1, 'left')*/
 
-            } else if (this.tab==="2") {
+            } else if (this.tab==="comm") {
                 //------------------------------------------------------------------------
+                let y = 20
+                for (let i = 0; i<this.data.aiShipsScanned.length; i++) {
+                    let address = aiShips[this.data.aiShipsScanned[i].id].server.myAddress
+                    if (this.data.shipPings[address]===undefined) {
+                        this.data.shipPings[address] = {}
+                    }
+                    this.comm.transmitData([0.0001, address, 0, {data:"sendPing", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+                    if (this.data.shipPings[address].started===undefined) {
+                        this.data.shipPings[address].started = false
+                    }
+                    if (!this.data.shipPings[address].started) {
+                        this.data.shipPings[address].startTime = performance.now()
+                        this.data.shipPings[address].started = true
+                    }
+                    if (this.data.shipPings[address].ping===undefined) {
+                        this.data.shipPings[address].ping = 0
+                    }
+                    this.display.drawText(5, y, i+": "+this.data.shipPings[address].ping, font1, color1, 'left')
+                    y+=20
+                    if (y>300) {
+                        break
+                    }
+                }
 
-                this.display.drawRect(100,100,50,50,"#00ff00") //test
+
+
+
 
             } else if (this.tab==="nav") {
                 //--------------------------------------------------------------------------------------------------------------------Navigation Tab
@@ -434,16 +475,97 @@ class Computer extends Part {
 
 
             } else if (this.tab==="modules") {//---------------------------------------------------------------------------------------Modules
+                this.modulesButtons = []
                 let y = 15
                 //this.comm,this.fuelCons,this.display,this.nav,this.scanner
+                let fontBig = "20px Consolas"
 
-                this.display.drawText(5, y, "Comm ", font1, color1, 'left') //[0]
+                //----Comm
+                this.display.drawText(5, y, "Comm ", fontBig, color1, 'left') //[0]
                 y+=20
-                this.display.drawText(5, y, "Fuel Consumption ", font1, color1, 'left') //[1]
+                let commColor = "#ab3b32"
+                if (this.comm.on) {
+                    commColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:5, y1:y-10,x2:125,y2:y+20,function: () => {if (this.tab==="modules") {this.comm.on = 1 - this.comm.on}}})
+                this.display.drawRect(5,y-10,120,20,commColor)
+                this.display.drawText(65,y+5, "Communication", font1, color1, 'center')
+                y+=30
+
+                y+=30
+                //----Fuel Consumption
+                this.display.drawLine(0,y-20,600,y-20,1,"#555555")
+                this.display.drawText(5, y, "Fuel Consumption ", fontBig, color1, 'left') //[1]
                 y+=20
-                this.display.drawText(5, y, "Nav ", font1, color1, 'left') //[3]
+                let fuelConsColor = "#ab3b32"
+                if (this.fuelCons.on) {
+                    fuelConsColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:5, y1:y-10,x2:155,y2:y+20,function: () => {if (this.tab==="modules") {this.fuelCons.on = 1 - this.fuelCons.on}}})
+                this.display.drawRect(5,y-10,150,20,fuelConsColor)
+                this.display.drawText(80,y+5, "Fuel Consumption", font1, color1, 'center')
+                let fuelConsPreciseColor = "#ab3b32"
+                if (this.fuelCons.partsActivated.preciseConsumption===1) {
+                    fuelConsPreciseColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:165, y1:y-10,x2:245,y2:y+20,function: () => {if (this.tab==="modules") {this.fuelCons.partsActivated.preciseConsumption = 1 - this.fuelCons.partsActivated.preciseConsumption}}})
+                this.display.drawRect(165,y-10,80,20,fuelConsPreciseColor)
+                this.display.drawText(205,y+5, "Precise", font1, color1, 'center')
+                let fuelConsRangeColor = "#ab3b32"
+                if (this.fuelCons.partsActivated.calcRange===1) {
+                    fuelConsRangeColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:255, y1:y-10,x2:325,y2:y+20,function: () => {if (this.tab==="modules") {this.fuelCons.partsActivated.calcRange = 1 - this.fuelCons.partsActivated.calcRange}}})
+                this.display.drawRect(255,y-10,70,20,fuelConsRangeColor)
+                this.display.drawText(290,y+5, "Range", font1, color1, 'center')
+                y+=30
+
+                y+=30
+                //----Nav
+                this.display.drawLine(0,y-20,600,y-20,1,"#555555")
+                this.display.drawText(5, y, "Nav ", fontBig, color1, 'left') //[3]
                 y+=20
-                this.display.drawText(5, y, "Scanner ", font1, color1, 'left') //[4]
+                let navColor = "#ab3b32"
+                if (this.nav.on) {
+                    navColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:5, y1:y-10,x2:50,y2:y+20,function: () => {if (this.tab==="modules") {this.nav.on = 1 - this.nav.on}}})
+                this.display.drawRect(5,y-10,45,20,navColor)
+                this.display.drawText(25,y+5, "Nav", font1, color1, 'center')
+                y+=30
+
+                y+=30
+                //----Scanner
+                this.display.drawLine(0,y-20,600,y-20,1,"#555555")
+                this.display.drawText(5, y, "Scanner ", fontBig, color1, 'left') //[4]
+                y+=20
+                let scannerColor = "#ab3b32"
+                if (this.scanner.on) {
+                    scannerColor = "#468b46"
+                }
+                this.modulesButtons.push({x1:5, y1:y-10,x2:75,y2:y+20,function: () => {if (this.tab==="modules") {this.scanner.on = 1 - this.scanner.on}}})
+                this.display.drawRect(5,y-10,70,20,scannerColor)
+                this.display.drawText(40,y+5, "Scanner", font1, color1, 'center')
+
+                if (this.scanner.longrange) {
+                    let longRangeColor = "#ab3b32"
+                    if (this.scanner.longrangeOn) {
+                        longRangeColor = "#468b46"
+                    }
+                    this.modulesButtons.push({x1:85, y1:y-10,x2:185,y2:y+20,function: () => {if (this.tab==="modules") {this.scanner.longrangeOn = 1 - this.scanner.longrangeOn}}})
+                    this.display.drawRect(85,y-10,100,20,longRangeColor)
+                    this.display.drawText(135,y+5, "Long Range", font1, color1, 'center')
+                    y+=30
+                    this.display.drawText(5,y, "Long Range Scanner Range: "+this.scanner.longrangeDistance+" ly", font1, color1, 'left')
+                    y+=20
+                } else {
+                    y+=20
+                }
+                this.display.drawText(5,y, "Scanner Range: "+this.scanner.distance+" ly", font1, color1, 'left')
+                y+=20
+
+
+
             }
 
 
@@ -672,8 +794,9 @@ class Computer extends Part {
             {x1:100, y1:325,x2:200,y2:345,function: () => {if (this.tab==="nav2") {this.toggleAutopilot();this.targetType="system";this.target=starSystems[this.nav2PlanetView].name;this.targetObj=starSystems[this.nav2PlanetView] }}},
 
             //----------
-            {x1:250, y1:250,x2:300,y2:300,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
-            {x1:350, y1:250,x2:400,y2:300,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
+            {x1:440, y1:20,x2:580,y2:40,function: () => {if (this.tab==="main") {this.tab="modules"}}},
+            {x1:440, y1:45,x2:580,y2:65,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
+            {x1:440, y1:70,x2:580,y2:90,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
         ]
         //nav 3 buttons
         for (let i = 0; i<9; i++) {
@@ -714,6 +837,8 @@ class Computer extends Part {
                     }}})
         }
         //TODO:END
+        buttons = buttons.concat(this.modulesButtons)
+
 
         for (let i = 0; i<buttons.length; i++) {
             let b = buttons[i]
@@ -832,5 +957,11 @@ class Computer extends Part {
         this.modules = [this.comm,this.fuelCons,this.display,this.nav,this.scanner]
 
         this.memorySize = memorySize
+
+
+        for (let i = 0; i<65536; i++) {
+            this.receivedData.push([])
+        }
+
     }
 }

@@ -15,16 +15,16 @@ class MainServer {
     }
 
     sendData(size,address,port,data,senderAddress) {
-        console.log(senderAddress," -> ",address)
-        let a = this.addressList[senderAddress].object.position.x - this.addressList[address].object.position.x //x1 - x2
-        let b = this.addressList[senderAddress].object.position.y - this.addressList[address].object.position.y //y1 - y2
-        let latency = (Math.sqrt( a*a + b*b )/this.speedOfData*1000)*2
-        console.log(latency+"ms")
+        let a = this.addressList[senderAddress].object.position.x - this.addressList[address].object.position.x
+        let b = this.addressList[senderAddress].object.position.y - this.addressList[address].object.position.y
+        let c = this.addressList[senderAddress].object.position.z - this.addressList[address].object.position.z
+        let latency = (Math.sqrt( a*a + b*b + c*c )/this.speedOfData*1000)*2
         setTimeout( ()=> {
             if (address===1) {
-                this.addressList[address].object.receive(0.002,senderAddress,0,{type:"var",var:"ping",ping:latency},0)
-                this.addressList[address].object.receive(0.005,senderAddress,0,{type:"var",var:"pingServerName",name:this.addressList[senderAddress].name},0)
+                this.addressList[address].object.receive(0.0001,senderAddress,0,{type:"var",var:"ping",ping:latency},0)
+                this.addressList[address].object.receive(0.0002,senderAddress,0,{type:"var",var:"pingServerName",name:this.addressList[senderAddress].name},0)
             }
+            //console.log(senderAddress+" -> "+address)
             return this.addressList[address].object.receive(size,address,port,data,senderAddress)
         },latency)
     }

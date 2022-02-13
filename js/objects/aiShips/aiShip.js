@@ -95,6 +95,7 @@ class AiShip {
             }
         }
         this.fuelTank.capacity -= consNow
+        this.server.updatePosition(this.position.x,this.position.y,this.position.z)
     }
 
     accelerate(fps) {
@@ -378,6 +379,8 @@ class AiShip {
         this.home = home
         factionList[this.faction].ships[role].push(this)
         this.id = aiShips.length
+
+        this.server = new ShipServer(1,"Ship Server ("+this.name+")",1,"ship",this.position.x,this.position.y,this.position.z,this.name)
     }
 }
 
