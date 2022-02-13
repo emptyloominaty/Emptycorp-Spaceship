@@ -6,7 +6,7 @@ class Computer extends Part {
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
         lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0, aiShipsScanned:[], aiShipsLongScanned:[],
-        shipPings:[], systemPings:[]}
+        shipPings:[], systemPings:[], distanceToSystems: []}
 
     //network
     listeningPort = [0]
@@ -40,6 +40,8 @@ class Computer extends Part {
                 this.drawUi()
                 this.time += 1000 / gameFPS
 
+                this.functions.getNearestSystems() //TODO: PERFORMANCE?????? YIKES
+
             //network
                 if (this.listeningPort.length>0) {
                     for (let i = 0; i<this.listeningPort.length; i++) {
@@ -52,19 +54,23 @@ class Computer extends Part {
                                         this.time = data.data.time
                                     } else if (data.data.var==="ping") {            //port:0
                                         this.data.lastPing = data.data.ping
-                                    } else if (data.data.var==="pingServerName") {  //port:0
                                         this.data.lastPingServerName = data.data.name
                                     } else if (data.data.var==="tradeData") {       //port:3
                                         this.data.priceData = {...data.data.trade}
                                     }
                                     //....
-                                }
-                                if (data.data.type==="shipPing") {
+                                } else if (data.data.type==="shipPing") {
                                     let address = data.data.address
                                     let name = data.data.name
-                                    this.data.shipPings[address].ping = performance.now()-this.data.shipPings[address].startTime
+                                    this.data.shipPings[address].ping = data.data.latency
                                     this.data.shipPings[address].name = name
                                     this.data.shipPings[address].started = false
+                                } else if (data.data.type==="systemPing") {
+                                    let address = data.data.address
+                                    let name = data.data.name
+                                    this.data.systemPings[address].ping = data.data.latency
+                                    this.data.systemPings[address].name = name
+                                    this.data.systemPings[address].started = false
                                 }
                                 if (this.listeningPort[i]!==0) {
                                     this.receivedData[this.listeningPort[i]].shift()
@@ -74,8 +80,8 @@ class Computer extends Part {
                         }
                     }
                 }
-                this.data.antennaRX = playerShip.antennas[0].rx[0]
-                this.data.antennaTX = playerShip.antennas[0].tx[0]
+                this.data.antennaRX = playerShip.antennas[0].realrx
+                this.data.antennaTX = playerShip.antennas[0].realtx
                 //-----
                 playerShip.target = this.targetObj
         //OFF
@@ -92,7 +98,8 @@ class Computer extends Part {
 
     functions = {
         receiveTime: ()=> {
-            this.comm.transmitData([0.002, this.comm.servers.time[0], 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+            let timeServerAddress = starSystems[0].servers[1].myAddress //TODO:FIX
+            this.comm.transmitData([0.002, timeServerAddress, 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(2)
         },
         receivePriceData: (id)=> {
@@ -103,6 +110,12 @@ class Computer extends Part {
             this.comm.transmitData([0.004, id, 3, {data:"trade", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(3)
             this.data.priceData={"Downloading Data...":""}
+        },
+        getNearestSystems: () => {
+            for (let i = 0; i<starSystems.length; i++) {
+                this.data.distanceToSystems[i] = {id:i, distance:calcDistance2D(playerShip,starSystems[i])}
+            }
+            this.data.distanceToSystems = this.data.distanceToSystems.sort((a, b) => a.distance> b.distance ? 1 : -1)
         },
         findNearestEnemyTarget: ()=>{
             let distances = []
@@ -262,38 +275,90 @@ class Computer extends Part {
                 this.display.drawText(5, 340, "Dir Yaw:"+playerShip.position.yaw.direction, font1, color1, 'left')
                 this.display.drawText(300, 340, "Dir Pitch:"+playerShip.position.pitch.direction, font1, color1, 'left')*/
 
-            } else if (this.tab==="comm") {
-                //------------------------------------------------------------------------
+            } else if (this.tab==="comm") {//--------------------------------------------------------------------------------------------------------------------Comm
                 let y = 20
+                this.display.drawText(5, y, "Name", font1, color5, 'left')
+                this.display.drawText(250, y, "Latency", font1, color5, 'left')
+                y+=15
+                this.display.drawLine(0,y,600,y,1,color5)
+                y+=15
+                let systems = 0
+                for (let i = 0; i<this.data.distanceToSystems.length; i++) {
+                    let id = this.data.distanceToSystems[i].id
+                    if (starSystems[id].servers.length>0) {
+                        y+=5
+                        let system = starSystems[id]
+                        let address = starSystems[id].servers[0].myAddress
+                        if (this.data.systemPings[address]===undefined) {
+                            this.data.systemPings[address] = {}
+                        }
+                        if (this.data.systemPings[address].started===undefined) {
+                            this.data.systemPings[address].started = false
+                        }
+
+                        if (this.comm.refreshPings>this.comm.refreshEvery) {
+                            if (!this.data.systemPings[address].started) {
+                                this.data.systemPings[address].started = true
+                                this.comm.transmitData([0.0002, address, 0, {data:"sendPing", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+                            }
+                        }
+
+                        if (this.data.systemPings[address].ping===undefined) {
+                            this.data.systemPings[address].ping = 0
+                        }
+
+                        if (this.data.systemPings[address].ping===0) {continue}
+                        this.display.drawText(5, y, system.name, font1, color1, 'left')
+                        this.display.drawText(250, y, this.data.systemPings[address].ping.toFixed(0)+" ms", font1, color1, 'left')
+                        y+=15
+                        systems++
+                        if (systems>2) {
+                            break;
+                        }
+                    }
+                }
+                this.display.drawLine(0,y,600,y,1,color5)
+                y+=20
                 for (let i = 0; i<this.data.aiShipsScanned.length; i++) {
                     let address = aiShips[this.data.aiShipsScanned[i].id].server.myAddress
+                    let ship = aiShips[this.data.aiShipsScanned[i].id]
                     if (this.data.shipPings[address]===undefined) {
                         this.data.shipPings[address] = {}
                     }
-                    this.comm.transmitData([0.0001, address, 0, {data:"sendPing", senderAddress:playerShip.myAddress}, playerShip.myAddress])
                     if (this.data.shipPings[address].started===undefined) {
                         this.data.shipPings[address].started = false
                     }
-                    if (!this.data.shipPings[address].started) {
-                        this.data.shipPings[address].startTime = performance.now()
-                        this.data.shipPings[address].started = true
+
+                    if (this.comm.refreshPings>this.comm.refreshEvery) {
+                        if (!this.data.shipPings[address].started) {
+                            this.data.shipPings[address].started = true
+                            this.comm.transmitData([0.0002, address, 0, {data:"sendPing", senderAddress:playerShip.myAddress}, playerShip.myAddress])
+                        }
                     }
+
                     if (this.data.shipPings[address].ping===undefined) {
                         this.data.shipPings[address].ping = 0
                     }
-                    this.display.drawText(5, y, i+": "+this.data.shipPings[address].ping, font1, color1, 'left')
+
+                    if (this.data.shipPings[address].ping===0) {continue}
+                    this.display.drawText(5, y, ship.name, font1, color1, 'left')
+                    this.display.drawText(250, y, this.data.shipPings[address].ping.toFixed(0)+" ms", font1, color1, 'left')
+
                     y+=20
-                    if (y>300) {
+                    if (y>340) {
                         break
                     }
                 }
+                if (this.comm.refreshPings>this.comm.refreshEvery) {
+                    this.comm.refreshPings = 0
+                }
+                this.comm.refreshPings+=1/gameFPS
 
 
 
 
+            } else if (this.tab==="nav") {//--------------------------------------------------------------------------------------------------------------------Navigation Tab
 
-            } else if (this.tab==="nav") {
-                //--------------------------------------------------------------------------------------------------------------------Navigation Tab
                 if (this.nav.on===1) {
                     //map
                     this.drawMap()

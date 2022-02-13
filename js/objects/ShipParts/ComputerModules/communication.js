@@ -3,6 +3,9 @@ class CommunicationModule {
     on = 1
     servers = {time:[2]}
 
+    refreshPings = 0
+    refreshEvery = 1
+
     run() {
 
     }

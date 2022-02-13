@@ -45,6 +45,15 @@ class Antenna extends Part {
         }
     }
     everySec() {
+        this.rxArray.push(this.rx[0])
+        this.txArray.push(this.tx[0])
+        if (this.rxArray.length>2) {
+            this.rxArray.shift()
+            this.txArray.shift()
+        }
+
+        this.realrx = (this.rxArray[0]+this.rxArray[1])/2
+        this.realtx = (this.txArray[0]+this.txArray[1])/2
         this.rx[0] = 0
         this.tx[0] = 0
     }
@@ -85,5 +94,11 @@ class Antenna extends Part {
 
         this.rx = [0,this.maxSpeed/8] //0=r 1=max
         this.tx = [0,this.maxSpeed/8] //0=t 1=max
+
+        this.realtx = 0
+        this.realrx = 0
+
+        this.rxArray = [0,0]
+        this.txArray = [0,0]
     }
 }

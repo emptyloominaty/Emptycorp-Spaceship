@@ -52,7 +52,7 @@ starSystems.push (new StarSystem(
     },
     "Sol",
     {x:0,y:0,z:0},
-    [
+    [new SystemServer(1,"System Server(Sol)",1,"system",0,0,0,"Sol"),
         new TimeServer(1,"Time Server(Sol)",1,"time",0,0,0,"Sol"),
         new TradeServer(1,"Trade Server(Sol)",1,"trade",0,0,0,"Sol"),
     ],
@@ -102,7 +102,8 @@ starSystems.push (new StarSystem(
     },
     "Obsidium",
     {x:6.3,y:2.5,z:0.5},
-    [new TimeServer(1,"Time Server(Obsidium)",1,"time",6.5,2.3,0.5,"Obsidium"),
+    [new SystemServer(1,"System Server(Obsidium)",1,"system",6.5,2.3,0.5,"Obsidium"),
+        new TimeServer(1,"Time Server(Obsidium)",1,"time",6.5,2.3,0.5,"Obsidium"),
         new TradeServer(1,"Trade Server(Obsidium)",1,"trade",6.5,2.3,0.5,"Obsidium"),],
     [],
     [],

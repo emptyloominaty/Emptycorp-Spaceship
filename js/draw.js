@@ -121,8 +121,8 @@ function draw(progress) {
         }
     }
     //Antenna
-    elements.antennaRx.textContent = (playerShip.antennas[0].rx[0]*1000).toFixed(0)+" kB/s"
-    elements.antennaTx.textContent = (playerShip.antennas[0].tx[0]*1000).toFixed(0)+" kB/s"
+    elements.antennaRx.textContent = (playerShip.antennas[0].realrx*1000).toFixed(0)+" kB/s"
+    elements.antennaTx.textContent = (playerShip.antennas[0].realtx*1000).toFixed(0)+" kB/s"
     //Shield
     elements.shieldCharge.textContent = playerShip.shields[0].charged.toFixed(0)+"/"+playerShip.shields[0].maxCharge.toFixed(0)+" MJ"
     //Nav
