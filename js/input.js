@@ -49,12 +49,12 @@ let inputFunctions = {
     toggleSpeedMode() {
         if (playerShip.speedMode === "FTL" && playerShip.speed<0.0000001) {
             playerShip.speedMode = "Sublight"
-            document.getElementById("inputRange_speed").max = 0.0001
-            document.getElementById("inputRange_speed").step = 0.0000001
+            /*document.getElementById("inputRange_speed").max = 0.0001
+            document.getElementById("inputRange_speed").step = 0.0000001*/
         } else {
             playerShip.speedMode = "FTL"
-            document.getElementById("inputRange_speed").max = playerShip.maxSpeed
-            document.getElementById("inputRange_speed").step = 1
+           /* document.getElementById("inputRange_speed").max = playerShip.maxSpeed
+            document.getElementById("inputRange_speed").step = 1*/
         }
         document.getElementById("btn_speedMode").innerText = playerShip.speedMode
     },

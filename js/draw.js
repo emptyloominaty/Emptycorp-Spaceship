@@ -83,8 +83,8 @@ function draw(progress) {
     elements.atmosphereComposition.textContent = (playerShip.atmosphere.nitrogen).toFixed(2)+"% "+(playerShip.atmosphere.oxygen).toFixed(2)+"% "+(playerShip.atmosphere.carbonDioxide).toFixed(2)+"%"
     elements.pressureAndTemperature.textContent =  (playerShip.atmosphere.pressure).toFixed(2)+"bar "+(playerShip.atmosphere.temperature-273.15).toFixed(1)+"°C"
     //update speed bar
-    elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
-    elements.speedText.textContent= "Speed: "+getSpeedText(playerShip.speed)
+    /*elements.speedFill.style.width = (playerShip.speed/playerShip.maxSpeed*100)+"%"
+    elements.speedText.textContent= "Speed: "+getSpeedText(playerShip.speed)*/
     //energy
     let powerInput = 0
     let powerOutput = 0

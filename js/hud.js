@@ -62,7 +62,7 @@ let drawHud = function () {
          html = ""
          for (let j = 0; j<4;j++) {
              for (let i = 35; i>=0;i--) {
-                 html+="<span id='degrees10-"+i+"-"+j+"' class='degrees10'>"+i*10+"° |</span>"
+                 html+="<span id='degrees10-"+i+"-"+j+"' class='degrees10'>"+i*10+"° </span>"
              }
          }
          elements.hudYaw.innerHTML = html
@@ -104,12 +104,12 @@ let drawHud = function () {
              }
          }
      }
-     elements.hudYaw.style.transform =  "translate("+((playerShip.position.yaw.direction*4)-3391)+"px)"
+     elements.hudYaw.style.transform =  "translate("+((playerShip.position.yaw.direction*4)-3398)+"px)"
      //pitch
      for (let j = 0; j<2;j++) {
          for (let i = 35; i>=0;i--) {
              let y = elements["degrees10-"+i+"-"+j+"p"].getBoundingClientRect().y
-             if (y>400 || y<200) {
+             if (y>400 || y<175) {
                  elements["degrees10-"+i+"-"+j+"p"].style.opacity = 0
              } else {
                  elements["degrees10-"+i+"-"+j+"p"].style.opacity = 1
@@ -147,5 +147,6 @@ let drawHud = function () {
      elements.hudYaw.innerHTML = ""
      elements.hudYawCenter.innerHTML = ""
      elements.hudPitch.innerHTML = ""
+     elements.hudPitchCenter.innerHTML = ""
  }
 }

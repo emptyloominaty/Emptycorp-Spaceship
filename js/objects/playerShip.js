@@ -767,7 +767,7 @@ class Ship {
                 }
             }
         }
-        document.getElementById("inputRange_speed").max = maxSpeed
+        //document.getElementById("inputRange_speed").max = maxSpeed
         this.maxSpeed = maxSpeed
         this.capArrayA = []
         this.capArrayB = []

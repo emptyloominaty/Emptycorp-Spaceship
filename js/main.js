@@ -155,13 +155,13 @@ function update(progress) {
     }
 
     //speed range<->number
-     if (elements.inputRange_speed.value!==inputRange_speed) {
+     /*if (elements.inputRange_speed.value!==inputRange_speed) {
          elements.inputNumber_speed.value = elements.inputRange_speed.value
      } else if (elements.inputNumber_speed.value!==inputNumber_speed) {
          elements.inputRange_speed.value = elements.inputNumber_speed.value
      }
      inputRange_speed = elements.inputRange_speed.value
-     inputNumber_speed = elements.inputNumber_speed.value
+     inputNumber_speed = elements.inputNumber_speed.value*/
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
 
