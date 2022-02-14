@@ -72,6 +72,7 @@ let drawHud = function () {
              }
          }
          elements.hudYawCenter.innerHTML = "<div id='hudYawCenter2'></div>"
+         elements.hudYawCenter2 = document.getElementById("hudYawCenter2")
          //pitch
          html = ""
          for (let j = 0; j<2;j++) {
@@ -87,36 +88,52 @@ let drawHud = function () {
          }
          elements.hudPitchCenter.innerHTML = "<div id='hudPitchCenter2'></div>"
 
+         elements.hudPitchCenter2 = document.getElementById("hudPitchCenter2")
 
 
          hudGenerated = true
      }
      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+     let wwidth = window.innerWidth
+     let wheight = window.innerHeight
+
+
 
      //yaw
+     let maxYaw = (1300*(wwidth/1920))
+     let minYaw = (620*(wwidth/1920))
      for (let j = 0; j<4;j++) {
          for (let i = 35; i>=0;i--) {
              let x = elements["degrees10-"+i+"-"+j].getBoundingClientRect().x
-             if (x>1300 || x<620) {
+             if (x>maxYaw || x<minYaw) {
                  elements["degrees10-"+i+"-"+j].style.opacity = 0
              } else {
                  elements["degrees10-"+i+"-"+j].style.opacity = 1
              }
          }
      }
-     elements.hudYaw.style.transform =  "translate("+((playerShip.position.yaw.direction*4)-3398)+"px)"
+     elements.hudYaw.style.transform =  "translate("+((playerShip.position.yaw.direction*4)-3798)+"px)"
      //pitch
+     elements.hudPitchCenter2.style.left = (600*(wwidth/1920))+"px"
+     elements.hudPitch.style.left = (600*(wwidth/1920))+"px"
+
+     elements.hudPitchCenter2.style.top = 80+(180*(wheight/977))+"px"//170+(90*(wheight/977))+"px"
+     elements.hudPitch.style.top = (180*(wheight/977))+"px"//(90*(wheight/977))+"px"
+
+     let maxPitch = (385*(wheight/977))
+     let minPitch = (145*(wheight/977))
+
      for (let j = 0; j<2;j++) {
          for (let i = 35; i>=0;i--) {
              let y = elements["degrees10-"+i+"-"+j+"p"].getBoundingClientRect().y
-             if (y>400 || y<175) {
+             if (y>maxPitch || y<minPitch) {
                  elements["degrees10-"+i+"-"+j+"p"].style.opacity = 0
              } else {
                  elements["degrees10-"+i+"-"+j+"p"].style.opacity = 1
              }
          }
      }
-     elements.hudPitch.style.transform =  "translate(0,"+(((playerShip.position.pitch.direction-180)*2.5)-705)+"px)"
+     elements.hudPitch.style.transform =  "translate(0,"+(((playerShip.position.pitch.direction-180)*2.5)-795)+"px)"
 
      //speed
      elements.hudSpeed.textContent = getSpeedText(playerShip.speed) + " |"
