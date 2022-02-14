@@ -86,6 +86,10 @@ let elements = {
     speedSensitivity: document.getElementById("speedSensitivity"),
     appSettings:document.getElementById("appSettings"),
     hud: document.getElementById("hud"),
+    hudPitch: document.getElementById("hudPitch"),
+    hudYaw: document.getElementById("hudYaw"),
+    hudYawCenter: document.getElementById("hudYawCenter"),
+    hudPitchCenter: document.getElementById("hudPitchCenter"),
 }
 
 for (let i = 0; i<11; i++) {
