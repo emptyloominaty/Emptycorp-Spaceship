@@ -140,7 +140,10 @@ class CanvasMain {
             this.scene.add(test[0])
         }*/
         //------------------------------------------------------------------------------------------Post Processing
-        this.composer = new EffectComposer( this.renderer )
+        /*const renderTarget = new THREE.WebGLMultisampleRenderTarget( 1920, 550 )
+        this.composer = new EffectComposer( this.renderer,renderTarget )*/
+
+        this.composer = new EffectComposer( this.renderer)
         let renderScene = new RenderPass( this.scene, this.camera )
         this.composer.addPass( renderScene )
         //-------------Bloom

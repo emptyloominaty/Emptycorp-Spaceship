@@ -19,6 +19,7 @@ class Computer extends Part {
     nav2PlanetView = ""
 
     modulesButtons = []
+    powerConsumptionArray = new Array(500).fill(0)
 
     //autopilot
     target = ""
@@ -42,7 +43,15 @@ class Computer extends Part {
 
                 this.functions.getNearestSystems() //TODO: PERFORMANCE?????? YIKES
 
-            //network
+                //power
+                this.powerConsumptionArray.push(playerShip.powerOutput3)
+                playerShip.powerOutput3 = 0
+                if (this.powerConsumptionArray.length > 500) {
+                    this.powerConsumptionArray.shift()
+                }
+
+
+                //network
                 if (this.listeningPort.length>0) {
                     for (let i = 0; i<this.listeningPort.length; i++) {
                         if (this.receivedData[this.listeningPort[i]]!==undefined && this.receivedData[this.listeningPort[i]].length>0) {
@@ -265,6 +274,9 @@ class Computer extends Part {
                 this.display.drawText(510, 60, "Get Time", font1, color1, 'center')
                 this.display.drawRect(440, 70, 140, 20, "#666666")
                 this.display.drawText(510, 85, "Recalc Position", font1, color1, 'center')
+
+                this.display.drawRect(430, 95, 160, 20, "#666666")
+                this.display.drawText(510, 110, "Power Consumption", font1, color1, 'center')
 
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
@@ -628,9 +640,32 @@ class Computer extends Part {
                 }
                 this.display.drawText(5,y, "Scanner Range: "+this.scanner.distance+" ly", font1, color1, 'left')
                 y+=20
-
-
-
+            } else if (this.tab==="powerCons") { //---------------------------------------------------------------------------------------Power Consumpti on
+                let lineColor = "#666666"
+                let maxVal = playerShip.batteries[0].maxDischarge*5
+                this.display.drawText(5,155, (maxVal * 200).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,155,width,155,1,lineColor)
+                this.display.drawText(5,180, (maxVal * 175).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,180,width,180,1,lineColor)
+                this.display.drawText(5,205, (maxVal * 150).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,205,width,205,1,lineColor)
+                this.display.drawText(5,230, (maxVal * 125).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,230,width,230,1,lineColor)
+                this.display.drawText(5,255, (maxVal * 100).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,255,width,255,1,lineColor)
+                this.display.drawText(5,280, (maxVal * 75).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,280,width,280,1,lineColor)
+                this.display.drawText(5,305, (maxVal * 50).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,305,width,305,1,lineColor)
+                this.display.drawText(5,330, (maxVal * 25).toFixed(0) + "kW", font1, color1, 'left')
+                this.display.drawLine(50,330,width,330,1,lineColor)
+                this.display.drawText(5,355, "0kW", font1, color1, 'left')
+                for (let i = 0; i < this.powerConsumptionArray.length; i++) {
+                    let x = i
+                    let y = 0
+                    y = this.powerConsumptionArray[i] / maxVal
+                    this.display.drawRect(x+50, 350, 1, y * (-1000), "rgba(72, 169, 255, 1)")
+                }
             }
 
 
@@ -862,6 +897,7 @@ class Computer extends Part {
             {x1:440, y1:20,x2:580,y2:40,function: () => {if (this.tab==="main") {this.tab="modules"}}},
             {x1:440, y1:45,x2:580,y2:65,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:440, y1:70,x2:580,y2:90,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
+            {x1:440, y1:95,x2:580,y2:115,function: () => {if (this.tab==="main") {this.tab="powerCons"}}},
         ]
         //nav 3 buttons
         for (let i = 0; i<9; i++) {

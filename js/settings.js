@@ -35,7 +35,6 @@ class Setting {
 let settings = {
     //Game
     survival:1,
-    showPowerConsumption:0,
     //Graphics
     antialiasing:0,
     antialiasingfx:0,
@@ -61,7 +60,6 @@ let settings = {
 let settingsList = {
     "Game":[
         new Setting("Survival (O2,Water,Food)","survival",[0,1],{0:"Off",1:"On"},[0,1],1),
-        new Setting("Show Power in HUD","showPowerConsumption",[0,1],{0:"Off",1:"On"},[0,1],0),
 
     ],
     "Graphics":[
