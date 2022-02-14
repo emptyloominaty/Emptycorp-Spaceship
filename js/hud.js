@@ -20,12 +20,13 @@ let flashmessage = {
 let powerConsumptionArray = new Array(500).fill(0)
 
 let drawHud = function () {
-    powerConsumptionArray.push(playerShip.powerOutput3)
-    playerShip.powerOutput3 = 0
-    if (powerConsumptionArray.length>500) {
-        powerConsumptionArray.shift()
+    if (settings.showPowerConsumption===1) {
+        powerConsumptionArray.push(playerShip.powerOutput3)
+        playerShip.powerOutput3 = 0
+        if (powerConsumptionArray.length > 500) {
+            powerConsumptionArray.shift()
+        }
     }
-
  if (hudEnabled) {
      if (!hudGenerated) {
          flashmessage.messages = []
@@ -44,23 +45,26 @@ let drawHud = function () {
          html +=  "<div id='shieldArmorBars'><div id='shieldBorder'><div id='shieldBar'> </div> </div> <div id='armorBorder'><div id='armorBar'> </div> </div></div>"
 
          //TargetSpeed + Speed
-         html += "<div id='hudSpeedDiv'><div id='hudTargetSpeed'> </div> <div id='hudSpeed'> </div></div>"
+         html += "<div id='hudSpeedDiv'> <div id='hudSpeed'></div> <div id='hudTargetSpeed'></div> </div>"
 
          //Flash Message
          html += "<div id='flashMessage'></div>"
 
-         html += "<canvas width='100' height='50' id='hudPowerConsumption'></canvas>"
+         if (settings.showPowerConsumption===1) {
+             html += "<div id='hudPowerConsumptionDiv'><div id='hudPowerConsumptionDivText'><span id='hudPowerConsumptionMax'>0</span> <span id='hudPowerConsumptionMid'>0</span> <span id='hudPowerConsumptionMin'>0</span></div><canvas width='110' height='55' id='hudPowerConsumption'></canvas></div>"
+         }
 
          elements.hud.innerHTML += html
-
-
 
          for (let i = 0; i<playerShip.weapons.length; i++) {
              elements["wepCd"+i] = document.getElementById("wepCd"+i)
              elements["wepMissiles"+i] = document.getElementById("wepMissiles"+i)
          }
-
-         elements["hudPowerConsumption"] = document.getElementById("hudPowerConsumption")
+         if (settings.showPowerConsumption===1) {
+             elements["hudPowerConsumptionMax"] = document.getElementById("hudPowerConsumptionMax")
+             elements["hudPowerConsumptionMid"] = document.getElementById("hudPowerConsumptionMid")
+             elements["hudPowerConsumption"] = document.getElementById("hudPowerConsumption")
+         }
          elements["shieldArmorBars"] = document.getElementById("shieldArmorBars")
          elements["shieldBar"] = document.getElementById("shieldBar")
          elements["armorBar"] = document.getElementById("armorBar")
@@ -71,27 +75,43 @@ let drawHud = function () {
          elements["flashMessage"] = document.getElementById("flashMessage")
          hudGenerated = true
      }
-     let powerConsCanvas = elements.hudPowerConsumption.getContext("2d")
-     //Power Consumption
-     let drawRect = function (x,y,w,h,color) {
-         powerConsCanvas.fillStyle = color
-         powerConsCanvas.fillRect(x,y,w,h)
-     }
-     powerConsCanvas.clearRect(0,0,100,50)
-     powerConsCanvas.globalAlpha = 0.3
-     for (let i = 0; i<powerConsumptionArray.length; i+=5) {
-         let x = i/5
-         let y = 0
-         for (let j = 0; j<5; j++) {
-             y+=powerConsumptionArray[i+j]
+     //speed
+     /*elements["hudSpeedDiv"] = document.getElementById("hudSpeedDiv")
+     elements["hudTargetSpeed"] = document.getElementById("hudTargetSpeed")
+     elements["hudSpeed"] = document.getElementById("hudSpeed")*/
+     elements.hudSpeed.textContent = getSpeedText(playerShip.speed) + " |"
+     elements.hudTargetSpeed.textContent = "| "+getSpeedText(playerShip.targetSpeed)
+
+
+    //Power Consumption
+     if (settings.showPowerConsumption===1) {
+         let powerConsCanvas = elements.hudPowerConsumption.getContext("2d")
+         let maxVal = 50
+
+         elements["hudPowerConsumptionMax"].textContent = (maxVal * 10).toFixed(0) + "kW"
+         elements["hudPowerConsumptionMid"].textContent = (maxVal * 5).toFixed(0) + "kW"
+
+         //Power Consumption
+         let drawRect = function (x, y, w, h, color) {
+             powerConsCanvas.fillStyle = color
+             powerConsCanvas.fillRect(x, y, w, h)
          }
-         y=(y/50)
-         drawRect(x,50,1,y*(-1000),"#00FFFF")
-
+         powerConsCanvas.clearRect(0, 0, 110, 55)
+         powerConsCanvas.globalAlpha = 0.3
+         powerConsCanvas.shadowColor = "rgba(72, 169, 255, 1)"
+         powerConsCanvas.shadowBlur = 3
+         let maxVal3 = 0//TODO:IDK
+         for (let i = 0; i < powerConsumptionArray.length; i += 5) {
+             let x = i / 5
+             let y = 0
+             for (let j = 0; j < 5; j++) {
+                 y += powerConsumptionArray[i + j]
+             }
+             y = y / maxVal //(y/50)
+             drawRect(x+5, 45, 1, y * (-1000), "rgba(72, 169, 255, 1)")
+         }
      }
 
-
-     //powerConsumptionArray
 
      //weapons
      for (let i = 0; i<playerShip.weapons.length; i++) {

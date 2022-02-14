@@ -111,7 +111,7 @@ class CanvasMain {
 
             if (this.planets[i]===undefined) {this.planets[i]=[]}
             for (let j = 0; j<starSystems[i].planets.length; j++) {
-                let planetSize = (starSystems[i].planets[j].radius/60528409678) //FIX?
+                let planetSize = (starSystems[i].planets[j].radius/605284096780)*1000 //FIX?
                 let planetGeometry = new THREE.SphereGeometry(planetSize, 40, 40, 0, Math.PI * 2, 0, Math.PI * 2) //50,50
                 let planetMaterial = this.materials[starSystems[i].planets[j].planetColor]
                 this.planets[i][j] = new THREE.Mesh(planetGeometry, planetMaterial)

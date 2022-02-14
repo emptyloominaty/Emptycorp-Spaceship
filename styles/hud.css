@@ -1,5 +1,46 @@
+:root {
+    --color-hud: rgba(101, 176, 255, 0.45);
+    --color-hudShadow: rgba(101, 176, 255, 0.8);
+    --color-hud2: rgba(0, 51, 255, 0.35);
+    --color-hud3: rgba(131, 208, 255, 0.35);
+    --color-hud-shield: rgba(66, 207, 255, 0.35);
+    --color-hud-armor: rgba(72, 137, 255, 0.35);
+}
+
+#weaponBar {
+    display:flex;
+    justify-content: center;
+    gap:2px;
+    text-align:center;
+    overflow:visible;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
+}
+
+.weaponBar {
+    font: 12px "Consolas", monospace;
+    border: 1px solid var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0;
+    border-radius: 2px;
+    padding:3px;
+}
+
+.wepCd {
+    background-color: var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0;
+    height:5px;
+}
+
+.wepCdBorder {
+    border: 1px solid var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0;
+    height:5px;
+}
+
+
 #hud {
     position:absolute;
+    overflow: visible;
     top:110px;
     margin-left: auto;
     margin-right: auto;
@@ -10,13 +51,14 @@
 
 #shieldArmorBars {
     margin-top:10px;
+    overflow:visible;
 }
 
 #shieldBorder,#armorBorder {
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0 ;
     width:100px;
     height:5px;
-
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -25,18 +67,22 @@
 
 #shieldBar,#armorBar {
     height:5px;
+    overflow:visible;
 }
 
 #shieldBar {
-    background-color: rgba(0, 187, 255, 0.35);
+    background-color: var(--color-hud-shield);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0;
 }
 
 #armorBar {
-    background-color: rgba(255, 138, 55, 0.35);
+    background-color: var(--color-hud-armor);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0;
 }
 
 #flashMessage {
-    color:rgba(255,255,255,0.55);
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
     white-space: pre-line;
     margin-top:10px;
     text-align:center;
@@ -45,4 +91,55 @@
     margin-right: auto;
     left: 0;
     right: 0;
+    overflow:visible;
+}
+
+
+#hudPowerConsumptionDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+
+#hudPowerConsumptionDivText {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right:5px;
+    height:50px;
+}
+
+#hudPowerConsumptionMax,#hudPowerConsumptionMid,#hudPowerConsumptionMin {
+    position:relative;
+    font:12px Consolas;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
+}
+
+#hudPowerCOnsumption {
+    background-color: var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0 ;
+}
+
+#hudSpeedDiv {
+    overflow: visible;
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top:5px;
+}
+
+#hudSpeed,#hudTargetSpeed {
+    overflow: visible;
+    font:12px Consolas;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
+}
+
+#hudSpeed {
+
+}
+
+#hudhudTargetSpeed {
+
 }

@@ -9,6 +9,7 @@ class Setting {
             this.value = val
             updateSettingsHTML()
             updateSettings()
+            hudGenerated = false
         }
     }
 
@@ -34,6 +35,7 @@ class Setting {
 let settings = {
     //Game
     survival:1,
+    showPowerConsumption:0,
     //Graphics
     antialiasing:0,
     antialiasingfx:0,
@@ -59,6 +61,8 @@ let settings = {
 let settingsList = {
     "Game":[
         new Setting("Survival (O2,Water,Food)","survival",[0,1],{0:"Off",1:"On"},[0,1],1),
+        new Setting("Show Power in HUD","showPowerConsumption",[0,1],{0:"Off",1:"On"},[0,1],0),
+
     ],
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
@@ -101,7 +105,7 @@ let keybinds = {
     "Main Generator":"KeyG",
     "Show System Name":"KeyC",
     "Shutdown Engine":"KeyX",
-    "Reset Target":"KeyN",
+    "Reset Target":"KeyP",
     "Show Target":"KeyB",
     }
 
@@ -146,7 +150,6 @@ let updateSettings = function() {
             aiShips[i].destroyed = true
         }
     }
-
 }
 let menus = ["shipInfo","galaxyMap","settings","keybinds","save","load"]
 let menuIn = "settings"
