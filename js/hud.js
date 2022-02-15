@@ -2,14 +2,23 @@ let hudEnabled = true
 let hudGenerated = false
 let flashmessage = {
     messages:[],
-    add: function(text) {
-       this.messages.push({text:text,duration:5,time:0})
+    colors:{
+        fail:["rgba(255,70,67,0.45)","rgba(255,70,67,0.8)"],
+        success:["rgba(117,255,116,0.45)","rgba(117,255,116,0.8)"],
+        default:["rgba(101, 176, 255, 0.45)","rgba(101, 176, 255, 0.8)"],
+        yellow:["rgba(255,254,127,0.45)","rgba(255,254,127,0.8)"],
+        purple:["rgba(191,118,255,0.45)","rgba(191,118,255,0.8)"],
+    },
+    add: function(text,color = "default") {
+        let colorF = this.colors[color][0]
+        let colorS = this.colors[color][1]
+        this.messages.push({text:text,duration:5,time:0,color:colorF,color2:colorS})
     },
     run: function() {
-        elements.flashMessage.textContent = ""
+        elements.flashMessage.innerHTML = ""
         let timeChange = 1/gameFPS
         for (let i = 0; i<this.messages.length; i++) {
-            elements.flashMessage.textContent += this.messages[i].text+"\r\n"
+            elements.flashMessage.innerHTML += "<span style='color:"+this.messages[i].color+"; text-shadow:"+this.messages[i].color2+" 0 0 5px;' >"+this.messages[i].text+"</span><br>"
             this.messages[i].time+=timeChange
             if(this.messages[i].time>this.messages[i].duration) {
                 this.messages.shift()
@@ -42,12 +51,19 @@ let drawHud = function () {
          //Flash Message
          html += "<div id='flashMessage'></div>"
 
+
+         //JumpDrive
+         html+= "<div id='hudJumpDrive'>Jump Drive<br> <div id='hudJumpDriveBorder' > <div id='hudJumpDriveCharging'></div></div></div>"
+
          elements.hud.innerHTML += html
 
          for (let i = 0; i<playerShip.weapons.length; i++) {
              elements["wepCd"+i] = document.getElementById("wepCd"+i)
              elements["wepMissiles"+i] = document.getElementById("wepMissiles"+i)
          }
+
+         elements.hudJumpDriveCharging = document.getElementById("hudJumpDriveCharging")
+         elements.hudJumpDrive = document.getElementById("hudJumpDrive")
 
          elements["shieldArmorBars"] = document.getElementById("shieldArmorBars")
          elements["shieldBar"] = document.getElementById("shieldBar")
@@ -98,6 +114,13 @@ let drawHud = function () {
      let wheight = window.innerHeight
 
 
+     //jump drive
+     elements.hudJumpDriveCharging.style.width = (playerShip.jumpDrive.charged/playerShip.jumpDrive.chargeNeeded*100)+"%"
+     if(playerShip.jumpDrive.running===0) {
+         elements.hudJumpDrive.style.opacity = 0
+     } else {
+         elements.hudJumpDrive.style.opacity = 1
+     }
 
      //yaw
      let maxYaw = (1300*(wwidth/1920))

@@ -114,8 +114,6 @@ class Computer extends Part {
                 }
             }
             return starSystems[0].servers[1].myAddress
-
-            // else return starSystems[0].servers[1].myAddress
         },
         receiveTime: ()=> {
             let timeServerAddress = this.functions.findTimeServer()
@@ -189,10 +187,10 @@ class Computer extends Part {
         }
 
         if (this.autopilot===1) {
-            flashmessage.add("Autopilot Activated")
+            flashmessage.add("Autopilot Activated","yellow")
         } else {
             playerShip.targetSpeed = 0
-            flashmessage.add("Autopilot Deactivated")
+            flashmessage.add("Autopilot Deactivated","yellow")
         }
     }
 

@@ -64,7 +64,7 @@ class NavigationModule {
                 }
             } else if (playerShip.computers[0].targetType==="ship" || playerShip.computers[0].targetType==="point" || playerShip.computers[0].targetType==="")  {
                  if (distanceToObject<0.0000000000105702341) {
-                    playerShip.computers[0].autopilot=0
+                     playerShip.computers[0].toggleAutopilot(0)
                     playerShip.targetSpeed = 0
                     playerShip.propulsion = "off"
                 } else if (distanceToObject<0.0001) {
@@ -83,7 +83,7 @@ class NavigationModule {
 
             } else if (playerShip.computers[0].targetType==="planet") {
                 if (distanceToObject<0.0000158) {
-                    playerShip.computers[0].autopilot=0
+                    playerShip.computers[0].toggleAutopilot(0)
                     playerShip.targetSpeed = 0
                     playerShip.propulsion = "off"
                 } else if (distanceToObject<0.0001) {

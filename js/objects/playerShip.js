@@ -68,6 +68,7 @@ class Ship {
     tanks = []
     weapons = []
     missileCargo = []
+    jumpDrive = false
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
@@ -223,6 +224,11 @@ class Ship {
         //weapons
         for(let i = 0; i<this.weapons.length; i++) {
             this.weapons[i].run()
+        }
+
+        //jump drive
+        if (this.jumpDrive!==false) {
+            this.jumpDrive.run()
         }
 
         //heat transfer radiation
@@ -725,6 +731,7 @@ class Ship {
 
 
     constructor(parts,stats) {
+        this.jumpDrive = new JumpDrive(0,parts.jumpDrive.weight,parts.jumpDrive.name,parts.jumpDrive)
         let maxSpeed = 0
         for (let i = 0 ; i < parts.antennas.length ; i++) {
             let part = parts.antennas[i]
@@ -839,7 +846,8 @@ let shipDefaultParts = {
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 4, speed:0.00002, color: 0xff0000}}
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
         //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,damage:4,shieldDmgBonus:0,ignoreShield:false,cd:1 /*seconds*/,life: 5, speed:5000, color: 0xffaa00}}
-        ]
+        ],
+    jumpDrive:{weight:500, fuelType:"fuel1", maxDistance:80/*ly*/, chargePerLy:0.1/*MW*/, chargePow:1.5, baseCharge:2/*MW*/, chargeSpeed:0.350/*MW*/, fuelPerLy:0.6},
 }
 
 let shipStats = {

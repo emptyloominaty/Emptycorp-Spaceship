@@ -5,28 +5,9 @@
     --color-hud3: rgba(131, 208, 255, 0.35);
     --color-hud-shield: rgba(66, 207, 255, 0.35);
     --color-hud-armor: rgba(72, 137, 255, 0.35);
+    --color-hud-speed: rgba(255, 169, 121, 0.45);
+    --color-hud-speedShadow: rgba(255, 169, 121, 0.8);
 }
-
-.fadeUp {
-    -webkit-mask-image: -webkit-gradient(
-            linear,
-            left 50%,
-            left bottom,
-            from(rgba(0,0,0,0)),
-            to(rgba(0,0,0,1))
-    );
-}
-
-.fadeDown {
-    -webkit-mask-image: -webkit-gradient(
-            linear,
-            left 50%,
-            left bottom,
-            from(rgba(0,0,0,1)),
-            to(rgba(0,0,0,0))
-    );
-}
-
 #weaponBar {
     display:flex;
     justify-content: center;
@@ -114,33 +95,6 @@
     overflow:visible;
 }
 
-
-#hudPowerConsumptionDiv {
-    display: flex;
-    flex-direction: row;
-}
-
-
-#hudPowerConsumptionDivText {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-right:5px;
-    height:50px;
-}
-
-#hudPowerConsumptionMax,#hudPowerConsumptionMid,#hudPowerConsumptionMin {
-    position:relative;
-    font:12px Consolas;
-    color: var(--color-hud);
-    text-shadow: var(--color-hudShadow) 0 0 5px;
-}
-
-#hudPowerCOnsumption {
-    background-color: var(--color-hud);
-    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0 ;
-}
-
 #hudSpeedDiv {
     overflow: visible;
     display:flex;
@@ -154,6 +108,8 @@
     font:14px Consolas;
     color: var(--color-hud);
     text-shadow: var(--color-hudShadow) 0 0 5px;
+  /*  color: var(--color-hud-speed);
+    text-shadow: var(--color-hud-speedShadow) 0 0 5px;*/
 }
 
 #hudPitch {
@@ -226,4 +182,32 @@
     text-shadow: var(--color-hudShadow) 0 0 5px;
     display: inline-block;
     width:40px;
+}
+
+#hudJumpDrive {
+    text-align: center;
+    font: 12px Consolas;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
+    position: absolute;
+    overflow: visible;
+    top:30px;
+    width:80px;
+    left:40px;
+    transition: opacity 400ms;
+}
+
+
+#hudJumpDriveBorder {
+    border: 1px solid var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0;
+    height:7px;
+    width:100%;
+}
+
+#hudJumpDriveCharging {
+    height:7px;
+    width:0;
+    background-color: var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0;
 }
