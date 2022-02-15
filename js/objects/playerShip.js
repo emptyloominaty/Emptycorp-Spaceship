@@ -68,7 +68,7 @@ class Ship {
     tanks = []
     weapons = []
     missileCargo = []
-    jumpDrive = false
+    jumpDrive = {}
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
@@ -731,7 +731,12 @@ class Ship {
 
 
     constructor(parts,stats) {
-        this.jumpDrive = new JumpDrive(0,parts.jumpDrive.weight,parts.jumpDrive.name,parts.jumpDrive)
+        if (parts.jumpDrive !== false) {
+            this.jumpDrive = new JumpDrive(0,parts.jumpDrive.weight,parts.jumpDrive.name,parts.jumpDrive)
+        }
+
+
+
         let maxSpeed = 0
         for (let i = 0 ; i < parts.antennas.length ; i++) {
             let part = parts.antennas[i]

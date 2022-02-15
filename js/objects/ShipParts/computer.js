@@ -18,6 +18,19 @@ class Computer extends Part {
     starSystems = []
     nav2PlanetView = ""
 
+    //input
+    listenForInput = false
+    keyInput = ""
+    inputData = {
+        jumpDrive:{
+            x:"",
+            y:"",
+            z:"",
+            select:"x"
+        },
+
+    }
+
     modulesButtons = []
     powerConsumptionArray = new Array(500).fill(0)
 
@@ -211,6 +224,9 @@ class Computer extends Part {
     }
 
     drawUi() {
+        //reset
+        this.listenForInput = false
+
         if (this.display && this.display.on===1) {
             let width = this.display.resolution.w
             let height = this.display.resolution.h
@@ -283,9 +299,10 @@ class Computer extends Part {
                 this.display.drawText(510, 60, "Get Time", font1, color1, 'center')
                 this.display.drawRect(440, 70, 140, 20, "#666666")
                 this.display.drawText(510, 85, "Recalc Position", font1, color1, 'center')
-
                 this.display.drawRect(430, 95, 160, 20, "#666666")
                 this.display.drawText(510, 110, "Power Consumption", font1, color1, 'center')
+                this.display.drawRect(440, 120, 140, 20, "#666666")
+                this.display.drawText(510, 135, "Jump Drive", font1, color1, 'center')
 
                 this.display.drawText(10, 220, "RX:"+(this.data.antennaRX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
                 this.display.drawText(10, 240, "TX:"+(this.data.antennaTX*1000).toFixed(0)+"kB/s", font1, color1, 'left')
@@ -649,7 +666,7 @@ class Computer extends Part {
                 }
                 this.display.drawText(5,y, "Scanner Range: "+this.scanner.distance+" ly", font1, color1, 'left')
                 y+=20
-            } else if (this.tab==="powerCons") { //---------------------------------------------------------------------------------------Power Consumpti on
+            } else if (this.tab==="powerCons") { //---------------------------------------------------------------------------------------Power Consumption
                 let lineColor = "#666666"
                 let maxVal = playerShip.batteries[0].maxDischarge*5
                 this.display.drawText(5,155, (maxVal * 200).toFixed(0) + "kW", font1, color1, 'left')
@@ -675,8 +692,57 @@ class Computer extends Part {
                     y = this.powerConsumptionArray[i] / maxVal
                     this.display.drawRect(x+50, 350, 1, y * (-1000), "rgba(72, 169, 255, 1)")
                 }
-            }
+            } else if (this.tab==="jumpDrive") {
+                let keyPressed = this.keyInput
+                let selected = this.inputData.jumpDrive.select
+                if (selected!=="") {
+                    this.listenForInput = true
+                    if (keyPressed==="Backspace") {
+                        if (this.inputData.jumpDrive[selected].length>0) {
+                            this.inputData.jumpDrive[selected] = this.inputData.jumpDrive[selected].substring(0, this.inputData.jumpDrive[selected].length - 1)
+                        }
+                    } else if (isFinite(keyPressed)) {
+                        this.inputData.jumpDrive[selected] += ""+keyPressed
+                    } else if (keyPressed==="," || keyPressed===".") {
+                        this.inputData.jumpDrive[selected] += "."
+                    }
+                }
+                this.inputData.jumpDrive.x = this.inputData.jumpDrive.x.substring(0, 17)
+                this.inputData.jumpDrive.y = this.inputData.jumpDrive.y.substring(0, 17)
+                this.inputData.jumpDrive.z = this.inputData.jumpDrive.z.substring(0, 17)
+                let x = Number(this.inputData.jumpDrive.x)
+                let y = Number(this.inputData.jumpDrive.y)
+                let z = Number(this.inputData.jumpDrive.z)
 
+                let distance = calcDistance(playerShip,{position:{x:x, y:y, z:z}})
+                let chargeNeed = playerShip.jumpDrive.getChargeNeeded(distance)
+                let timeNeed = chargeNeed/playerShip.jumpDrive.chargeSpeed
+
+
+
+                this.display.drawText(10,20, "Charge Time: "+timeNeed.toFixed(1)+"sec", font1, color1, 'left')
+                this.display.drawText(10,40, "Power: "+(chargeNeed/3.6).toFixed(0)+" kWh", font1, color1, 'left')
+                this.display.drawText(10,60, "Fuel: "+playerShip.jumpDrive.getFuelNeeded(distance).toFixed(0)+" kg", font1, color1, 'left')
+                this.display.drawText(10,80, "Distance: "+getDistanceText(distance), font1, color1, 'left')
+
+                this.display.drawText(10,150, "x: ", font1, color1, 'left')
+                this.display.drawText(125,150, this.inputData.jumpDrive.x, font1, color1, 'center')
+                this.display.drawRectStroke(50,135,150,25,color1)
+
+                this.display.drawText(10,180, "y: ", font1, color1, 'left')
+                this.display.drawText(125,180, this.inputData.jumpDrive.y, font1, color1, 'center')
+                this.display.drawRectStroke(50,165,150,25,color1)
+
+                this.display.drawText(10,210, "z: ", font1, color1, 'left')
+                this.display.drawText(125,210, this.inputData.jumpDrive.z, font1, color1, 'center')
+                this.display.drawRectStroke(50,195,150,25,color1)
+
+                this.display.drawText(125,242, "Jump", font1, "#00b600", 'center')
+                this.display.drawRectStroke(50,225,150,25,"#00b600")
+
+                //reset keyInput
+                this.keyInput = ""
+            }
 
             //-----------------------------------------------------------------------------------------------------------------bottom
             this.display.drawRect(0,height-40,width,height,"#000000")
@@ -907,6 +973,13 @@ class Computer extends Part {
             {x1:440, y1:45,x2:580,y2:65,function: () => {if (this.tab==="main") {this.functions.receiveTime()}}},
             {x1:440, y1:70,x2:580,y2:90,function: () => {if (this.tab==="main") {this.nav.start.recalcPosition()}}},
             {x1:440, y1:95,x2:580,y2:115,function: () => {if (this.tab==="main") {this.tab="powerCons"}}},
+            {x1:440, y1:120,x2:580,y2:140,function: () => {if (this.tab==="main") {this.tab="jumpDrive"}}},
+            //----------
+            {x1:50, y1:135,x2:200,y2:160,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="x"}}},
+            {x1:50, y1:165,x2:200,y2:190,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="y"}}},
+            {x1:50, y1:195,x2:200,y2:220,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="z"}}},
+            {x1:50, y1:225,x2:200,y2:245,function: () => {if (this.tab==="jumpDrive") {playerShip.jumpDrive.jump(this.inputData.jumpDrive.x,this.inputData.jumpDrive.y,this.inputData.jumpDrive.z)}}},
+
         ]
         //nav 3 buttons
         for (let i = 0; i<9; i++) {

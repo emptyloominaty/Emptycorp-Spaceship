@@ -1,6 +1,6 @@
 class JumpDrive extends Part {
     charged = 0
-    chargeNeeded = 0 //  /3600000 = kWh
+    chargeNeeded = 0
     fuelNeeded = 0
 
     running = 0
@@ -9,10 +9,13 @@ class JumpDrive extends Part {
 
 
     jump(x,y,z) {
+        if (x==="") {x=0}
+        if (y==="") {y=0}
+        if (z==="") {z=0}
         let distance = calcDistance(playerShip,{position:{x:x,y:y,z:z}})
         if (distance<this.maxDistance) {
-            this.chargeNeeded = this.baseCharge+Math.pow(distance,this.chargePow)
-            this.fuelNeeded = 1+Math.pow(distance,this.chargePow)*this.fuelPerLy
+            this.chargeNeeded = this.getChargeNeeded(distance)
+            this.fuelNeeded = this.getFuelNeeded(distance)
             this.jumpTo = {x:x, y:y, z:z}
             this.running = 1
             flashmessage.add("Charging Jump Drive","default")
@@ -23,7 +26,13 @@ class JumpDrive extends Part {
         }
     }
 
+    getChargeNeeded(distance) {
+        return this.baseCharge+Math.pow(distance,this.chargePow)
+    }
 
+    getFuelNeeded(distance) {
+        return 1+Math.pow(distance,this.chargePow)*this.fuelPerLy
+    }
 
     run() {
         if (this.running===1 && this.on===1) {

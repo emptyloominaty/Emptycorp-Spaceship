@@ -346,6 +346,9 @@ let keyLoop = () => {
 }
 
 let keyup = (e)=> {
+    if (playerShip.computers[0].listenForInput) {
+        playerShip.computers[0].keyInput = e.key
+    }
     if(e.code!=="F12" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
         e.preventDefault()
     }
