@@ -33,7 +33,9 @@ html,body,#app {
 }
 
 #topBar {
+    position: relative;
     margin-top:3px;
+    z-index: 5;
 }
 
 output {

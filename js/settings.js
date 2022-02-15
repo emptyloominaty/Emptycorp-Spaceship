@@ -187,7 +187,7 @@ let generateMenu = function(id) {
             let array = settingsList[categoryArray[i]]
             for (let j = 0; j<array.length; j++) {
                 //let setVal = array[j].optionsString[settings[array[j].settingName]]
-                html += "<div class='flex-row settingItem'><span>"+array[j].name+": </span> <div class='settingOptions'>"
+                html += "<div class='flex-row settingItem'><span>"+array[j].name+" </span> <div class='settingOptions'>"
                 for (let a = 0; a<array[j].options.length; a++) {
                     html+= "<button onclick='settingsList[\""+categoryArray[i]+"\"]["+j+"].setValue("+array[j].options[a]+")' class='settingItemC' id='setting"+i+j+a+"'> "+array[j].optionsString[array[j].options[a]]+" </button>"
                 }
@@ -392,7 +392,7 @@ let generateSettingsHTML = function() {
         let array = settingsList[categoryArray[i]]
         for (let j = 0; j<array.length; j++) {
             //let setVal = array[j].optionsString[settings[array[j].settingName]]
-            html += "<div class='flex-row settingItem'><span>"+array[j].name+": </span> <div class='settingOptions'>"
+            html += "<div class='flex-row settingItem'><span>"+array[j].name+" </span> <div class='settingOptions'>"
             for (let a = 0; a<array[j].options.length; a++) {
                 html+= "<button onclick='settingsList[\""+categoryArray[i]+"\"]["+j+"].setValue("+array[j].options[a]+")' class='settingItemC' id='setting"+i+j+a+"'> "+array[j].optionsString[array[j].options[a]]+" </button>"
             }

@@ -19,7 +19,7 @@ let flashmessage = {
 }
 
 let drawHud = function () {
- if (hudEnabled) {
+ if (hudEnabled && playerShip.computers[0].on===1) {
      if (!hudGenerated) {
          flashmessage.messages = []
          elements.hud.innerHTML = "<div id='weaponBar'></div>"
@@ -102,13 +102,23 @@ let drawHud = function () {
      //yaw
      let maxYaw = (1300*(wwidth/1920))
      let minYaw = (620*(wwidth/1920))
+
+     let maxFadeYaw = maxYaw-40
+     let minFadeYaw = minYaw+40
+
      for (let j = 0; j<4;j++) {
          for (let i = 35; i>=0;i--) {
              let x = elements["degrees10-"+i+"-"+j].getBoundingClientRect().x
              if (x>maxYaw || x<minYaw) {
                  elements["degrees10-"+i+"-"+j].style.opacity = 0
              } else {
-                 elements["degrees10-"+i+"-"+j].style.opacity = 1
+                 if (x>maxFadeYaw) {
+                     elements["degrees10-"+i+"-"+j].style.opacity = (maxYaw-x)/40
+                 } else if (x<minFadeYaw) {
+                     elements["degrees10-"+i+"-"+j].style.opacity = (x-minYaw)/40
+                 } else {
+                     elements["degrees10-"+i+"-"+j].style.opacity = 1
+                 }
              }
          }
      }
@@ -123,14 +133,24 @@ let drawHud = function () {
      let maxPitch = (385*(wheight/977))
      let minPitch = (145*(wheight/977))
 
+     let maxFadePitch = maxPitch-25
+     let minFadePitch = minPitch+25
      for (let j = 0; j<2;j++) {
          for (let i = 35; i>=0;i--) {
              let y = elements["degrees10-"+i+"-"+j+"p"].getBoundingClientRect().y
              if (y>maxPitch || y<minPitch) {
                  elements["degrees10-"+i+"-"+j+"p"].style.opacity = 0
              } else {
-                 elements["degrees10-"+i+"-"+j+"p"].style.opacity = 1
+                 if (y>maxFadePitch) {
+                     elements["degrees10-"+i+"-"+j+"p"].style.opacity = (maxPitch-y)/25
+                 } else if (y<minFadePitch) {
+                     elements["degrees10-"+i+"-"+j+"p"].style.opacity = (y-minPitch)/25
+                 } else {
+                     elements["degrees10-"+i+"-"+j+"p"].style.opacity = 1
+                 }
              }
+
+
          }
      }
      elements.hudPitch.style.transform =  "translate(0,"+(((playerShip.position.pitch.direction-180)*2.5)-795)+"px)"

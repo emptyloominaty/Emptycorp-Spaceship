@@ -9,6 +9,8 @@ class StarSystem {
     mapSize = 15
     position = {x:0,y:0,z:0}
 
+    timeServerAddress = false
+
     totalPopulation = 0
     faction = ""
     factionColor = "#999999"
@@ -331,6 +333,14 @@ class StarSystem {
                 this.factories.push({name:factories[i].name, amount:factories[i].amount, input:factories[i].input, ratio:factories[i].ratio})
             }
         }
+
+        //servers
+        for (let i = 0; i<servers.length; i++) {
+           if (servers[i].type==="time") {
+               this.timeServerAddress = servers[i].myAddress
+           }
+        }
+
 
     }
 }

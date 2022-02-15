@@ -10,10 +10,15 @@ class CommunicationModule {
 
     }
     receiveData(data) {
-        playerShip.computers[0].receivedData[data.port].push(data)
+        if (this.on === 1) {
+            playerShip.computers[0].receivedData[data.port].push(data)
+        }
     }
+
     transmitData(data) {
-        playerShip.antennas[0].transmitArray.push({size:data[0], address:data[1], port:data[2], data:data[3], senderAddress:data[4]})
+        if (this.on===1) {
+            playerShip.antennas[0].transmitArray.push({size:data[0], address:data[1], port:data[2], data:data[3], senderAddress:data[4]})
+        }
     }
 
 }

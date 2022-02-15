@@ -169,21 +169,33 @@ class Ship {
             this.speed = 0
         }
 
+
+        let shipInertia = (0.0833*this.weight*Math.pow(this.size.l,2))/3500
         //------------------------------------------------------------------------------------RCS
         //------------------------yaw
-        this.position.yaw.direction += (this.position.yaw.angularSpeed*57.2957795)/gameFPS
-        if (this.position.yaw.direction>1440) {
-            this.position.yaw.direction = 360
-        } else if (this.position.yaw.direction<-360) {
+        if (settings.realRcs===1) {
+            this.position.yaw.direction += (this.position.yaw.angularSpeed*57.2957795)/gameFPS
+        } else {
+            this.position.yaw.direction += this.position.yaw.angularSpeed*shipInertia
+            this.position.yaw.angularSpeed = 0
+        }
+        if (this.position.yaw.direction>900) {
+            this.position.yaw.direction = 180
+        } else if (this.position.yaw.direction<0) {
             this.position.yaw.direction = 360
         }
         this.position.yaw.angularSpeed = this.shipRCS(this.position.yaw.direction,this.position.yaw.targetDirection,this.position.yaw.angularSpeed,"yaw")
         //------------------------pitch
-        this.position.pitch.direction += (this.position.pitch.angularSpeed*57.2957795)/gameFPS
-        if (this.position.pitch.direction>1440) {
-            this.position.pitch.direction = 360
-        } else if (this.position.pitch.direction<-360) {
-            this.position.pitch.direction = 360
+        if (settings.realRcs===1) {
+            this.position.pitch.direction += (this.position.pitch.angularSpeed * 57.2957795) / gameFPS
+        } else {
+            this.position.pitch.direction += this.position.pitch.angularSpeed*shipInertia
+            this.position.pitch.angularSpeed = 0
+        }
+        if (this.position.pitch.direction>540) {
+            this.position.pitch.direction = 180
+        } else if (this.position.pitch.direction<-180) {
+            this.position.pitch.direction = 180
         }
         this.position.pitch.angularSpeed = this.shipRCS(this.position.pitch.direction,this.position.pitch.targetDirection,this.position.pitch.angularSpeed,"pitch")
         //------------------------------------------------------------------------------------

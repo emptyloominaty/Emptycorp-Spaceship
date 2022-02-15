@@ -106,8 +106,19 @@ class Computer extends Part {
     }
 
     functions = {
+        findTimeServer: ()=> {
+            let distanceToSystems = this.data.distanceToSystems
+            for (let i = 0; i<distanceToSystems.length; i++) {
+                if (starSystems[distanceToSystems[i].id].timeServerAddress!==false) {
+                   return starSystems[distanceToSystems[i].id].timeServerAddress
+                }
+            }
+            return starSystems[0].servers[1].myAddress
+
+            // else return starSystems[0].servers[1].myAddress
+        },
         receiveTime: ()=> {
-            let timeServerAddress = starSystems[0].servers[1].myAddress //TODO:FIX
+            let timeServerAddress = this.functions.findTimeServer()
             this.comm.transmitData([0.002, timeServerAddress, 2, {data:"time", senderAddress:playerShip.myAddress}, playerShip.myAddress])
             this.listeningPort.push(2)
         },
