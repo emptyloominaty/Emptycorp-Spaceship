@@ -1,4 +1,3 @@
-
 let settingsHTML = true
 
 
@@ -38,8 +37,7 @@ let settings = {
     realRcs:1,
     //Graphics
     antialiasing:0,
-    ssaaSamples:2,
-    antialiasingsmaa:0,
+    antialiasingmsaa:0,
     modelsQuality:2,
     renderQuality:2,
     renderDistance:2,
@@ -67,6 +65,7 @@ let settingsList = {
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
         new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,1000,100000],2),
         new Setting("Antialiasing","antialiasing",[0,1,2,3],{0:"Off",1:"SMAA",2:"SSAA 2x",3:"SSAA 4x"},[0,1,2,3],0),
+        new Setting("MSAA","antialiasingmsaa",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Bloom","bloom",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,0.8,1.6],1),
         //new Setting("Motion Blur","motionBlur",[0,1],{0:"Off",1:"On"},[0,1],0),
         //new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
@@ -109,6 +108,14 @@ let keybinds = {
     }
 
 let updateSettings = function() {
+    //msaa
+    if (shipWindow3D.msaa!==Boolean(settings.antialiasingmsaa)) {
+        shipWindow3D.msaa = Boolean(settings.antialiasingmsaa)
+        shipWindow3D.reloadComposer()
+    }
+
+
+
     //motion blur
     if (settings.motionBlur===1) {
         if (!shipWindow3D.motionBlur) {
@@ -123,7 +130,7 @@ let updateSettings = function() {
     }
     //bloom
     if (settings.bloom!==0) {
-        let bl = settingsList["Graphics"][3].values[settingsList["Graphics"][3].value]
+        let bl = settingsList["Graphics"][4].values[settingsList["Graphics"][4].value]
         shipWindow3D.enableBloom(bl)
     } else {
         shipWindow3D.disableBloom()
@@ -461,7 +468,9 @@ let drawSettings = function() {
     }
 }
 
+
 generateSettingsHTML()
 updateSettingsHTML()
+shipWindow3D.reloadComposer()
 updateSettings()
 document.getElementById("menu_"+menuIn).classList.add("selectedMenu")

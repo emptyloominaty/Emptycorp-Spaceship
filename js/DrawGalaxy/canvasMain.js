@@ -1,8 +1,9 @@
 class CanvasMain {
     motionBlur = false
-    smaa = false
+    msaa = false
     bloom = false
     enableTargetTorus = true
+
 
     drawStarSystemsText = false
 
@@ -24,6 +25,7 @@ class CanvasMain {
         this.camera = new THREE.PerspectiveCamera(50, 1920 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
         //this.renderer.setPixelRatio(2)
+        this.composer = new EffectComposer( this.renderer)
 
         const loader = new FontLoader()
         loader.load( threeJSFont, ( font )=> {
@@ -70,15 +72,15 @@ class CanvasMain {
         this.materials["Class K"] = new THREE.MeshBasicMaterial( {color:0xffd69c} )
 
         //planet materials
-        this.materials["Moon"] = new THREE.MeshPhongMaterial( {color:0x94908D, shininess:5} )
-        this.materials["Mercury"] = new THREE.MeshPhongMaterial( {color:0x97979F, shininess:5} )
-        this.materials["Venus"] = new THREE.MeshPhongMaterial( {color:0xBBB7AB, shininess:5} )
-        this.materials["Earth"] = new THREE.MeshPhongMaterial( {color:0x8CB1DE, shininess:5} )
-        this.materials["Mars"] = new THREE.MeshPhongMaterial( {color:0xE27B58, shininess:5} )
-        this.materials["Jupiter"] = new THREE.MeshPhongMaterial( {color:0xDCD0B8, shininess:5} )
-        this.materials["Saturn"] = new THREE.MeshPhongMaterial( {color:0xA49B72, shininess:5} )
-        this.materials["Uranus"] = new THREE.MeshPhongMaterial( {color:0xBBE1E4, shininess:5} )
-        this.materials["Neptune"] = new THREE.MeshPhongMaterial( {color:0x6081FF, shininess:5} )
+        this.materials["Moon"] = new THREE.MeshPhongMaterial( {color:0x94908D, shininess:1} )
+        this.materials["Mercury"] = new THREE.MeshPhongMaterial( {color:0x97979F, shininess:1} )
+        this.materials["Venus"] = new THREE.MeshPhongMaterial( {color:0xBBB7AB, shininess:1} )
+        this.materials["Earth"] = new THREE.MeshPhongMaterial( {color:0x8CB1DE, shininess:1} )
+        this.materials["Mars"] = new THREE.MeshPhongMaterial( {color:0xE27B58, shininess:1} )
+        this.materials["Jupiter"] = new THREE.MeshPhongMaterial( {color:0xDCD0B8, shininess:1} )
+        this.materials["Saturn"] = new THREE.MeshPhongMaterial( {color:0xA49B72, shininess:1} )
+        this.materials["Uranus"] = new THREE.MeshPhongMaterial( {color:0xBBE1E4, shininess:1} )
+        this.materials["Neptune"] = new THREE.MeshPhongMaterial( {color:0x6081FF, shininess:1} )
 
         //target
         const geometry = new THREE.TorusGeometry( 10, 0.2, 2, 50 )
@@ -139,73 +141,8 @@ class CanvasMain {
             test[0].position.y = 0
             this.scene.add(test[0])
         }*/
-        //------------------------------------------------------------------------------------------Post Processing
 
-        //MSAA TEST
-        /*const renderTarget = new THREE.WebGLMultisampleRenderTarget( 1920, 550 )
-        this.composer = new EffectComposer( this.renderer,renderTarget )
-        this.composer.setSize(1920,550)*/
-        //--------
-
-        this.composer = new EffectComposer( this.renderer)
-        let renderScene = new RenderPass( this.scene, this.camera )
-        this.composer.addPass( renderScene )
-
-        //MSAA TEST
-        /*let copyPass = new ShaderPass( CopyShader )
-        this.composer.addPass( copyPass )*/
-        //--------
-
-        //-------------SSAA
-        this.ssaaRenderPass = new SSAARenderPass( this.scene, this.camera )
-        this.ssaaRenderPass.unbiased = true
-        this.composer.addPass( this.ssaaRenderPass )
-        this.ssaaRenderPass.enabled = false
-
-        this.copyPassSSAA = new ShaderPass( CopyShader )
-        this.composer.addPass( this.copyPassSSAA )
-        this.copyPassSSAA.enabled = false
-
-        //-------------Bloom
-        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( 1920, 550 ), 1.5, 0.4, 0.4 )
-        this.composer.addPass( this.bloomPass )
-
-
-        //-------------SMAA
-        this.passSMAA = new SMAAPass( 1900, 550 )
-        this.passSMAA.renderToScreen = false
-
-
-        this.composer.addPass( this.passSMAA )
-        this.passSMAA.enabled = false
-
-
-
-        //-------------Motion Blur //TODO:REPLACE WITH BETTER MOTION BLUR (RN DOESNT WORK WITH SMAA)
-        /*
-        // save pass
-        let renderTargetParameters = {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            stencilBuffer: false
-        }
-        this.savePassMotionBlur = new THREE.SavePass( new THREE.WebGLRenderTarget( 1920, 550, renderTargetParameters ) )
-        // blend pass
-        this.blendPassMotionBlur = new THREE.ShaderPass( THREE.BlendShader, 'tDiffuse1' )
-        this.blendPassMotionBlur.uniforms[ 'tDiffuse2' ].value = this.savePassMotionBlur.renderTarget.texture
-        this.blendPassMotionBlur.uniforms[ 'mixRatio' ].value = 0.4 //0.4
-
-        // output pass
-        this.outputPassMotionBlur = new THREE.ShaderPass( THREE.CopyShader )
-        this.outputPassMotionBlur.renderToScreen = true
-
-        this.composer.addPass( this.blendPassMotionBlur )
-        this.composer.addPass( this.savePassMotionBlur  )
-        this.composer.addPass( this.outputPassMotionBlur )
-        this.composer.passes[3].enabled = false
-        this.composer.passes[4].enabled = false
-        this.composer.passes[5].enabled = false*/
-
+        //this.reloadComposer(1920,550)
         //----------------------------------------
 
 
@@ -235,9 +172,54 @@ class CanvasMain {
         this.render()
 
     }
-    resetRenderer(msaa) {
-        //does not work????????
-        this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias: msaa} )
+
+    reloadComposer(width = 1920,height = 550) {
+        //MSAA
+        let renderTarget
+        if (settings.antialiasingmsaa===1) {
+            renderTarget = new THREE.WebGLMultisampleRenderTarget( width, height )
+            this.composer = new EffectComposer( this.renderer,renderTarget )
+        } else {
+            this.composer = new EffectComposer( this.renderer)
+        }
+
+        this.composer.setSize(width,height)
+
+        let renderScene = new RenderPass( this.scene, this.camera )
+        this.composer.addPass( renderScene )
+
+        let copyPass = new ShaderPass( CopyShader )
+        this.composer.addPass( copyPass )
+
+        //-------------SSAA
+        this.ssaaRenderPass = new SSAARenderPass( this.scene, this.camera )
+        this.ssaaRenderPass.unbiased = true
+        this.composer.addPass( this.ssaaRenderPass )
+        this.ssaaRenderPass.enabled = false
+
+        this.copyPassSSAA = new ShaderPass( CopyShader )
+        this.composer.addPass( this.copyPassSSAA )
+        this.copyPassSSAA.enabled = false
+
+        //-------------Bloom
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( width, height ), 1.5, 0.4, 0.4 )
+        this.composer.addPass( this.bloomPass )
+
+
+        //-------------SMAA
+        this.passSMAA = new SMAAPass( width, height )
+        this.passSMAA.renderToScreen = false
+
+
+        this.composer.addPass( this.passSMAA )
+        this.passSMAA.enabled = false
+
+
+        //-------------Motion Blur
+
+
+        //
+        updateSettings()
     }
 
     createNewProjectile(id) {
@@ -368,15 +350,9 @@ class CanvasMain {
 
 
     enableMotionBlur() {
-        //this.composer.passes[3].enabled = true
-        //this.composer.passes[4].enabled = true
-        //this.composer.passes[5].enabled = true
     }
 
     disableMotionBlur() {
-       // this.composer.passes[3].enabled = false
-        //this.composer.passes[4].enabled = false
-        //this.composer.passes[5].enabled = false
     }
 
     enableBloom(bl) {
