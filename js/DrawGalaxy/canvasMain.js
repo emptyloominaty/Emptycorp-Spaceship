@@ -146,20 +146,34 @@ class CanvasMain {
         this.composer = new EffectComposer( this.renderer)
         let renderScene = new RenderPass( this.scene, this.camera )
         this.composer.addPass( renderScene )
+
+        //-------------SSAA
+        this.ssaaRenderPass = new SSAARenderPass( this.scene, this.camera )
+        this.ssaaRenderPass.unbiased = true
+        this.composer.addPass( this.ssaaRenderPass )
+        this.ssaaRenderPass.enabled = false
+
+        this.copyPassSSAA = new ShaderPass( CopyShader )
+        this.composer.addPass( this.copyPassSSAA )
+        this.copyPassSSAA.enabled = false
+
         //-------------Bloom
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( 1920, 550 ), 1.5, 0.4, 0.4 )
+        this.composer.addPass( this.bloomPass )
 
-        const bloomPass = new UnrealBloomPass( new THREE.Vector2( 1920, 550 ), 1.5, 0.4, 0.4 )
-
-        this.composer.addPass( bloomPass )
 
         //-------------SMAA
         this.passSMAA = new SMAAPass( 1900, 550 )
         this.passSMAA.renderToScreen = false
 
+
         this.composer.addPass( this.passSMAA )
-        this.composer.passes[2].enabled = false
+        this.passSMAA.enabled = false
+
+
 
         //-------------Motion Blur //TODO:REPLACE WITH BETTER MOTION BLUR (RN DOESNT WORK WITH SMAA)
+        /*
         // save pass
         let renderTargetParameters = {
             minFilter: THREE.LinearFilter,
@@ -181,7 +195,7 @@ class CanvasMain {
         this.composer.addPass( this.outputPassMotionBlur )
         this.composer.passes[3].enabled = false
         this.composer.passes[4].enabled = false
-        this.composer.passes[5].enabled = false
+        this.composer.passes[5].enabled = false*/
 
         //----------------------------------------
 
@@ -345,34 +359,47 @@ class CanvasMain {
 
 
     enableMotionBlur() {
-        this.composer.passes[3].enabled = true
-        this.composer.passes[4].enabled = true
-        this.composer.passes[5].enabled = true
+        //this.composer.passes[3].enabled = true
+        //this.composer.passes[4].enabled = true
+        //this.composer.passes[5].enabled = true
     }
 
     disableMotionBlur() {
-        this.composer.passes[3].enabled = false
-        this.composer.passes[4].enabled = false
-        this.composer.passes[5].enabled = false
+       // this.composer.passes[3].enabled = false
+        //this.composer.passes[4].enabled = false
+        //this.composer.passes[5].enabled = false
     }
 
     enableBloom(bl) {
-        this.composer.passes[1].enabled = true
-        this.composer.passes[1].strength = bl
+        this.bloomPass.enabled = true
+        this.bloomPass.strength = bl
     }
 
     disableBloom() {
-        this.composer.passes[1].enabled = false
+        this.bloomPass.enabled = false
     }
 
     enableSMAA() {
-        this.composer.passes[2].enabled = true
+        this.passSMAA.enabled = true
     }
 
     disableSMAA() {
-        this.composer.passes[2].enabled = false
+        this.passSMAA.enabled = false
     }
 
+    enableSSAA() {
+        this.ssaaRenderPass.enabled = true
+        this.copyPassSSAA.enabled = true
+    }
+
+    disableSSAA() {
+        this.ssaaRenderPass.enabled = false
+        this.copyPassSSAA.enabled = false
+    }
+
+    setSSAA(samples) {
+        this.ssaaRenderPass.sampleLevel = samples
+    }
 
 }
 

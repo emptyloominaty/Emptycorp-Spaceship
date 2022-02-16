@@ -19,8 +19,14 @@ class MainServer {
         let b = this.addressList[senderAddress].object.position.y - this.addressList[address].object.position.y
         let c = this.addressList[senderAddress].object.position.z - this.addressList[address].object.position.z
         let latency = (Math.sqrt( a*a + b*b + c*c )/this.speedOfData*1000)*2
-        if (latency<5) { latency = 4+Math.random()}
+        if (latency<2) { latency = 1+Math.random()}
         //console.log(latency)
+
+        /*if (address===1) {
+            if (playerShip.antennas[0].rx+size>playerShip.antennas[1].rx) {
+
+            }
+        }*/
         setTimeout( ()=> {
             if (address===1) {
                 data.latency = latency

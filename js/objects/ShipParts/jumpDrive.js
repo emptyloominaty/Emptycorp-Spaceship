@@ -27,11 +27,11 @@ class JumpDrive extends Part {
     }
 
     getChargeNeeded(distance) {
-        return this.baseCharge+Math.pow(distance,this.chargePow)
+        return this.baseCharge+Math.pow(distance*this.chargePerLy,this.chargePow)
     }
 
     getFuelNeeded(distance) {
-        return 1+Math.pow(distance,this.chargePow)*this.fuelPerLy
+        return 1+Math.pow(distance*this.fuelPerLy,this.chargePow)
     }
 
     run() {

@@ -26,8 +26,13 @@ class Computer extends Part {
             x:"",
             y:"",
             z:"",
-            select:"x"
+            select:""
         },
+        lifeSupport:{
+            pressure:"1.0",
+            temperature:"21",
+            select:""
+        }
 
     }
 
@@ -723,7 +728,13 @@ class Computer extends Part {
                 this.display.drawText(10,20, "Charge Time: "+timeNeed.toFixed(1)+"sec", font1, color1, 'left')
                 this.display.drawText(10,40, "Power: "+(chargeNeed/3.6).toFixed(0)+" kWh", font1, color1, 'left')
                 this.display.drawText(10,60, "Fuel: "+playerShip.jumpDrive.getFuelNeeded(distance).toFixed(0)+" kg", font1, color1, 'left')
-                this.display.drawText(10,80, "Distance: "+getDistanceText(distance), font1, color1, 'left')
+
+                let dColor = color1
+                if (distance>playerShip.jumpDrive.maxDistance) {
+                    dColor = "#FF0000"
+                }
+
+                this.display.drawText(10,80, "Distance: "+getDistanceText(distance)+" / "+playerShip.jumpDrive.maxDistance+"ly", font1, dColor, 'left')
 
                 this.display.drawText(10,150, "x: ", font1, color1, 'left')
                 this.display.drawText(125,150, this.inputData.jumpDrive.x, font1, color1, 'center')
@@ -978,46 +989,57 @@ class Computer extends Part {
             {x1:50, y1:135,x2:200,y2:160,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="x"}}},
             {x1:50, y1:165,x2:200,y2:190,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="y"}}},
             {x1:50, y1:195,x2:200,y2:220,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="z"}}},
-            {x1:50, y1:225,x2:200,y2:245,function: () => {if (this.tab==="jumpDrive") {playerShip.jumpDrive.jump(this.inputData.jumpDrive.x,this.inputData.jumpDrive.y,this.inputData.jumpDrive.z)}}},
+            {x1:50, y1:225,x2:200,y2:245,function: () => {if (this.tab==="jumpDrive") {playerShip.jumpDrive.jump(this.inputData.jumpDrive.x,this.inputData.jumpDrive.y,this.inputData.jumpDrive.z);this.inputData.jumpDrive.select=""}}},
 
         ]
         //nav 3 buttons
-        for (let i = 0; i<9; i++) {
-            let y = ((this.data.startId+i)*35)+35
-            let id = (this.data.startId+i)
-            //45-10 = 35 (y1)
-            buttons.push({x1:410, y1:y,x2:480,y2:y+20,function: () => {
-                if (this.tab==="nav3") {
-                    this.target=starSystems[id].name
-                    this.targetType="system"
-                    this.targetObj=starSystems[id]
-            }}})
-            buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
-                if (this.tab==="nav3") {
-                    this.toggleAutopilot()
-                    this.targetType="system"
-                    this.target=starSystems[id].name
-                    this.targetObj=starSystems[id]
-            }}})
+        if (this.tab==="nav3") {
+            for (let i = 0; i<9; i++) {
+                let y = ((this.data.startId+i)*35)+35
+                let id = (this.data.startId+i)
+                //45-10 = 35 (y1)
+                buttons.push({x1:410, y1:y,x2:480,y2:y+20,function: () => {
+                        if (this.tab==="nav3") {
+                            this.target=starSystems[id].name
+                            this.targetType="system"
+                            this.targetObj=starSystems[id]
+                        }}})
+                buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
+                        if (this.tab==="nav3") {
+                            this.toggleAutopilot()
+                            this.targetType="system"
+                            this.target=starSystems[id].name
+                            this.targetObj=starSystems[id]
+                        }}})
+            }
         }
+
         //nav 4 buttons
-        for (let i = 0; i<9; i++) {
-            let y = ((this.data.startId+i)*35)+35
-            let id = (this.data.startId+i)
-            //45-10 = 35 (y1)
-            buttons.push({x1:410, y1:y,x2:480,y2:y+20,function: () => {
-                    if (this.tab==="nav4") {
-                        this.target=planets[id].name
-                        this.targetType="planet"
-                        this.targetObj=planets[id]
-                    }}})
-            buttons.push({x1:490, y1:y,x2:590,y2:y+20,function: () => {
-                    if (this.tab==="nav4") {
-                        this.toggleAutopilot()
-                        this.targetType="planet"
-                        this.target=planets[id].name
-                        this.targetObj=planets[id]
-                    }}})
+        if (this.tab==="nav4") {
+            for (let i = 0; i < 9; i++) {
+                let y = ((this.data.startId + i) * 35) + 35
+                let id = (this.data.startId + i)
+                //45-10 = 35 (y1)
+                buttons.push({
+                    x1: 410, y1: y, x2: 480, y2: y + 20, function: () => {
+                        if (this.tab === "nav4") {
+                            this.target = planets[id].name
+                            this.targetType = "planet"
+                            this.targetObj = planets[id]
+                        }
+                    }
+                })
+                buttons.push({
+                    x1: 490, y1: y, x2: 590, y2: y + 20, function: () => {
+                        if (this.tab === "nav4") {
+                            this.toggleAutopilot()
+                            this.targetType = "planet"
+                            this.target = planets[id].name
+                            this.targetObj = planets[id]
+                        }
+                    }
+                })
+            }
         }
         //TODO:END
         buttons = buttons.concat(this.modulesButtons)

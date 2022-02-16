@@ -51,7 +51,6 @@ let drawHud = function () {
          //Flash Message
          html += "<div id='flashMessage'></div>"
 
-
          //JumpDrive
          html+= "<div id='hudJumpDrive'>Jump Drive<br> <div id='hudJumpDriveBorder' > <div id='hudJumpDriveCharging'></div></div></div>"
 
@@ -112,7 +111,6 @@ let drawHud = function () {
      //--------------------------------------------------------------------------------------------------------------------------------------------------------
      let wwidth = window.innerWidth
      let wheight = window.innerHeight
-
 
      //jump drive
      elements.hudJumpDriveCharging.style.width = (playerShip.jumpDrive.charged/playerShip.jumpDrive.chargeNeeded*100)+"%"

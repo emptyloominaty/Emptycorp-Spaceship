@@ -2,6 +2,8 @@ class Ship {
     myAddress = 1
     faction = "Player"
     credits = 0
+    stealth = 0
+    baseStealth = 25
     //---------------------------------------------
     crew = [{name:"Empty",status:"alive",dying:0,player:true,faction:"Player", id:0}]
     maxCrew = 2
@@ -72,7 +74,9 @@ class Ship {
 
 //------------------------------------------------------------------------------------------------------------------
     everyFrame(fps) {
-        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,0.0001)
+        this.stealth = (((this.powerOutput2*50)+(this.computers[0].data.engineThrust/1000000000)+(this.powerInput*350))*((this.size.w+this.size.l+this.size.h)/3))-this.baseStealth
+
+        this.hitbox = calcHitbox(this.position.x,this.position.y,this.position.z,0.000000000000002114)
         this.powerInputArray.push(this.powerInput)
         if (this.powerInputArray.length>60) {
             this.powerInputArray.shift()
@@ -810,7 +814,7 @@ class Ship {
 
         this.surfaceArea = stats.surfaceArea
         this.size = stats.size
-
+        this.baseStealth = stats.baseStealth
     }
 }
 
@@ -852,12 +856,13 @@ let shipDefaultParts = {
         //{weight:250 ,type:"laser",damageData:{power:40/* MW */, length:0.01 /*seconds*/,damage:0.8,shieldDmgBonus:0,ignoreShield:false,cd:0.32 /*seconds*/,life: 7, speed:20000, color: 0xff0000}}
         //{weight:280 ,type:"plasma",damageData:{power:500/* MW */, length:0.0025 /*seconds*/,damage:4,shieldDmgBonus:0,ignoreShield:false,cd:1 /*seconds*/,life: 5, speed:5000, color: 0xffaa00}}
         ],
-    jumpDrive:{weight:500, fuelType:"fuel1", maxDistance:80/*ly*/, chargePerLy:0.1/*MW*/, chargePow:1.5, baseCharge:2/*MW*/, chargeSpeed:0.350/*MW*/, fuelPerLy:0.6},
+    jumpDrive:{weight:500, fuelType:"fuel1", maxDistance:80/*ly*/, chargePerLy:0.3/*MW*/, chargePow:1.3, baseCharge:2/*MW*/, chargeSpeed:0.350/*MW*/, fuelPerLy:0.6},
 }
 
 let shipStats = {
     armor:50, weight:5500/*kg*/, ercsThrust: 0.01/*MN*/,
     surfaceArea:128/*m2*/,size:{l:7,h:3.5,w:3.5}/*m*/ ,
+    baseStealth:25,
 }
 
 
