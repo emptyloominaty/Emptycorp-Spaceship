@@ -157,7 +157,7 @@ updateToggles()
 //-------------------------------Keyboard
 let keyPressed = {}
 let keyLoop = () => {
-    let val = gameFPS/120
+    let val = 0.5//gameFPS/120
     let valSpeed = 1
 
     if (!settingsOpen) {

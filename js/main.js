@@ -80,8 +80,6 @@ let elements = {
     shieldCharge: document.getElementById("shieldCharge"),
     root: document.querySelector(':root'),
     weaponBar: document.getElementById("weaponBar"),
-    rcsV: document.getElementById("rcsV"),
-    rcsH: document.getElementById("rcsH"),
     speedSensitivityValue: document.getElementById("speedSensitivityValue"),
     speedSensitivity: document.getElementById("speedSensitivity"),
     appSettings:document.getElementById("appSettings"),
@@ -90,15 +88,9 @@ let elements = {
     hudYaw: document.getElementById("hudYaw"),
     hudYawCenter: document.getElementById("hudYawCenter"),
     hudPitchCenter: document.getElementById("hudPitchCenter"),
+    hudRCS:document.getElementById("hudRCS"),
+    rcsControl: document.getElementById("rcsControl"),
 }
-
-for (let i = 0; i<11; i++) {
-    elements["rcsBar"+i] = document.getElementById("rcsBar"+i)
-    elements["rcs2Bar"+i] = document.getElementById("rcs2Bar"+i)
-    elements["rcs3Bar"+i] = document.getElementById("rcs3Bar"+i)
-    elements["rcs4Bar"+i] = document.getElementById("rcs4Bar"+i)
-}
-
 
 let speedInc = 1
 function update(progress) {
@@ -165,23 +157,22 @@ function update(progress) {
 
     playerShip.computers[0].data.inputSpeed = inputNumber_speed
 
-    //throttle
-    if (playerShip.computers[0].data.engineThrottle>=0) {
-        throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
-    } else {
-        throttleBar(playerShip.computers[0].data.engineThrottle*(-100),"throttleBar")
+    if (hudEnabled && hudGenerated) {
+        //throttle
+        if (playerShip.computers[0].data.engineThrottle>=0) {
+            throttleBar(playerShip.computers[0].data.engineThrottle*100,"throttleBar")
+        } else {
+            throttleBar(playerShip.computers[0].data.engineThrottle*(-100),"throttleBar")
+        }
+        //rcs
+        elements.rcsV.textContent = ((playerShip.computers[0].data.rcsUThrust*100)-(playerShip.computers[0].data.rcsDThrust*100)).toFixed(3)
+        elements.rcsH.textContent = ((playerShip.computers[0].data.rcsLThrust*100)-(playerShip.computers[0].data.rcsRThrust*100)).toFixed(3)
+        throttleBarHud(playerShip.computers[0].data.rcsRThrust*100,"rcsBar",0,0.2,0.5,1,5,10,25,50,75,90) //right
+        throttleBarHud(playerShip.computers[0].data.rcsLThrust*100,"rcs2Bar",0,0.2,0.5,1,5,10,25,50,75,90) //left
 
+        throttleBarHud(playerShip.computers[0].data.rcsUThrust*100,"rcs4Bar",0,0.2,0.5,1,5,10,25,50,75,90) //up
+        throttleBarHud(playerShip.computers[0].data.rcsDThrust*100,"rcs3Bar",0,0.2,0.5,1,5,10,25,50,75,90) //down
     }
-
-    //rcs
-    elements.rcsV.textContent = ((playerShip.computers[0].data.rcsUThrust*100)-(playerShip.computers[0].data.rcsDThrust*100)).toFixed(3)
-    elements.rcsH.textContent = ((playerShip.computers[0].data.rcsLThrust*100)-(playerShip.computers[0].data.rcsRThrust*100)).toFixed(3)
-    throttleBar(playerShip.computers[0].data.rcsRThrust*100,"rcsBar",0,0.2,0.5,1,5,10,25,50,75,90) //right
-    throttleBar(playerShip.computers[0].data.rcsLThrust*100,"rcs2Bar",0,0.2,0.5,1,5,10,25,50,75,90) //left
-
-    throttleBar(playerShip.computers[0].data.rcsUThrust*100,"rcs4Bar",0,0.2,0.5,1,5,10,25,50,75,90) //up
-    throttleBar(playerShip.computers[0].data.rcsDThrust*100,"rcs3Bar",0,0.2,0.5,1,5,10,25,50,75,90) //down
-
 
     if (debug.performance) {
         debug.timeC = performance.now()

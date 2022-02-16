@@ -8,7 +8,7 @@ class Setting {
             this.value = val
             updateSettingsHTML()
             updateSettings()
-            hudGenerated = false
+            //hudGenerated = false
         }
     }
 

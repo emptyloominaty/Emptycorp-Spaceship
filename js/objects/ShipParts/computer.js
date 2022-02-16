@@ -578,10 +578,64 @@ class Computer extends Part {
                 this.display.drawText(80, 125, "CO2: ", font1, color1, 'left')
                 this.display.drawText(130, 125, (carbonDioxide).toFixed(2)+" %", font1, colorCarbonDioxide, 'left')
 
+
+                let keyPressed = this.keyInput
+                let selected = this.inputData.lifeSupport.select
+                if (selected!=="") {
+                    this.listenForInput = true
+                    if (keyPressed==="Backspace") {
+                        if (this.inputData.lifeSupport[selected].length>0) {
+                            this.inputData.lifeSupport[selected] = this.inputData.lifeSupport[selected].substring(0, this.inputData.lifeSupport[selected].length - 1)
+                        }
+                    } else if (isFinite(keyPressed)) {
+                        this.inputData.lifeSupport[selected] += ""+keyPressed
+                    } else if (keyPressed==="," || keyPressed===".") {
+                        this.inputData.lifeSupport[selected] += "."
+                    }
+                }
+                this.inputData.lifeSupport.pressure = this.inputData.lifeSupport.pressure.substring(0, 4)
+                this.inputData.lifeSupport.temperature = this.inputData.lifeSupport.temperature.substring(0, 4)
+
+                if (Number(this.inputData.lifeSupport.pressure)>2) {
+                    this.inputData.lifeSupport.pressure = "2.0"
+                }
+                if (Number(this.inputData.lifeSupport.temperature)>40) {
+                    this.inputData.lifeSupport.pressure = "40"
+                } else if (Number(this.inputData.lifeSupport.temperature)<0) {
+                    this.inputData.lifeSupport.pressure = "0"
+                }
+
                 //Set
-                //TODO:
+                let atmColor = "#ab3b32"
+                if (playerShip.lifeSupport[0].on===1) {
+                    atmColor = "#468b46"
+                }
+
+                this.display.drawRect(300,10,180,20,atmColor)
+                this.display.drawText(390,25, "Atmosphere Control", font1, color1, 'center')
+
+                this.display.drawText(300,57, "Set Pressure: ", font1, color1, 'left')
+                this.display.drawText(500,57, this.inputData.lifeSupport.pressure+" bar", font1, color1, 'center')
+                this.display.drawRectStroke(450,40,100,25,color1)
+
+                let tempColor = "#ab3b32"
+                if (playerShip.lifeSupport[1].on===1) {
+                    tempColor = "#468b46"
+                }
+
+                this.display.drawRect(300,150,180,20,tempColor)
+                this.display.drawText(390,165, "Temperature Control", font1, color1, 'center')
+
+                this.display.drawText(300,197, "Set Temperature: ", font1, color1, 'left')
+                this.display.drawText(500,197, this.inputData.lifeSupport.temperature+" °C", font1, color1, 'center')
+                this.display.drawRectStroke(450,180,100,25,color1)
 
 
+                this.display.drawText(500,327, "Set", font1, "#00b600", 'center')
+                this.display.drawRectStroke(450,310,100,25,"#00b600")
+
+                //reset keyInput
+                this.keyInput = ""
             } else if (this.tab==="modules") {//---------------------------------------------------------------------------------------Modules
                 this.modulesButtons = []
                 let y = 15
@@ -961,7 +1015,6 @@ class Computer extends Part {
 
 
     touchScreen(x,y) {
-        //TODO:START OPTIMIZE
         let buttons = [
             {x1:0, y1:360,x2:100,y2:400,function: () => {this.tab = "main";this.starSystems = []}},
             {x1:100, y1:360,x2:150,y2:400,function: () => {this.tab = "nav";this.starSystems = []}},
@@ -990,8 +1043,18 @@ class Computer extends Part {
             {x1:50, y1:165,x2:200,y2:190,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="y"}}},
             {x1:50, y1:195,x2:200,y2:220,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="z"}}},
             {x1:50, y1:225,x2:200,y2:245,function: () => {if (this.tab==="jumpDrive") {playerShip.jumpDrive.jump(this.inputData.jumpDrive.x,this.inputData.jumpDrive.y,this.inputData.jumpDrive.z);this.inputData.jumpDrive.select=""}}},
-
         ]
+        if (this.tab==="lifeSupport") {
+            buttons.push({x1:450, y1:180,x2:550,y2:205,function: () => {this.inputData.lifeSupport.select="temperature"}})
+            buttons.push({x1:450, y1:40,x2:550,y2:65,function: () => {this.inputData.lifeSupport.select="pressure"}})
+            //set
+            buttons.push({x1:450, y1:310,x2:550,y2:335,function: () => {
+                    playerShip.temperatureSet = Number(this.inputData.lifeSupport.temperature)+273.15
+                    playerShip.pressureSet = Number(this.inputData.lifeSupport.pressure)
+                }})
+            buttons.push({x1:300, y1:10,x2:480,y2:30,function: () => {playerShip.lifeSupport[0].on = 1 - playerShip.lifeSupport[0].on}})  //atm
+            buttons.push({x1:300, y1:150,x2:480,y2:170,function: () => {playerShip.lifeSupport[1].on = 1 - playerShip.lifeSupport[1].on}})  //temp
+        }
         //nav 3 buttons
         if (this.tab==="nav3") {
             for (let i = 0; i<9; i++) {
@@ -1041,7 +1104,6 @@ class Computer extends Part {
                 })
             }
         }
-        //TODO:END
         buttons = buttons.concat(this.modulesButtons)
 
 

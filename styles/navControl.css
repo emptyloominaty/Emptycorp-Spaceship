@@ -1,19 +1,33 @@
 #navControl {
-    background-color:#000;
-    border:2px solid var(--background-color-light2);
-    border-radius:2px;
+    background-color:rgba(0,0,0,0);
+    color:var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
     position:absolute;
     right:0;
-    top:150px;
+    top:calc(50vh - 260px);
     width:260px;
-    height:180px;
-    overflow-y: hidden;
+    /*overflow-y: hidden;*/
+    overflow: visible;
 }
 
 #navControlScreen {
+    border:1px solid var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 3px 0,inset  var(--color-hudShadow) 0 0 3px 0 ;
+    border-radius:2px;
     padding:3px;
-    background-color:#000;
+    background-color:rgba(0,0,0,0);
     height:180px;
     transition: opacity 100ms ease-in;
-    overflow-y: hidden;
+    /*overflow: visible;*/
+}
+
+#navControlScreen hr {
+    border-color:var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0;
+}
+
+#navControlScreen button {
+    opacity:0.45;
+    border-color:var(--color-hudShadow);
+    box-shadow: var(--color-hudShadow) 0 0 5px 0;
 }

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/hud.css">
     <link rel="stylesheet" type="text/css" href="styles/throttle.css">
     <link rel="stylesheet" type="text/css" href="styles/navControl.css">
     <link rel="stylesheet" type="text/css" href="styles/settings.css">
-    <link rel="stylesheet" type="text/css" href="styles/hud.css">
     <link rel="stylesheet" type="text/css" href="styles/tanks.css">
     <!-- START -->
     <!--Libs -->
@@ -153,10 +153,6 @@
                 <label class="flex-row">Temperature Control: <button id="btn_temperatureControl" onclick="inputFunctions.toggleTemperatureControl()" ></button></label>
             </div>
             <div class="paddingDiv">
-                <label class="flex-row">Pressure:  <input type="range" class="inputRange" min="0" max="2" step="0.1" value="1"  id="inputRange_pressure" oninput="txt_pressure.value = inputRange_pressure.value;inputFunctions.setPressure()" ><output id="txt_pressure">1</output> Bar</label>
-                <label class="flex-row">Temperature:  <input type="range" class="inputRange" min="0" max="30" step="0.5" value="21"  id="inputRange_temperature" oninput="txt_temperature.value = inputRange_temperature.value;inputFunctions.setTemperature()" ><output id="txt_temperature">21</output> °C</label>
-            </div>
-            <div class="paddingDiv">
                 <p id="atmosphereComposition"></p>
                 <p id="pressureAndTemperature"></p>
             </div>
@@ -208,10 +204,10 @@
         </div>
     </div>
 
-    <div class="RcsControl">
+    <div id="rcsControl" class="RcsControl">
         <label class="flex-row">RCS: <button id="btn_rcs" onclick="inputFunctions.toggleRCS()" ></button></label>
         <label class="flex-row">ERCS: <button id="btn_eRcs" onclick="inputFunctions.toggleERCS()" ></button></label>
-        <label class="flex-row">Direction  </label>
+        <label class="flex-row">Yaw  </label>
         <input type="range" class="inputRange" min="0" max="359" step="1" value="0"  id="inputRange_direction" oninput="txt_direction.value = inputRange_direction.value;inputFunctions.setDirection()" ><output id="txt_direction">0</output>°
         <label class="flex-row">Time  </label>
         <input type="range" class="inputRange" min="1" max="4" step="1" value="1"  id="inputRange_time" oninput="txt_time.value = inputRange_time.value;inputFunctions.setTime()" ><output id="txt_time">1</output>x
@@ -228,57 +224,9 @@
             <div class="throttleBar" id="throttleBar9"></div>
             <div class="throttleBar" id="throttleBar10"></div>
         </div>
-        RCS
-        <div class="rcsBar2V">
-            <div class="rcsBarV" id="rcs4Bar10"></div>
-            <div class="rcsBarV" id="rcs4Bar9"></div>
-            <div class="rcsBarV" id="rcs4Bar8"></div>
-            <div class="rcsBarV" id="rcs4Bar7"></div>
-            <div class="rcsBarV" id="rcs4Bar6"></div>
-            <div class="rcsBarV" id="rcs4Bar5"></div>
-            <div class="rcsBarV" id="rcs4Bar4"></div>
-            <div class="rcsBarV" id="rcs4Bar3"></div>
-            <div class="rcsBarV" id="rcs4Bar2"></div>
-            <div class="rcsBarV" id="rcs4Bar1"></div>
-            <div class="hline"></div>
-        </div>
-        <div id="rcsBar">
-            <div class="rcsBar" id="rcs2Bar10"></div>
-            <div class="rcsBar" id="rcs2Bar9"></div>
-            <div class="rcsBar" id="rcs2Bar8"></div>
-            <div class="rcsBar" id="rcs2Bar7"></div>
-            <div class="rcsBar" id="rcs2Bar6"></div>
-            <div class="rcsBar" id="rcs2Bar5"></div>
-            <div class="rcsBar" id="rcs2Bar4"></div>
-            <div class="rcsBar" id="rcs2Bar3"></div>
-            <div class="rcsBar" id="rcs2Bar2"></div>
-            <div class="rcsBar" id="rcs2Bar1"></div>
-            <div class="vline"></div>
-            <div class="rcsBar" id="rcsBar1"></div>
-            <div class="rcsBar" id="rcsBar2"></div>
-            <div class="rcsBar" id="rcsBar3"></div>
-            <div class="rcsBar" id="rcsBar4"></div>
-            <div class="rcsBar" id="rcsBar5"></div>
-            <div class="rcsBar" id="rcsBar6"></div>
-            <div class="rcsBar" id="rcsBar7"></div>
-            <div class="rcsBar" id="rcsBar8"></div>
-            <div class="rcsBar" id="rcsBar9"></div>
-            <div class="rcsBar" id="rcsBar10"></div>
-        </div>
-        <div class="rcsBar2V">
-            <div class="hline"></div>
-            <div class="rcsBarV" id="rcs3Bar1"></div>
-            <div class="rcsBarV" id="rcs3Bar2"></div>
-            <div class="rcsBarV" id="rcs3Bar3"></div>
-            <div class="rcsBarV" id="rcs3Bar4"></div>
-            <div class="rcsBarV" id="rcs3Bar5"></div>
-            <div class="rcsBarV" id="rcs3Bar6"></div>
-            <div class="rcsBarV" id="rcs3Bar7"></div>
-            <div class="rcsBarV" id="rcs3Bar8"></div>
-            <div class="rcsBarV" id="rcs3Bar9"></div>
-            <div class="rcsBarV" id="rcs3Bar10"></div>
-        </div>
     </div>
+
+    <button id="hideRcsControl" onclick="hideRcsControl()"></button>
 
     <div id="navControl">
     </div>
@@ -300,12 +248,12 @@
     <div id="hudYaw">
     </div>
 
+    <div id="hudRCS">
+    </div>
+
     <div>
         <span id="debug123"></span>
     </div>
-
-    <span id="rcsV"></span>
-    <span id="rcsH"></span>
 
 </div>
 <div id="appSettings">

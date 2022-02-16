@@ -117,6 +117,72 @@ let throttleBar = function(throttle,el,a=0,b=10,c=20,d=30,e=40,f=50,g=60,h=70,i=
     }
 }
 
+
+let throttleBarHud = function(throttle,el,a=0,b=10,c=20,d=30,e=40,f=50,g=60,h=70,i=80,j=90) {
+    elements[el+1].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+2].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+3].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+4].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+5].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+6].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+7].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+8].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+9].style.backgroundColor = "rgba(0,0,0,0)"
+    elements[el+10].style.backgroundColor = "rgba(0,0,0,0)"
+
+    elements[el+1].style.boxShadow = ""
+    elements[el+2].style.boxShadow = ""
+    elements[el+3].style.boxShadow = ""
+    elements[el+4].style.boxShadow = ""
+    elements[el+5].style.boxShadow = ""
+    elements[el+6].style.boxShadow = ""
+    elements[el+7].style.boxShadow = ""
+    elements[el+8].style.boxShadow = ""
+    elements[el+9].style.boxShadow = ""
+    elements[el+10].style.boxShadow = ""
+
+    if (throttle>j) {
+        elements[el+10].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+10].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 00"
+    }
+    if (throttle>i) {
+        elements[el+9].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+9].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>h) {
+        elements[el+8].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+8].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>g) {
+        elements[el+7].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+7].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>f) {
+        elements[el+6].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+6].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>e) {
+        elements[el+5].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+5].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>d) {
+        elements[el+4].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+4].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>c) {
+        elements[el+3].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+3].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>b) {
+        elements[el+2].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+2].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+    if (throttle>a) {
+        elements[el+1].style.backgroundColor = "rgba(101, 176, 255, 0.5)"
+        elements[el+1].style.boxShadow = "rgba(101, 176, 255, 0.5) 0 0 10px 0"
+    }
+}
+
 let sortAllSystemsByDistance = function(obj,position,systems) {
     let systemsSorted = []
     for (let i = 0; i<systems.length; i++) {

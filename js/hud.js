@@ -56,6 +56,64 @@ let drawHud = function () {
 
          elements.hud.innerHTML += html
 
+         //RCS
+         html = `
+                 <div class="rcsBar2V">
+                     <div class="rcsBarV" id="rcs4Bar10"></div>
+                     <div class="rcsBarV" id="rcs4Bar9"></div>
+                     <div class="rcsBarV" id="rcs4Bar8"></div>
+                     <div class="rcsBarV" id="rcs4Bar7"></div>
+                     <div class="rcsBarV" id="rcs4Bar6"></div>
+                     <div class="rcsBarV" id="rcs4Bar5"></div>
+                     <div class="rcsBarV" id="rcs4Bar4"></div>
+                     <div class="rcsBarV" id="rcs4Bar3"></div>
+                     <div class="rcsBarV" id="rcs4Bar2"></div>
+                     <div class="rcsBarV" id="rcs4Bar1"></div>
+                 </div>
+                 <div id="rcsBar">
+                     <div class="rcsBar" id="rcs2Bar10"></div>
+                     <div class="rcsBar" id="rcs2Bar9"></div>
+                     <div class="rcsBar" id="rcs2Bar8"></div>
+                     <div class="rcsBar" id="rcs2Bar7"></div>
+                     <div class="rcsBar" id="rcs2Bar6"></div>
+                     <div class="rcsBar" id="rcs2Bar5"></div>
+                     <div class="rcsBar" id="rcs2Bar4"></div>
+                     <div class="rcsBar" id="rcs2Bar3"></div>
+                     <div class="rcsBar" id="rcs2Bar2"></div>
+                     <div class="rcsBar" id="rcs2Bar1"></div>
+                     <div class="vline"></div>
+                     <div class="rcsBar" id="rcsBar1"></div>
+                     <div class="rcsBar" id="rcsBar2"></div>
+                     <div class="rcsBar" id="rcsBar3"></div>
+                     <div class="rcsBar" id="rcsBar4"></div>
+                     <div class="rcsBar" id="rcsBar5"></div>
+                     <div class="rcsBar" id="rcsBar6"></div>
+                     <div class="rcsBar" id="rcsBar7"></div>
+                     <div class="rcsBar" id="rcsBar8"></div>
+                     <div class="rcsBar" id="rcsBar9"></div>
+                     <div class="rcsBar" id="rcsBar10"></div>
+                 </div>
+                 <div class="rcsBar2V">
+                     <div class="rcsBarV" id="rcs3Bar1"></div>
+                     <div class="rcsBarV" id="rcs3Bar2"></div>
+                     <div class="rcsBarV" id="rcs3Bar3"></div>
+                     <div class="rcsBarV" id="rcs3Bar4"></div>
+                     <div class="rcsBarV" id="rcs3Bar5"></div>
+                     <div class="rcsBarV" id="rcs3Bar6"></div>
+                     <div class="rcsBarV" id="rcs3Bar7"></div>
+                     <div class="rcsBarV" id="rcs3Bar8"></div>
+                     <div class="rcsBarV" id="rcs3Bar9"></div>
+                     <div class="rcsBarV" id="rcs3Bar10"></div>
+                 </div>
+             <span id="rcsV"></span>
+             <span id="rcsH"></span>
+                 `
+         elements.hudRCS.innerHTML += html
+
+
+
+
+
          for (let i = 0; i<playerShip.weapons.length; i++) {
              elements["wepCd"+i] = document.getElementById("wepCd"+i)
              elements["wepMissiles"+i] = document.getElementById("wepMissiles"+i)
@@ -106,6 +164,18 @@ let drawHud = function () {
          elements.hudPitchCenter2 = document.getElementById("hudPitchCenter2")
 
 
+         for (let i = 0; i<11; i++) {
+             elements["rcsBar"+i] = document.getElementById("rcsBar"+i)
+             elements["rcs2Bar"+i] = document.getElementById("rcs2Bar"+i)
+             elements["rcs3Bar"+i] = document.getElementById("rcs3Bar"+i)
+             elements["rcs4Bar"+i] = document.getElementById("rcs4Bar"+i)
+         }
+
+         elements.rcsV = document.getElementById("rcsV")
+         elements.rcsH = document.getElementById("rcsH")
+
+
+         elements.navControl.style.opacity= 1
          hudGenerated = true
      }
      //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -206,5 +276,19 @@ let drawHud = function () {
      elements.hudYawCenter.innerHTML = ""
      elements.hudPitch.innerHTML = ""
      elements.hudPitchCenter.innerHTML = ""
+     elements.hudRCS.innerHTML = ""
+     elements.navControl.style.opacity= 0
  }
+}
+
+
+let rcsControlHidden = false
+let hideRcsControl = function() {
+    if (!rcsControlHidden) {
+        rcsControlHidden = true
+        elements.rcsControl.style.transform = "translate(0,-150px)"
+    } else {
+        rcsControlHidden = false
+        elements.rcsControl.style.transform = "translate(0,0)"
+    }
 }

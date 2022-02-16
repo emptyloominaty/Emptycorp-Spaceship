@@ -1,5 +1,6 @@
 :root {
     --color-hud: rgba(101, 176, 255, 0.45);
+    --color-hudRcsBorder: rgba(101, 176, 255, 0.2);
     --color-hudShadow: rgba(101, 176, 255, 0.8);
     --color-hud2: rgba(0, 51, 255, 0.35);
     --color-hud3: rgba(131, 208, 255, 0.35);
@@ -210,4 +211,15 @@
     width:0;
     background-color: var(--color-hud);
     box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0;
+}
+
+#hideRcsControl {
+    position:absolute;
+    z-index:2;
+    left:90px;
+    top:75px;
+    background-color:rgba(255,255,255,0.03);
+    border:0;
+    width:20px;
+    height:20px;
 }

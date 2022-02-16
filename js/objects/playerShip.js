@@ -16,7 +16,7 @@ class Ship {
     //---------------------------------------------
     speed = 0 //c
     position = {x:1, y:1, z:0, yaw: {direction:360, targetDirection:360, angularSpeed:0}, pitch: {direction:180, targetDirection:180, angularSpeed:0}}
-    positionPrecise = {x:new BigNumber(1),y:new BigNumber(1),z:new BigNumber(0)}
+    positionPrecise = {x:new BigNumber(0.1),y:new BigNumber(0.1),z:new BigNumber(0)}
     positionHi = {x:1, y:1, z:0}
     positionLo = {x:0, y:0, z:0}
 

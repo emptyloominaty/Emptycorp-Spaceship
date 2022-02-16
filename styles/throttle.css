@@ -1,9 +1,12 @@
 #throttleBar,#rcsBar,.rcsBar2V {
     display:flex;
+    overflow: visible;
 }
 
 .rcsBar2V {
+    margin-top:2px;
     flex-direction:column;
+    overflow: visible;
 }
 
 .throttleBar,.rcsBar,.rcsBarV {
@@ -19,47 +22,61 @@
 }
 
 .rcsBar {
-    width:3px;
+    width:1px;
     height:12px;
-    background-color:var(--background-color-light2);
+    background-color:rgba(101, 176, 255, 0.6);
     margin-right:2px;
+    border: 1px solid var(--color-hudRcsBorder);
+    box-shadow: var(--color-hudShadow) 0 0 1px 0,inset  var(--color-hudShadow) 0 0 1px 0;
+    overflow: visible;
 }
 
 .rcsBarV {
     width:12px;
-    height:3px;
-    background-color:var(--background-color-light2);
+    height:1px;
+    background-color:rgba(101, 176, 255, 0.6);
     margin-bottom:2px;
-    margin-left:41%;
+    margin-left:42%;
+    border: 1px solid var(--color-hudRcsBorder);
+    box-shadow: var(--color-hudShadow) 0 0 1px 0,inset  var(--color-hudShadow) 0 0 1px 0;
+    overflow: visible;
 }
 
 .vline {
-    background-color:#888;
     width:1px;
     height:12px;
     margin-right:2px;
+    margin-bottom:1px;
+    margin-top:1px;
+    background-color: var(--color-hud);
+    box-shadow: var(--color-hudShadow) 0 0 2px 0;
 }
 
-.hline {
-    background-color:#888;
-    width:12px;
-    height:1px;
-    margin-bottom:2px;
-    margin-left:41%;
-}
 
 #rcsV,#rcsH {
     font: 10px "Consolas", monospace;
-    color:#888;
+    color:var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 4px;
+
 }
 
 #rcsH {
     position:absolute;
-    top:365px;
-    left:7px;
+    top:40px;
+    left:1px;
 }
 #rcsV {
     position:absolute;
-    top:325px;
-    left:66px;
+    top:0;
+    left:60px;
+}
+
+#hudRCS {
+    /*position:absolute;
+    left:-400px;
+    top:50px;*/
+    position:absolute;
+    left:10px;
+    top:250px;
+    overflow: visible;
 }

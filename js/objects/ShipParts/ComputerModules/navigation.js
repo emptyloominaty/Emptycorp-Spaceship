@@ -2,7 +2,7 @@ class NavigationModule {
     consumption = 0.0009
     on = 1
     distanceTraveled = 0
-    position = {x:1,y:1,z:0}
+    position = {x:0.1,y:0.1,z:0}
     vars = {recalcPosition:{time:0,timeNeed:5,running:1,func:()=>{this.recalcPosition()},consumption:0.00085}}
 
     run() {

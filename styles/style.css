@@ -33,9 +33,11 @@ html,body,#app {
 }
 
 #topBar {
+    background-color:var(--background-color-light2);
     position: relative;
-    margin-top:3px;
+    padding-top:3px;
     z-index: 5;
+    border-bottom:1px solid #000;
 }
 
 output {
@@ -54,6 +56,11 @@ button {
     width:16px;
     height:16px;
     transition: all 100ms ease-in;
+    outline: none !important;
+}
+
+button:hover {
+    cursor:pointer;
 }
 
 #btn_speedMode {
@@ -359,12 +366,14 @@ input[type=number] {
 .RcsControl {
     background-color:var(--background-color-light2);
     border:1px solid #000;
-    border-radius:2px;
+    border-radius:0 0 2px 2px;
     position:absolute;
     left:0;
-    top:150px;
+    top:66px;
     padding:5px;
     width:110px;
+    z-index:1;
+    transition: transform 500ms;
 }
 
 .inputRange {

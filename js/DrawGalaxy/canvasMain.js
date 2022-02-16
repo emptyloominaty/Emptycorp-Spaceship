@@ -25,14 +25,13 @@ class CanvasMain {
         this.BLOOM_SCENE = 1
         this.bloomLayer = new THREE.Layers()
         this.bloomLayer.set( this.BLOOM_SCENE )
-        console.log(this.bloomLayer)
-
         this.darkMaterialBloom = new THREE.MeshBasicMaterial( { color: 'black' } )
         this.materialsBloom = {}
 
         this.scene = new THREE.Scene()
-        this.camera = new THREE.PerspectiveCamera(50, 1920 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
+        this.camera = new THREE.PerspectiveCamera(40, 1920 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
+        //this.renderer.toneMapping = THREE.ACESFilmicToneMapping
         this.composer = new EffectComposer( this.renderer)
 
         const loader = new FontLoader()
@@ -104,7 +103,7 @@ class CanvasMain {
 
         this.light = new THREE.PointLight( 0xffffff, 0.2, 2 )
         this.light.position.set( -1, 0, -1)
-        this.light.intensity = 1.5
+        this.light.intensity = 1
         this.scene.add( this.light )
 
         //stars
@@ -295,7 +294,7 @@ class CanvasMain {
         this.passSMAA.enabled = false
 
         //-------------Bloom
-        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( width, height ), 1.5, 0.4, 0.4 )
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( width, height ), 1.5, 0.4, 0.2 )
 
         this.bloomComposer = new EffectComposer( this.renderer )
         this.bloomComposer.renderToScreen = false
@@ -342,6 +341,9 @@ class CanvasMain {
         this.projectiles[id].rotation.x = ((projectiles[id].pitch-90)/57.295779487363233601652280409982)
         this.projectiles[id].rotation.y = ((projectiles[id].yaw-180)/57.295779487363233601652280409982)
 
+        if ((type==="laser" || type==="plasma") && this.bloomPass.enabled) {
+            this.projectiles[id].layers.enable( this.BLOOM_SCENE )
+        }
         this.scene.add(this.projectiles[id])
     }
 
