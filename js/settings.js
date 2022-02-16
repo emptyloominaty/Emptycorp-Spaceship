@@ -66,8 +66,7 @@ let settingsList = {
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
         new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,1000,100000],2),
-        new Setting("Antialiasing","antialiasing",[0,1,2],{0:"Off",1:"SMAA",2:"SSAA"},[0,1,2],0),
-        new Setting("SSAA Samples","ssaaSamples",[2,4,8,16],{2:"Low",4:"Medium",8:"High",16:"Ultra"},[2,4,8,16],2),
+        new Setting("Antialiasing","antialiasing",[0,1,2,3],{0:"Off",1:"SMAA",2:"SSAA 2x",3:"SSAA 4x"},[0,1,2,3],0),
         new Setting("Bloom","bloom",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,0.8,1.6],1),
         //new Setting("Motion Blur","motionBlur",[0,1],{0:"Off",1:"On"},[0,1],0),
         //new Setting("Models Quality (TODO)","modelsQuality",[0,1,2],{0:"Low",1:"Medium",2:"High"},[0,1,2],2),
@@ -124,7 +123,7 @@ let updateSettings = function() {
     }
     //bloom
     if (settings.bloom!==0) {
-        let bl = settingsList["Graphics"][4].values[settingsList["Graphics"][4].value]
+        let bl = settingsList["Graphics"][3].values[settingsList["Graphics"][3].value]
         shipWindow3D.enableBloom(bl)
     } else {
         shipWindow3D.disableBloom()
@@ -139,8 +138,13 @@ let updateSettings = function() {
     } else if (settings.antialiasing===2) {
         shipWindow3D.disableSMAA()
         shipWindow3D.enableSSAA()
+        shipWindow3D.setSSAA(2)
+    } else if (settings.antialiasing===3) {
+        shipWindow3D.disableSMAA()
+        shipWindow3D.enableSSAA()
+        shipWindow3D.setSSAA(4)
     }
-    shipWindow3D.setSSAA(settings.ssaaSamples)
+
 
 
     //shipWindow3D.resetRenderer(Boolean(settingsList["Graphics"][2].values[settingsList["Graphics"][2].value]))

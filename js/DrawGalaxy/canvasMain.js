@@ -140,12 +140,21 @@ class CanvasMain {
             this.scene.add(test[0])
         }*/
         //------------------------------------------------------------------------------------------Post Processing
+
+        //MSAA TEST
         /*const renderTarget = new THREE.WebGLMultisampleRenderTarget( 1920, 550 )
-        this.composer = new EffectComposer( this.renderer,renderTarget )*/
+        this.composer = new EffectComposer( this.renderer,renderTarget )
+        this.composer.setSize(1920,550)*/
+        //--------
 
         this.composer = new EffectComposer( this.renderer)
         let renderScene = new RenderPass( this.scene, this.camera )
         this.composer.addPass( renderScene )
+
+        //MSAA TEST
+        /*let copyPass = new ShaderPass( CopyShader )
+        this.composer.addPass( copyPass )*/
+        //--------
 
         //-------------SSAA
         this.ssaaRenderPass = new SSAARenderPass( this.scene, this.camera )
