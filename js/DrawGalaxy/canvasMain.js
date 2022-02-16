@@ -21,10 +21,18 @@ class CanvasMain {
     test = []
 
     constructor() {
+        this.ENTIRE_SCENE = 0
+        this.BLOOM_SCENE = 1
+        this.bloomLayer = new THREE.Layers()
+        this.bloomLayer.set( this.BLOOM_SCENE )
+        console.log(this.bloomLayer)
+
+        this.darkMaterialBloom = new THREE.MeshBasicMaterial( { color: 'black' } )
+        this.materialsBloom = {}
+
         this.scene = new THREE.Scene()
         this.camera = new THREE.PerspectiveCamera(50, 1920 / 550,0.0000000000000001,100000) //0.00000000000000001  //0.00000000000000001, 100000
         this.renderer = new THREE.WebGLRenderer( { canvas: spaceShipWindow, antialias:false, logarithmicDepthBuffer: true} )
-        //this.renderer.setPixelRatio(2)
         this.composer = new EffectComposer( this.renderer)
 
         const loader = new FontLoader()
@@ -106,7 +114,7 @@ class CanvasMain {
             let geometry = new THREE.SphereGeometry(starSize, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2)
             this.stars[i] = new THREE.Mesh(geometry, this.materials[starColor])
             this.stars[i].position.set(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y)
-
+            this.stars[i].layers.enable( this.BLOOM_SCENE )
             this.scene.add(this.stars[i])
 
             drawText(starSystems[i].position.x,starSystems[i].position.z,starSystems[i].position.y,0.08,starSystems[i].name,i)
@@ -161,19 +169,57 @@ class CanvasMain {
         window.onresize = reportWindowSize
 
 
-
-        this.render = () => {
-            requestAnimationFrame(this.render)
-            if (!settingsOpen) {
-                //this.renderer.render(this.scene, this.camera)
-                this.composer.render()
+        setTimeout(()=>{
+            this.render = () => {
+                requestAnimationFrame(this.render)
+                if (!settingsOpen) {
+                    //this.renderer.render(this.scene, this.camera)
+                    this.renderBloom( true )
+                    this.composer.render()
+                }
             }
-        }
-        this.render()
-
+            this.render()
+        },100)
     }
 
+    renderBloom( mask ) {
+        let darkMaterialBloom = this.darkMaterialBloom
+        let bloomLayer = this.bloomLayer
+        let materialsBloom = this.materialsBloom
+
+
+        let darkenNonBloomed = ( obj ) => {
+            if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
+                this.materialsBloom[ obj.uuid ] = obj.material
+                obj.material = darkMaterialBloom
+            }
+        }
+
+        let restoreMaterial = ( obj ) => {
+            if ( materialsBloom[ obj.uuid ] ) {
+                obj.material = materialsBloom[ obj.uuid ]
+                delete materialsBloom[ obj.uuid ]
+            }
+        }
+
+
+        if ( mask === true ) {
+            this.scene.traverse( darkenNonBloomed )
+            this.bloomComposer.render()
+            this.scene.traverse( restoreMaterial )
+        } else {
+            this.camera.layers.set( this.BLOOM_SCENE )
+            this.bloomComposer.render()
+            this.camera.layers.set( this.ENTIRE_SCENE )
+        }
+    }
+
+
+
+
+
     reloadComposer(width = 1920,height = 550) {
+        /*
         //MSAA
         let renderTarget
         if (settings.antialiasingmsaa===1) {
@@ -213,9 +259,65 @@ class CanvasMain {
 
         this.composer.addPass( this.passSMAA )
         this.passSMAA.enabled = false
+*/
+
+        //MSAA
+        let renderTarget
+        if (settings.antialiasingmsaa===1) {
+            renderTarget = new THREE.WebGLMultisampleRenderTarget( width, height )
+            this.composer = new EffectComposer( this.renderer,renderTarget )
+        } else {
+            this.composer = new EffectComposer( this.renderer)
+        }
+
+        this.composer.setSize(width,height)
+
+        let renderScene = new RenderPass( this.scene, this.camera )
+        this.composer.addPass( renderScene )
+
+        let copyPass = new ShaderPass( CopyShader )
+        this.composer.addPass( copyPass )
+
+        //-------------SSAA
+        this.ssaaRenderPass = new SSAARenderPass( this.scene, this.camera )
+        this.ssaaRenderPass.unbiased = true
+        this.composer.addPass( this.ssaaRenderPass )
+        this.ssaaRenderPass.enabled = false
+
+        this.copyPassSSAA = new ShaderPass( CopyShader )
+        this.composer.addPass( this.copyPassSSAA )
+        this.copyPassSSAA.enabled = false
+
+        //-------------SMAA
+        this.passSMAA = new SMAAPass( width, height )
+        this.passSMAA.needsSwap = true;
+        this.composer.addPass( this.passSMAA )
+        this.passSMAA.enabled = false
+
+        //-------------Bloom
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( width, height ), 1.5, 0.4, 0.4 )
+
+        this.bloomComposer = new EffectComposer( this.renderer )
+        this.bloomComposer.renderToScreen = false
+        this.bloomComposer.addPass( renderScene )
+        this.bloomComposer.addPass( this.bloomPass )
 
 
-        //-------------Motion Blur
+        //-------------Bloom Final Pass
+        this.finalPass = new ShaderPass(
+            new THREE.ShaderMaterial( {
+                uniforms: {
+                    baseTexture: { value: null },
+                    bloomTexture: { value:  this.bloomComposer.renderTarget2.texture }
+                },
+                vertexShader: document.getElementById( 'vertexshader' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+                defines: {}
+            } ), 'baseTexture'
+        )
+       this.finalPass.needsSwap = true
+
+        this.composer.addPass( this.finalPass )
 
 
         //
@@ -358,10 +460,16 @@ class CanvasMain {
     enableBloom(bl) {
         this.bloomPass.enabled = true
         this.bloomPass.strength = bl
+        for (let i = 0; i<starSystems.length; i++) {
+            this.stars[i].layers.enable( this.BLOOM_SCENE )
+        }
     }
 
     disableBloom() {
         this.bloomPass.enabled = false
+        for (let i = 0; i<starSystems.length; i++) {
+            this.stars[i].layers.disable( this.BLOOM_SCENE )
+        }
     }
 
     enableSMAA() {
