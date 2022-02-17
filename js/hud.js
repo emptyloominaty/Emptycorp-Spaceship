@@ -198,7 +198,15 @@ let drawHud = function () {
      let maxFadeYaw = maxYaw-40
      let minFadeYaw = minYaw+40
 
-     elements.hudYawCenter3.style.left = (wwidth/2)-(((playerShip.position.yaw.targetDirection-playerShip.position.yaw.direction))*4)-5+"px"
+     let playerShipYaw =  (playerShip.position.yaw.direction + 360) % 360
+     let playerShipYawTarget = (playerShip.position.yaw.targetDirection + 360) % 360
+     if ((playerShipYawTarget<90) && (playerShipYaw>270)) {
+         playerShipYawTarget+=360
+     } else if ((playerShipYawTarget>270) && (playerShipYaw<90)) {
+         playerShipYawTarget-=360
+     }
+
+     elements.hudYawCenter3.style.left = (wwidth/2)-(((playerShipYawTarget-playerShipYaw))*4)-5+"px"
      let yawxx = elements.hudYawCenter3.getBoundingClientRect().x
      if (yawxx>maxYaw || yawxx<minYaw) {
          elements.hudYawCenter3.style.opacity = 0

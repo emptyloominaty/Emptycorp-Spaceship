@@ -584,7 +584,7 @@ class Ship {
             return t
         }
 
-        let realDir = (dir + 360) % 360 //a      //TODO: 360?
+        let realDir = (dir + 360) % 360 //a
         dir = 180 //b
         let realTargetDir = (targetDir + 360) % 360  //c
         targetDir = realDir - realTargetDir + dir  // a - c + b
@@ -596,7 +596,7 @@ class Ship {
         if (targetDir<0) {
             targetDir+=360
         }
-        
+
         let testa = dir
         let testb = targetDir
 
