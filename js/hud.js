@@ -144,8 +144,9 @@ let drawHud = function () {
                  elements["degrees10-"+i+"-"+j] = document.getElementById("degrees10-"+i+"-"+j)
              }
          }
-         elements.hudYawCenter.innerHTML = "<div id='hudYawCenter2'></div>"
+         elements.hudYawCenter.innerHTML = "<div id='hudYawCenter2'></div><div id='hudYawCenter3'>▲</div>"
          elements.hudYawCenter2 = document.getElementById("hudYawCenter2")
+         elements.hudYawCenter3 = document.getElementById("hudYawCenter3")
          //pitch
          html = ""
          for (let j = 0; j<2;j++) {
@@ -159,10 +160,10 @@ let drawHud = function () {
                  elements["degrees10-"+i+"-"+j+"p"] = document.getElementById("degrees10-"+i+"-"+j+"p")
              }
          }
-         elements.hudPitchCenter.innerHTML = "<div id='hudPitchCenter2'></div>"
+         elements.hudPitchCenter.innerHTML = "<div id='hudPitchCenter2'></div><div id='hudPitchCenter3'>◄</div>"
 
          elements.hudPitchCenter2 = document.getElementById("hudPitchCenter2")
-
+         elements.hudPitchCenter3 = document.getElementById("hudPitchCenter3")
 
          for (let i = 0; i<11; i++) {
              elements["rcsBar"+i] = document.getElementById("rcsBar"+i)
@@ -197,6 +198,14 @@ let drawHud = function () {
      let maxFadeYaw = maxYaw-40
      let minFadeYaw = minYaw+40
 
+     elements.hudYawCenter3.style.left = (wwidth/2)-(((playerShip.position.yaw.targetDirection-playerShip.position.yaw.direction))*4)-5+"px"
+     let yawxx = elements.hudYawCenter3.getBoundingClientRect().x
+     if (yawxx>maxYaw || yawxx<minYaw) {
+         elements.hudYawCenter3.style.opacity = 0
+     } else {
+         elements.hudYawCenter3.style.opacity = 1
+     }
+
      for (let j = 0; j<4;j++) {
          for (let i = 35; i>=0;i--) {
              let x = elements["degrees10-"+i+"-"+j].getBoundingClientRect().x
@@ -226,6 +235,16 @@ let drawHud = function () {
 
      let maxFadePitch = maxPitch-25
      let minFadePitch = minPitch+25
+
+     elements.hudPitchCenter3.style.top = 80+(180*(wheight/977))-(((playerShip.position.pitch.targetDirection-playerShip.position.pitch.direction))*2.5)-2+"px"
+     elements.hudPitchCenter3.style.left = (600*(wwidth/1920))+45+"px"
+     let pitchyy = elements.hudPitchCenter3.getBoundingClientRect().y
+     if (pitchyy>maxPitch || pitchyy<minPitch) {
+         elements.hudPitchCenter3.style.opacity = 0
+     } else {
+         elements.hudPitchCenter3.style.opacity = 1
+     }
+
      for (let j = 0; j<2;j++) {
          for (let i = 35; i>=0;i--) {
              let y = elements["degrees10-"+i+"-"+j+"p"].getBoundingClientRect().y

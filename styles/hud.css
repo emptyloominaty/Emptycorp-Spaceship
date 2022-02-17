@@ -137,6 +137,16 @@
     box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0 ;
 }
 
+#hudPitchCenter3 {
+    position:absolute;
+    top:260px;
+    left:600px;
+    width:40px;
+    height:15px;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
+}
+
 .degrees10p {
     color: var(--color-hud);
     text-shadow: var(--color-hudShadow) 0 0 5px;
@@ -176,6 +186,15 @@
     box-shadow: var(--color-hudShadow) 0 0 2px 0,inset  var(--color-hudShadow) 0 0 2px 0 ;
     left: 0;
     right: 0;
+}
+
+#hudYawCenter3 {
+    position:absolute;
+    top:90px;
+    width:40px;
+    height:15px;
+    color: var(--color-hud);
+    text-shadow: var(--color-hudShadow) 0 0 5px;
 }
 
 .degrees10 {

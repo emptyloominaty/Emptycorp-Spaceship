@@ -764,6 +764,8 @@ class Computer extends Part {
                         this.inputData.jumpDrive[selected] += ""+keyPressed
                     } else if (keyPressed==="," || keyPressed===".") {
                         this.inputData.jumpDrive[selected] += "."
+                    } else if (keyPressed==="-") {
+                        this.inputData.jumpDrive[selected] += "-"
                     }
                 }
                 this.inputData.jumpDrive.x = this.inputData.jumpDrive.x.substring(0, 17)
