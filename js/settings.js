@@ -89,25 +89,28 @@ let settingsList = {
 let keybinds = {
     keyListening:0,
     keyDone:true,
-    "Pitch Up":"KeyW",
-    "Pitch Down":"KeyS",
-    "Yaw Left":"KeyA",
-    "Yaw Right":"KeyD",
-    "Weapon 1":"Digit1",
-    "Weapon 2":"Digit2",
-    "Weapon 3":"Digit3",
-    "Weapon 4":"Digit4",
-    "Increase Speed":"ShiftLeft",
-    "Decrease Speed" :"ControlLeft",
-    "Target Nearest Enemy":"Tab",
-    "Toggle Hud":"KeyH",
-    "Autopilot":"KeyT",
-    "Main Generator":"KeyG",
-    "Show System Name":"KeyC",
-    "Shutdown Engine":"KeyX",
-    "Reset Target":"KeyP",
-    "Show Target":"KeyB",
+    "Pitch Up":{mod:"",key:"KeyW"},
+    "Pitch Down":{mod:"",key:"KeyS"},
+    "Yaw Left":{mod:"",key:"KeyA"},
+    "Yaw Right":{mod:"",key:"KeyD"},
+    "Increase Speed":{mod:"",key:"KeyX"},
+    "Decrease Speed" :{mod:"",key:"KeyZ"},
+    "Shutdown Engine":{mod:"",key:"KeyC"},
+    "Weapon 1":{mod:"",key:"Digit1"},
+    "Weapon 2":{mod:"",key:"Digit2"},
+    "Weapon 3":{mod:"",key:"Digit3"},
+    "Weapon 4":{mod:"",key:"Digit4"},
+    "Target Nearest Enemy":{mod:"",key:"Tab"},
+    "Reset Target":{mod:"",key:"KeyP"},
+    "Show Target":{mod:"",key:"KeyB"},
+    "Toggle Hud":{mod:"",key:"KeyH"},
+    "Autopilot":{mod:"ShiftLeft",key:"KeyA"},
+    "Main Generator":{mod:"",key:"KeyG"},
+    "Show System Name":{mod:"",key:"Backquote"},
+    "Mouse Steering":{mod:"ShiftLeft",key:"KeyM"},
     }
+
+
 
 let updateSettings = function() {
     //msaa
@@ -115,9 +118,6 @@ let updateSettings = function() {
         shipWindow3D.msaa = Boolean(settings.antialiasingmsaa)
         shipWindow3D.reloadComposer()
     }
-
-
-
     //motion blur
     if (settings.motionBlur===1) {
         if (!shipWindow3D.motionBlur) {
@@ -153,10 +153,6 @@ let updateSettings = function() {
         shipWindow3D.enableSSAA()
         shipWindow3D.setSSAA(4)
     }
-
-
-
-    //shipWindow3D.resetRenderer(Boolean(settingsList["Graphics"][2].values[settingsList["Graphics"][2].value]))
     //render distance
     shipWindow3D.camera.far = settingsList["Graphics"][1].values[settingsList["Graphics"][1].value]
     shipWindow3D.camera.updateProjectionMatrix()
@@ -223,8 +219,16 @@ let generateMenu = function(id) {
         html += "<div class='keybinds'>"
         //keybinds
         Object.keys(keybinds).forEach(key => {
-            if(key!=="keyListening" && key!=="keyDone")
-          html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' onclick='keybinds.keyListening=\""+key+"\"'>"+keybinds[key]+"</button></div>"
+            if(key!=="keyListening" && key!=="keyDone") {
+                if (key==="Pitch Up" || key==="Pitch Down" || key==="Yaw Left"|| key==="Yaw Right" || key==="Increase Speed" || key==="Decrease Speed") {
+                    keybinds[key].mod=""
+                }
+                let mod = ""
+                if (keybinds[key].mod!=="") {
+                    mod = keybinds[key].mod+" + "
+                }
+                html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' onclick='keybinds.keyListening=\""+key+"\"'>"+mod+keybinds[key].key+"</button></div>"
+            }
         })
         html+= "</div>"
         elements.appSettings.innerHTML = html
@@ -471,7 +475,8 @@ let drawSettings = function() {
 }
 
 
-generateSettingsHTML()
+//generateSettingsHTML()
+updateMenu(2)
 updateSettingsHTML()
 shipWindow3D.reloadComposer()
 updateSettings()

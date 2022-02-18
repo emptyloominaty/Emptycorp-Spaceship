@@ -203,8 +203,13 @@ class Computer extends Part {
         } else {
             this.autopilot = forceAutopilot
         }
-
         if (this.autopilot===1) {
+            if (mouseSteering) {
+                document.exitPointerLock()
+                document.removeEventListener("mousemove", updateRotation, false)
+                flashmessage.add("Mouse Steering Deactivated", "orange")
+                mouseSteering = false
+            }
             flashmessage.add("Autopilot Activated","yellow")
         } else {
             playerShip.targetSpeed = 0

@@ -1,4 +1,5 @@
-
+let mouseSteering = false
+elements.spaceShipWindow = document.getElementById("spaceShipWindow")
 
 let inputFunctions = {
     toggleButtonText(id,val) {
@@ -186,88 +187,123 @@ let keyLoop = () => {
             shipWindow3D.camera.rotation.z-=0.01
         }*/
 
-        //Toggle Showing Target
-        if (keyPressed[keybinds["Show Target"]]) {
-            shipWindow3D.enableTargetTorus = Boolean(1 - shipWindow3D.enableTargetTorus)
-            keyPressed[keybinds["Show Target"]] = false
+        if (keybinds["Mouse Steering"].mod==="" || keyPressed[keybinds["Mouse Steering"].mod]) {
+            if (keyPressed[keybinds["Mouse Steering"].key]) {
+                if (!mouseSteering) {
+                    elements.spaceShipWindow.requestPointerLock()
+                } else {
+                    document.exitPointerLock()
+                    document.removeEventListener("mousemove", updateRotation, false)
+                    flashmessage.add("Mouse Steering Deactivated", "orange")
+                    mouseSteering = false
+                }
+                keyPressed[keybinds["Mouse Steering"].key] = false
+            }
         }
 
+
+        //Toggle Showing Target
+        if (keybinds["Show Target"].mod==="" || keyPressed[keybinds["Show Target"].mod]) {
+            if (keyPressed[keybinds["Show Target"].key]) {
+                shipWindow3D.enableTargetTorus = Boolean(1 - shipWindow3D.enableTargetTorus)
+                keyPressed[keybinds["Show Target"].key] = false
+            }
+        }
 
         //Reset Target
-        if (keyPressed[keybinds["Reset Target"]]) {
-            playerShip.computers[0].resetTarget()
-            keyPressed[keybinds["Reset Target"]] = false
+        if (keybinds["Reset Target"].mod==="" || keyPressed[keybinds["Reset Target"].mod]) {
+            if (keyPressed[keybinds["Reset Target"].key]) {
+                playerShip.computers[0].resetTarget()
+                keyPressed[keybinds["Reset Target"].key] = false
+            }
         }
 
-
         //Toggle Star Systems Name
-        if (keyPressed[keybinds["Show System Name"]]) {
-            shipWindow3D.drawStarSystemsText = true
-        } else {
-            shipWindow3D.drawStarSystemsText = false
+        if (keybinds["Show System Name"].mod==="" || keyPressed[keybinds["Show System Name"].mod]) {
+            if (keyPressed[keybinds["Show System Name"].key]) {
+                shipWindow3D.drawStarSystemsText = true
+            } else {
+                shipWindow3D.drawStarSystemsText = false
+            }
         }
 
         //Shutdown engines
-        if (keyPressed[keybinds["Shutdown Engine"]]) {
-            playerShip.propulsion = "off"
-            playerShip.targetSpeed = 0
-            keyPressed[keybinds["Shutdown Engine"]] = false
+        if (keybinds["Shutdown Engine"].mod==="" || keyPressed[keybinds["Shutdown Engine"].mod]) {
+            if (keyPressed[keybinds["Shutdown Engine"].key]) {
+                playerShip.propulsion = "off"
+                playerShip.targetSpeed = 0
+                keyPressed[keybinds["Shutdown Engine"].key] = false
+            }
+        }
+        //Autopilot
+        if (keybinds["Autopilot"].mod==="" || keyPressed[keybinds["Autopilot"].mod]) {
+            if (keyPressed[keybinds["Autopilot"].key]) {
+                playerShip.computers[0].toggleAutopilot()
+                keyPressed[keybinds["Autopilot"].key] = false
+            }
         }
 
-        //Autopilot
-        if (keyPressed[keybinds["Autopilot"]]) {
-            playerShip.computers[0].toggleAutopilot()
-            keyPressed[keybinds["Autopilot"]] = false
-        }
 
         //Main generator
-        if (keyPressed[keybinds["Main Generator"]]) {
-            playerShip.generators[0].on = 1 - playerShip.generators[0].on
-            keyPressed[keybinds["Main Generator"]] = false
+        if (keybinds["Main Generator"].mod==="" || keyPressed[keybinds["Main Generator"].mod]) {
+            if (keyPressed[keybinds["Main Generator"].key]) {
+                playerShip.generators[0].on = 1 - playerShip.generators[0].on
+                keyPressed[keybinds["Main Generator"].key] = false
+            }
         }
 
         //Hide HUD
-        if (keyPressed[keybinds["Toggle Hud"]]) {
-            hudEnabled = Boolean(1 - hudEnabled)
-            keyPressed[keybinds["Toggle Hud"]] = false
+        if (keybinds["Toggle Hud"].mod==="" || keyPressed[keybinds["Toggle Hud"].mod]) {
+            if (keyPressed[keybinds["Toggle Hud"].key]) {
+                hudEnabled = Boolean(1 - hudEnabled)
+                keyPressed[keybinds["Toggle Hud"].key] = false
+            }
         }
 
         //rotation
-        if (keyPressed[keybinds["Yaw Left"]]) {
-            playerShip.position.yaw.targetDirection+=val
-        } else if (keyPressed[keybinds["Yaw Right"]]) {
-            playerShip.position.yaw.targetDirection-=val
+        if (keyPressed[keybinds["Yaw Left"].key]) {
+            playerShip.position.yaw.targetDirection += val
+        } else if (keyPressed[keybinds["Yaw Right"].key]) {
+            playerShip.position.yaw.targetDirection -= val
         }
-        if (keyPressed[keybinds["Pitch Up"]]) {
-            playerShip.position.pitch.targetDirection+=val
-        } else if (keyPressed[keybinds["Pitch Down"]]) {
-            playerShip.position.pitch.targetDirection-=val
+        if (keyPressed[keybinds["Pitch Up"].key]) {
+            playerShip.position.pitch.targetDirection += val
+        } else if (keyPressed[keybinds["Pitch Down"].key]) {
+            playerShip.position.pitch.targetDirection -= val
         }
 
         //weapons
-        if(keyPressed[keybinds["Weapon 1"]]) {
-            if (playerShip.weapons[0]!==undefined) {
-                playerShip.weapons[0].doDamage(0,0,0)
+        if (keybinds["Weapon 1"].mod==="" || keyPressed[keybinds["Weapon 1"].mod]) {
+            if(keyPressed[keybinds["Weapon 1"].key]) {
+                if (playerShip.weapons[0]!==undefined) {
+                    playerShip.weapons[0].doDamage(0,0,0)
+                }
             }
         }
-        if(keyPressed[keybinds["Weapon 2"]]) {
-            if (playerShip.weapons[1]!==undefined) {
-                playerShip.weapons[1].doDamage(0,0,0)
+        if (keybinds["Weapon 2"].mod==="" || keyPressed[keybinds["Weapon 2"].mod]) {
+            if (keyPressed[keybinds["Weapon 2"].key]) {
+                if (playerShip.weapons[1] !== undefined) {
+                    playerShip.weapons[1].doDamage(0, 0, 0)
+                }
             }
         }
-        if(keyPressed[keybinds["Weapon 3"]]) {
-            if (playerShip.weapons[2]!==undefined) {
-                playerShip.weapons[2].doDamage(0,0,0)
+        if (keybinds["Weapon 3"].mod==="" || keyPressed[keybinds["Weapon 3"].mod]) {
+            if (keyPressed[keybinds["Weapon 3"].key]) {
+                if (playerShip.weapons[2] !== undefined) {
+                    playerShip.weapons[2].doDamage(0, 0, 0)
+                }
             }
         }
-        if(keyPressed[keybinds["Weapon 4"]]) {
-            if (playerShip.weapons[3]!==undefined) {
-                playerShip.weapons[3].doDamage(0,0,0)
+        if (keybinds["Weapon 4"].mod==="" || keyPressed[keybinds["Weapon 4"].mod]) {
+            if (keyPressed[keybinds["Weapon 4"].key]) {
+                if (playerShip.weapons[3] !== undefined) {
+                    playerShip.weapons[3].doDamage(0, 0, 0)
+                }
             }
         }
 
         //speed
-        if (keyPressed[keybinds["Increase Speed"]]) {
+        if (keyPressed[keybinds["Increase Speed"].key]) {
             playerShip.targetSpeed+=valSpeed
             playerShip.propulsion="on"
             if (playerShip.speedMode==="Sublight") {
@@ -277,7 +313,7 @@ let keyLoop = () => {
                     playerShip.acc = 0
                 }
             }
-        } else if (keyPressed[keybinds["Decrease Speed"]]) {
+        } else if (keyPressed[keybinds["Decrease Speed"].key]) {
             playerShip.targetSpeed-=valSpeed
             if (playerShip.speedMode==="Sublight") {
                 playerShip.propulsion="on"
@@ -288,33 +324,36 @@ let keyLoop = () => {
                 }
             }
         }
-        if (keyPressed[keybinds["Target Nearest Enemy"]]) {
-            playerShip.computers[0].functions.findNearestEnemyTarget()
-            keyPressed[keybinds["Target Nearest Enemy"]] = false
+        if (keybinds["Target Nearest Enemy"].mod==="" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
+            if (keyPressed[keybinds["Target Nearest Enemy"].key]) {
+                playerShip.computers[0].functions.findNearestEnemyTarget()
+                keyPressed[keybinds["Target Nearest Enemy"].key] = false
+            }
         }
     } else {
         if (menuIn==="galaxyMap") {
             let s = settingsData.mapScaling
-            if (keyPressed[keybinds["Yaw Left"]]) {
+            if (keyPressed[keybinds["Yaw Left"].key]) {
                 settingsData.centerX += 10/s
                 generateMenu(1)
-            } else if (keyPressed[keybinds["Yaw Right"]]) {
+            } else if (keyPressed[keybinds["Yaw Right"].key]) {
                 settingsData.centerX -= 10/s
                 generateMenu(1)
             }
-            if (keyPressed[keybinds["Pitch Up"]]) {
+            if (keyPressed[keybinds["Pitch Up"].key]) {
                 settingsData.centerY += 10/s
                 generateMenu(1)
-            } else if (keyPressed[keybinds["Pitch Down"]]) {
+            } else if (keyPressed[keybinds["Pitch Down"].key]) {
                 settingsData.centerY -= 10/s
                 generateMenu(1)
             }
-
-            if (keyPressed[keybinds["Target Nearest Enemy"]]) {
-                settingsData.centerX = playerShip.position.x
-                settingsData.centerY = playerShip.position.y
-                generateMenu(1)
-                keyPressed[keybinds["Target Nearest Enemy"]] = false
+            if (keybinds["Target Nearest Enemy"].mod==="" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
+                if (keyPressed[keybinds["Target Nearest Enemy"].key]) {
+                    settingsData.centerX = playerShip.position.x
+                    settingsData.centerY = playerShip.position.y
+                    generateMenu(1)
+                    keyPressed[keybinds["Target Nearest Enemy"].key] = false
+                }
             }
 
         }
@@ -366,11 +405,19 @@ let keydown = (e)=> {
     }
     keyPressed[e.code]=true
     if (menuIn==="keybinds" && keybinds.keyListening!==0) {
-        console.log(keybinds.keyListening+" set to "+e.code)
-        keybinds[keybinds.keyListening]=e.code
-        keybinds.keyListening = 0
-        keyPressed[e.code]=false
-        keybinds.keyDone = false
+        if (e.code!=="ShiftLeft" && e.code!=="ControlLeft") {
+            keybinds[keybinds.keyListening].key = e.code
+            if (keyPressed["ShiftLeft"]) {
+                keybinds[keybinds.keyListening].mod = "ShiftLeft"
+            } else if (keyPressed["ControlLeft"]) {
+                keybinds[keybinds.keyListening].mod = "ControlLeft"
+            } else {
+                keybinds[keybinds.keyListening].mod = ""
+            }
+            keybinds.keyListening = 0
+            keyPressed[e.code]=false
+            keybinds.keyDone = false
+        }
     }
 }
 document.addEventListener('keydown', keydown)
@@ -446,10 +493,11 @@ window.onbeforeunload = function (e) {
 
 
 //----------------------------------------------------
-elements.spaceShipWindow = document.getElementById("spaceShipWindow")
-elements.spaceShipWindow.onclick = function() {
+
+/*elements.spaceShipWindow.onclick = function() {
     elements.spaceShipWindow.requestPointerLock()
-}
+}*/
+
 function updateRotation(e) {
     playerShip.position.yaw.targetDirection -= e.movementX*settings.mouseSteeringSensitivity
     playerShip.position.pitch.targetDirection -= e.movementY*settings.mouseSteeringSensitivity
@@ -468,14 +516,20 @@ function updateRotation(e) {
 }
 
 document.addEventListener('pointerlockchange', lockChangeAlert, false)
-document.addEventListener('mozpointerlockchange', lockChangeAlert, false)
 
 function lockChangeAlert() {
     if (document.pointerLockElement === elements.spaceShipWindow) {
-        document.addEventListener("mousemove", updateRotation, false)
-        flashmessage.add("Mouse Steering Activated","yellow")
+        if (!mouseSteering) {
+            document.addEventListener("mousemove", updateRotation, false)
+            flashmessage.add("Mouse Steering Activated","success")
+            mouseSteering = true
+        }
+
     } else {
-        document.removeEventListener("mousemove", updateRotation, false)
-        flashmessage.add("Mouse Steering Deactivated","yellow")
+        if (mouseSteering) {
+            document.removeEventListener("mousemove", updateRotation, false)
+            flashmessage.add("Mouse Steering Deactivated", "orange")
+            mouseSteering = false
+        }
     }
 }
