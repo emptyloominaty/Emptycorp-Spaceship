@@ -157,29 +157,34 @@ updateToggles()
 //-------------------------------Keyboard
 let keyPressed = {}
 let keyLoop = () => {
-    let val = 0.5//gameFPS/120
+    let val = 0.5
     let valSpeed = 1
 
     if (!settingsOpen) {
-
         if (speedInputSet==="Default") {
             if (playerShip.speedMode==="FTL") {
-                valSpeed = 50*gameFPS
+                valSpeed = 3000
             } else {
-                valSpeed = 0.000000001*gameFPS
+                valSpeed = 0.00000006
             }
         } else if (speedInputSet==="VeryFast") {
-            valSpeed = 250*gameFPS
+            valSpeed = 15000
         } else if (speedInputSet==="Fast") {
-            valSpeed = 50*gameFPS
+            valSpeed = 3000
         } else if (speedInputSet==="Medium") {
-            valSpeed = 0.05*gameFPS
+            valSpeed = 3
         } else if (speedInputSet==="Slow") {
-            valSpeed = 0.000000001*gameFPS
+            valSpeed = 0.00000006
         } else if (speedInputSet==="VerySlow") {
-            valSpeed = 0.0000000001*gameFPS
+            valSpeed = 0.000000006
         }
 
+        //test
+        /*if (keyPressed["KeyQ"]) {
+            shipWindow3D.camera.rotation.z+=0.01
+        } else if (keyPressed["KeyE"]) {
+            shipWindow3D.camera.rotation.z-=0.01
+        }*/
 
         //Toggle Showing Target
         if (keyPressed[keybinds["Show Target"]]) {
@@ -349,14 +354,14 @@ let keyup = (e)=> {
     if (playerShip.computers[0].listenForInput) {
         playerShip.computers[0].keyInput = e.key
     }
-    if(e.code!=="F12" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
+    if(e.code!=="F12" && e.code!=="F11" &&  e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
         e.preventDefault()
     }
     keyPressed[e.code]=false
 }
 let keydown = (e)=> {
     //console.log(e.code)
-    if (e.code!=="F12" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
+    if (e.code!=="F12" &&  e.code!=="F11" && e.code!=="F5" && e.code!=="Numpad0" && e.code!=="Numpad1" && e.code!=="Numpad2" && e.code!=="Numpad3" && e.code!=="Numpad4" && e.code!=="Numpad5" && e.code!=="Numpad6" && e.code!=="Numpad7" && e.code!=="Numpad8" && e.code!=="Numpad9" && e.code!=="Period" && e.code!=="NumpadDecimal" && e.code!=="Backspace") {
         e.preventDefault()
     }
     keyPressed[e.code]=true
@@ -438,3 +443,39 @@ window.onbeforeunload = function (e) {
     // Chrome requires returnValue to be set
     e.returnValue = 'Really want to quit the game?'
 }*/
+
+
+//----------------------------------------------------
+elements.spaceShipWindow = document.getElementById("spaceShipWindow")
+elements.spaceShipWindow.onclick = function() {
+    elements.spaceShipWindow.requestPointerLock()
+}
+function updateRotation(e) {
+    playerShip.position.yaw.targetDirection -= e.movementX*settings.mouseSteeringSensitivity
+    playerShip.position.pitch.targetDirection -= e.movementY*settings.mouseSteeringSensitivity
+
+    if (playerShip.position.yaw.targetDirection<360) {
+        playerShip.position.yaw.targetDirection=720
+    } else if (playerShip.position.yaw.targetDirection>720) {
+        playerShip.position.yaw.targetDirection=360
+    }
+
+    if (playerShip.position.pitch.targetDirection<90) {
+        playerShip.position.pitch.targetDirection=90
+    } else if (playerShip.position.pitch.targetDirection>270) {
+        playerShip.position.pitch.targetDirection=270
+    }
+}
+
+document.addEventListener('pointerlockchange', lockChangeAlert, false)
+document.addEventListener('mozpointerlockchange', lockChangeAlert, false)
+
+function lockChangeAlert() {
+    if (document.pointerLockElement === elements.spaceShipWindow) {
+        document.addEventListener("mousemove", updateRotation, false)
+        flashmessage.add("Mouse Steering Activated","yellow")
+    } else {
+        document.removeEventListener("mousemove", updateRotation, false)
+        flashmessage.add("Mouse Steering Deactivated","yellow")
+    }
+}

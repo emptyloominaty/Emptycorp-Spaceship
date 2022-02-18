@@ -35,6 +35,7 @@ let settings = {
     //Game
     survival:1,
     realRcs:1,
+    mouseSteeringSensitivity:0.15,
     //Graphics
     antialiasing:0,
     antialiasingmsaa:0,
@@ -60,6 +61,7 @@ let settingsList = {
     "Game":[
         new Setting("Survival (O2,Water,Food)","survival",[0,1],{0:"Off",1:"On"},[0,1],1),
         new Setting("Realistic RCS","realRcs",[0,1],{0:"Off",1:"On"},[0,1],1),
+        new Setting("Mouse Sensitivity","mouseSteeringSensitivity",[0.1,0.12,0.15,0.17,0.2],{0.1:"0.1",0.12:"0.12",0.15:"0.15",0.17:"0.17",0.2:"0.2"},[0.1,0.12,0.15,0.17,0.2],0.15), //TODO:Input Range
     ],
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
