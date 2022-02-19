@@ -144,6 +144,7 @@ class NavigationModule {
     recalcPosition() {
         this.position.x = playerShip.position.x
         this.position.y = playerShip.position.y
+        this.position.z = playerShip.position.z
     }
 
 

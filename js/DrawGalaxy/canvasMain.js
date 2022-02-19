@@ -131,10 +131,11 @@ class CanvasMain {
 
         //TEST
         /*this.stars2 = []
-        let geometry = new THREE.SphereGeometry(0.005, 30, 30, 0, Math.PI * 2, 0, Math.PI * 2)
+        let geometry2 = new THREE.SphereGeometry(0.005, 30, 30, 0, Math.PI * 2, 0, Math.PI * 2)
         for (let i = 0; i<100; i++) {
-            this.stars2[i] = new THREE.Mesh(geometry, this.materials["Class G"])
-            this.stars2[i].position.set(0.5+Math.random()*(-15),1.5-Math.random()*3,0.5+Math.random()*(-15))
+            this.stars2[i] = new THREE.Mesh(geometry2, this.materials["Class G"])
+            this.stars2[i].position.set(Math.random()*(-15),1.5-Math.random()*3,Math.random()*(-15))
+            this.stars2[i].layers.enable( this.BLOOM_SCENE )
             this.scene.add(this.stars2[i])
         }*/
 
@@ -349,7 +350,7 @@ class CanvasMain {
 
     createNewShip(id) {
         let material = new THREE.MeshBasicMaterial( {color: 0x444444} )
-        let geometry = new THREE.BoxGeometry( 0.000000000000255702341, 0.000000000000105702341, 0.000000000000105702341 )
+        let geometry = new THREE.BoxGeometry( 0.000000000255702341, 0.000000000105702341, 0.000000000105702341 ) //0.000000000000255702341, 0.000000000000105702341, 0.000000000000105702341
         this.ships[id] = new THREE.Mesh( geometry, material )
         this.scene.add(this.ships[id])
     }

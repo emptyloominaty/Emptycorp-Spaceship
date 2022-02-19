@@ -47,6 +47,7 @@ class Computer extends Part {
 
 
     run() {
+        this.data.aiShipsScanned = []
         if(this.on===1) {
             if (playerShip.usePower(this.consumption[0] / gameFPS, this.group)) { //todo:fix power consumption
                 for (let i = 0; i < this.modules.length; i++) {
@@ -812,6 +813,9 @@ class Computer extends Part {
                 this.display.drawText(125,242, "Jump", font1, "#00b600", 'center')
                 this.display.drawRectStroke(50,225,150,25,"#00b600")
 
+                this.display.drawText(125,272, "Target", font1, color5, 'center')
+                this.display.drawRectStroke(50,255,150,25,color5)
+
                 //reset keyInput
                 this.keyInput = ""
             }
@@ -991,7 +995,6 @@ class Computer extends Part {
                         yy = obj[i].position.y
                     }
 
-
                     let x = varX-(xx*this.mapScaling)
                     let y = varY-(yy*this.mapScaling)
                     if (xx>-300-this.mapScaling && xx<(this.display.resolution.w+this.mapScaling) && yy>-180-this.mapScaling && yy<((this.display.resolution.h-bottom)+this.mapScaling)) {
@@ -1061,6 +1064,21 @@ class Computer extends Part {
                 }})
             buttons.push({x1:300, y1:10,x2:480,y2:30,function: () => {playerShip.lifeSupport[0].on = 1 - playerShip.lifeSupport[0].on}})  //atm
             buttons.push({x1:300, y1:150,x2:480,y2:170,function: () => {playerShip.lifeSupport[1].on = 1 - playerShip.lifeSupport[1].on}})  //temp
+        }
+        if (this.tab==="jumpDrive") {
+            buttons.push({x1:50, y1:255,x2:200,y2:280,function: () => {
+                if ((Object.keys(this.targetObj).length!==0)) {
+                    let off = 0.0000000000001
+                    if (this.targetType==="system") {
+                        off = 0.1
+                    } else if (this.targetType==="planet") {
+                        off = 0.00002 //TODO: getRadius
+                    }
+                    this.inputData.jumpDrive.x = String(this.targetObj.position.x+off)
+                    this.inputData.jumpDrive.y = String(this.targetObj.position.y+off)
+                    this.inputData.jumpDrive.z = String(this.targetObj.position.z)
+                }
+                }})
         }
         //nav 3 buttons
         if (this.tab==="nav3") {

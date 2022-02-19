@@ -22,6 +22,7 @@
     margin: 10px 10px 10px 10px;
     padding-top: 10px;
     align-items: center;
+    height:100%;
     /*width:7.25vw;*/
 }
 
@@ -40,7 +41,8 @@
     color:#CCC;
     filter:opacity(0);
     transition: filter 500ms;
-    flex-wrap: wrap;
+    display:flex;
+    flex-wrap: nowrap;
 }
 
 #app {

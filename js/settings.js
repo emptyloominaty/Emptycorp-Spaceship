@@ -239,13 +239,11 @@ let generateMenu = function(id) {
 
         let changeScaling = (event) => {
             event.preventDefault()
-
-
             let val = event.deltaY * -0.01
             if (val>0) {
-                settingsData.mapScaling+=0.05*settingsData.mapScaling
+                settingsData.mapScaling+=0.1*settingsData.mapScaling
             } else if((val<0)) {
-                settingsData.mapScaling-=0.05*settingsData.mapScaling
+                settingsData.mapScaling-=0.1*settingsData.mapScaling
                 if (settingsData.mapScaling<2) {
                     settingsData.mapScaling = 2
                 }
@@ -258,8 +256,8 @@ let generateMenu = function(id) {
         canvasElement.width = 1500
         canvasElement.height = 700
         let canvas = canvasElement.getContext("2d")
-        const width = canvasElement.getBoundingClientRect().width
-        const height = canvasElement.getBoundingClientRect().height
+        const width = 1500 //canvasElement.getBoundingClientRect().width
+        const height = 700//canvasElement.getBoundingClientRect().height
 
         let isMoving = false
         let mx = 0
@@ -311,6 +309,11 @@ let generateMenu = function(id) {
                 canvas.fillText(text,x,y)
             }
 
+            let drawRect = function(x,y,w,h,color) {
+                canvas.fillStyle = color
+                canvas.fillRect(x,y,w,h)
+            }
+
             let centerScreen = {x:canvasElement.width/2, y:canvasElement.height/2}
             let center = {x:settingsData.centerX*scaling,y:settingsData.centerY*scaling}
             let player = {x:playerShip.position.x*scaling,y:playerShip.position.y*scaling}
@@ -322,6 +325,43 @@ let generateMenu = function(id) {
                 let color = factionList[starSystems[i].faction].color
                 drawCircle(x,y,size,color)
                 drawText(x,y-5,starSystems[i].name,"12px Consolas","#FFFFFF")
+            }
+
+            let drawShips = (obj,all) => {
+                let font = "12px Consolas"
+                let scaling = settingsData.mapScaling
+                for (let i = 0; i<obj.length; i++) {
+                    if (obj[i]!==undefined) {
+                        let ai
+                        let xx
+                        let yy
+
+                        if (all===1) {
+                            ai = aiShips[i]
+                            xx = ((ai.position.x*scaling*(-1))+centerScreen.x)+center.x
+                            yy = ((ai.position.y*scaling*(-1))+centerScreen.y)+center.y
+                        } else {
+                            ai = aiShips[obj[i].id]
+                            xx = ((obj[i].position.x*scaling*(-1))+centerScreen.x)+center.x
+                            yy = ((obj[i].position.y*scaling*(-1))+centerScreen.y)+center.y
+                        }
+                        let color = factionList[ai.faction].color
+                        drawRect(xx,yy,3,3,color)
+                        if (ai.showInNav) {
+                            drawText(xx,yy-5,ai.id,font,"#FFFFFF","center")
+                        }
+                        if (scaling>1600) {
+                            drawText(xx,yy-5,ai.name,font,"#FFFFFF","center")
+                        }
+                    }
+                }
+            }
+
+            if (settings.drawAllShips===1) {
+                drawShips(aiShips,1)
+            } else {
+                drawShips(playerShip.computers[0].data.aiShipsScanned,0)
+                drawShips(playerShip.computers[0].data.aiShipsLongScanned,0)
             }
 
             let x = ((player.x*(-1))+centerScreen.x)+center.x

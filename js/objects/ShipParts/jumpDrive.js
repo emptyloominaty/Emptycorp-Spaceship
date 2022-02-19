@@ -51,9 +51,9 @@ class JumpDrive extends Part {
                     playerShip.positionPrecise.y = new BigNumber(this.jumpTo.y)
                     playerShip.positionPrecise.z = new BigNumber(this.jumpTo.z)
                     flashmessage.add("Jumped successfully to x:"+this.jumpTo.x+" y:"+this.jumpTo.y+" z:"+this.jumpTo.z,"success")
+                    playerShip.computers[0].nav.start.recalcPosition()
                     this.charged = 0
                     this.running = 0
-                    playerShip.computers[0].nav.start.recalcPosition()
                 } else {
                     this.charged = 0
                     this.running = 0

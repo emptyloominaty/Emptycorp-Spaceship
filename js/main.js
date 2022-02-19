@@ -17,7 +17,7 @@ let updateSystems = {i:0,array:[],}
 
 //VerySlow,Slow,Medium,Fast,VeryFast,Default
 let speedInputSet = "Default"
-let speedInputArray = ["VerySlow","Slow","Medium","Fast","VeryFast","Default"]
+let speedInputArray = ["VerySlow","Slow","Medium-Slow","Medium","Medium-Fast","Fast","VeryFast","Default"]
 let speedIdArray = 5
 
 let doBeforeStart =  function() {

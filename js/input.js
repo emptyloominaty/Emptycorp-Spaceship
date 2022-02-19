@@ -172,8 +172,12 @@ let keyLoop = () => {
             valSpeed = 15000
         } else if (speedInputSet==="Fast") {
             valSpeed = 3000
+        } else if (speedInputSet==="Medium-Fast") {
+            valSpeed = 150
         } else if (speedInputSet==="Medium") {
             valSpeed = 3
+        } else if (speedInputSet==="Medium-Slow") {
+            valSpeed = 0.0001
         } else if (speedInputSet==="Slow") {
             valSpeed = 0.00000006
         } else if (speedInputSet==="VerySlow") {
@@ -186,6 +190,17 @@ let keyLoop = () => {
         } else if (keyPressed["KeyE"]) {
             shipWindow3D.camera.rotation.z-=0.01
         }*/
+        /*if (keyPressed["KeyQ"]) {
+            shipWindow3D.camera.fov+=0.8
+        } else if (keyPressed["KeyE"]) {
+            shipWindow3D.camera.fov-=0.8
+        }
+        if (shipWindow3D.camera.fov>165) {
+            shipWindow3D.camera.fov=165
+        } else if (shipWindow3D.camera.fov<30) {
+            shipWindow3D.camera.fov = 30
+        }*/
+
 
         if (keybinds["Mouse Steering"].mod==="" || keyPressed[keybinds["Mouse Steering"].mod]) {
             if (keyPressed[keybinds["Mouse Steering"].key]) {
