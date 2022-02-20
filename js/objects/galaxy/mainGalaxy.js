@@ -1,4 +1,51 @@
-let galaxy = {}
+let factories = {
+    buildFactory:function(name,size,built = false) {
+        let factory = {...this[name]}
+        factory.amount *= size
+        factory.peopleNeed *= size /*k people*/
+        Object.keys(factory.buildResources).forEach(key => {
+            factory.buildResources[key] *= size
+        })
+        factory.built = built
+        factory.timeB = 0
+        if (factory.built) {
+            factory.timeB = factory.time
+        }
+        return factory
+    },
+    "steel":{name:"steel",amount:100,producing:true, input:["iron","carbon"], ratio:3, peopleNeed:300, time:5, buildResources:{"steel":5000,"polymer":500,"tungsten":1000,"electronics":500,"copper":100,"silver":100}},
+    "electronics":{name:"electronics",amount:100,producing:true, input:["silicon","gold"], ratio:10, peopleNeed:150, time:20, buildResources:{"steel":1000,"polymer":2000,"tungsten":100,"electronics":1500,"copper":100,"silver":100,"gold":300}},
+    "medicine":{name:"medicine",amount:100,producing:true,input:["silicon","silver"], ratio:1, peopleNeed:220, time:10, buildResources:{"steel":700,"polymer":3000,"electronics":1000,"copper":100,"silver":100}},
+}
+let naturalResources = {
+    c:function(name,size) {
+        let resource = {...this[name]}
+        resource.amount *= size
+        resource.peopleNeed *= size
+        return resource
+    },
+    "iron":{name:"iron",amount:100, peopleNeed:50},
+    "carbon":{name:"carbon",amount:100, peopleNeed:30},
+    "gold":{name:"gold",amount:100, peopleNeed:60},
+    "silver":{name:"silver",amount:100, peopleNeed:40},
+    "aluminium":{name:"aluminium",amount:100, peopleNeed:50},
+    "titanium":{name:"titanium",amount:100, peopleNeed:80},
+    "silicon":{name:"silicon",amount:100, peopleNeed:30},
+    "chromium":{name:"chromium",amount:100, peopleNeed:70},
+    "polymer":{name:"polymer",amount:100, peopleNeed:30},
+    "lead":{name:"lead",amount:100, peopleNeed:60},
+    "copper":{name:"copper",amount:100, peopleNeed:50},
+    "tungsten":{name:"tungsten",amount:100, peopleNeed:75},
+    "food":{name:"food",amount:100, peopleNeed:1},
+    "water":{name:"water",amount:100, peopleNeed:0.01},
+    "O2":{name:"O2", amount:10000, peopleNeed:1},
+    "H2":{name:"H2", amount:10000, peopleNeed:2},
+    "N2":{name:"N2", amount:10000, peopleNeed:1},
+    "He":{name:"He", amount:10000, peopleNeed:2},
+    "deuterium":{name:"deuterium", amount:100, peopleNeed:10},
+    "fuel1":{name:"fuel1", amount:100, peopleNeed:100},
+    "uranium":{name:"uranium", amount:100, peopleNeed:50},
+}
 
 let globalPrices = {
         O2:0.0004, N2:0.0002, H2:0.005, He:0.008, //Gas (Litres)
@@ -56,14 +103,14 @@ starSystems.push (new StarSystem(
         new TimeServer(1,"Time Server(Sol)",1,"time",0,0,0,"Sol"),
         new TradeServer(1,"Trade Server(Sol)",1,"trade",0,0,0,"Sol"),
     ],
-    [{name:"steel",amount:2000,producing:true, input:["iron","carbon"], ratio:3},{name:"electronics",amount:500,producing:true, input:["silicon","gold"], ratio:10},
-        {name:"medicine",amount:100,producing:true,input:["silicon","silver"], ratio:1}],
-    [{name:"iron",amount:7500 ,producing:true},{name:"carbon",amount:3000,producing:true},{name:"water",amount:100000,producing:true},{name:"food",amount:10000,producing:true},
-        {name:"O2",amount:500000,producing:true},{name:"N2",amount:50000,producing:true},{name:"H2",amount:50000,producing:true},{name:"He",amount:200,producing:true},
-        {name:"silicon",amount:15000,producing:true},{name:"gold",amount:250,producing:true},{name:"silver",amount:250,producing:true},{name:"aluminium",amount:300,producing:true},
-        {name:"titanium",amount:100,producing:true},{name:"chromium",amount:100,producing:true},{name:"polymer",amount:1000,producing:true},
-        {name:"copper",amount:1000,producing:true},{name:"tungsten",amount:70,producing:true},
-        {name:"deuterium",amount:10,producing:true},{name:"uranium",amount:2,producing:true},{name:"fuel1",amount:500,producing:true}],
+    [factories.buildFactory("steel",20,true),factories.buildFactory("electronics",10,true),
+        factories.buildFactory("medicine",1,true)],
+    [naturalResources.c("iron",75),naturalResources.c("carbon",30),naturalResources.c("water",1000),naturalResources.c("food",100),
+        naturalResources.c("O2",50),naturalResources.c("N2",5),naturalResources.c("H2",5),naturalResources.c("He",0.01),
+        naturalResources.c("silicon",150),naturalResources.c("gold",2.5),naturalResources.c("silver",2.5),naturalResources.c("aluminium",3),
+        naturalResources.c("titanium",1),naturalResources.c("chromium",1),naturalResources.c("polymer",10),
+        naturalResources.c("copper",1),naturalResources.c("tungsten",0.7),
+        naturalResources.c("deuterium",0.5),naturalResources.c("uranium",2),naturalResources.c("fuel1",7)],
     1,
     15,
 ))
@@ -105,8 +152,14 @@ starSystems.push (new StarSystem(
     [new SystemServer(1,"System Server(Obsidium)",1,"system",6.5,2.3,0.5,"Obsidium"),
         new TimeServer(1,"Time Server(Obsidium)",1,"time",6.5,2.3,0.5,"Obsidium"),
         new TradeServer(1,"Trade Server(Obsidium)",1,"trade",6.5,2.3,0.5,"Obsidium"),],
-    [],
-    [],
+    [factories.buildFactory("steel",1, true),factories.buildFactory("electronics",20, true),
+        factories.buildFactory("medicine",2, true)],
+    [naturalResources.c("iron",20),naturalResources.c("carbon",10),naturalResources.c("water",400),naturalResources.c("food",50),
+        naturalResources.c("O2",50),naturalResources.c("N2",5),naturalResources.c("H2",5),naturalResources.c("He",0.01),
+        naturalResources.c("silicon",150),naturalResources.c("gold",2.5),naturalResources.c("silver",2.5),naturalResources.c("aluminium",0.8),
+        naturalResources.c("titanium",1),naturalResources.c("chromium",1),naturalResources.c("polymer",5),
+        naturalResources.c("copper",1),naturalResources.c("tungsten",0.7),
+        naturalResources.c("deuterium",0.5),naturalResources.c("uranium",5),naturalResources.c("fuel1",7)],
     0.8,
     15,
 ))
@@ -117,34 +170,14 @@ starSystems.push (new StarSystem(
     [],
     [],
     "Terran",
-    {
-        O2:0.0004, N2:0.0002, H2:0.005, He:0.008, //Gas (Litres)
-        deuterium:1250, fuel1:10, uranium:5000, //Liquids,Solid (kg)
-        food:0.01, water:0.001, medicine:1.2, //pop resources
-        iron:0.1, gold:1.4, silver:0.5, aluminium:0.2, titanium:0.6, silicon:0.05, chromium:0.12, carbon:0.075, polymer:0.5, lead:0.2, copper:0.25,tungsten:1, //building resources
-        electronics:1.8,steel:1,  //other
-    },
-    {
-        O2:{max:500000000,val:500000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["O2"], ratios:[0.2,0.5,0.8]}, N2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["N2"], ratios:[0.2,0.5,0.8]}, H2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["H2"], ratios:[0.2,0.5,0.8]}, He:{max:1000000,val:1000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["He"], ratios:[0.2,0.5,0.8]}, //Gas (Litres)
-        deuterium:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["deuterium"], ratios:[0.2,0.5,0.8]}, fuel1:{max:6000000,val:5800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["fuel1"], ratios:[0.2,0.5,0.8]}, uranium:{max:20000,val:19990,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["uranium"], ratios:[0.15,0.3,0.6]}, //Liquids,Solid (kg)
-        food:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["food"], ratios:[0.3,0.6,0.8]}, water:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["water"], ratios:[0.3,0.6,0.8]}, medicine:{max:500000,val:480000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["medicine"], ratios:[0.2,0.5,0.8]}, //pop resources
-        iron:{max:20000,val:19000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["steel"], ratios:[0.2,0.4,0.7]}, gold:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["gold"], ratios:[0.2,0.4,0.7]}, silver:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["silver"], ratios:[0.2,0.4,0.7]}, aluminium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["aluminium"], ratios:[0.2,0.4,0.7]},
-        titanium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["titan"], ratios:[0.2,0.4,0.7]}, silicon:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["silicon"], ratios:[0.2,0.4,0.7]}, chromium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["chromium"], ratios:[0.2,0.4,0.7]}, carbon:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["carbon"], ratios:[0.2,0.4,0.7]},
-        polymer:{max:10000,val:1000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["polymer"], ratios:[0.2,0.4,0.7]}, lead:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["lead"], ratios:[0.2,0.4,0.7]}, copper:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["copper"], ratios:[0.2,0.4,0.7]},tungsten:{max:10000,val:8500,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["tungsten"], ratios:[0.2,0.5,0.8]}, //building resources
-        electronics:{max:50000,val:49999,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["electronics"], ratios:[0.15,0.3,0.6]},steel:{max:90000,val:45000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["steel"], ratios:[0.2,0.5,0.8]}  //other
-    },
+    {},
+    {},
     "Test",
     {x:-2,y:-1,z:1},
     [],
-    [{name:"steel",amount:2000,producing:true, input:["iron","carbon"], ratio:3},{name:"electronics",amount:500,producing:true, input:["silicon","gold"], ratio:10},
-        {name:"medicine",amount:100,producing:true,input:["silicon","silver"], ratio:1}],
-    [{name:"iron",amount:7500 ,producing:true},{name:"carbon",amount:3000,producing:true},{name:"water",amount:100000,producing:true},{name:"food",amount:10000,producing:true},
-        {name:"O2",amount:500000,producing:true},{name:"N2",amount:50000,producing:true},{name:"H2",amount:50000,producing:true},{name:"He",amount:200,producing:true},
-        {name:"silicon",amount:15000,producing:true},{name:"gold",amount:250,producing:true},{name:"silver",amount:250,producing:true},{name:"aluminium",amount:300,producing:true},
-        {name:"titanium",amount:100,producing:true},{name:"chromium",amount:100,producing:true},{name:"polymer",amount:1000,producing:true},
-        {name:"copper",amount:1000,producing:true},{name:"tungsten",amount:70,producing:true},
-        {name:"deuterium",amount:10,producing:true},{name:"uranium",amount:2,producing:true},{name:"fuel1",amount:500,producing:true}],
-    0.2,
+    [],
+    [],
+    0.01,
     15,
 ))
 
@@ -154,34 +187,14 @@ starSystems.push (new StarSystem(
     [],
     [],
     "Terran",
-    {
-        O2:0.0004, N2:0.0002, H2:0.005, He:0.008, //Gas (Litres)
-        deuterium:1250, fuel1:10, uranium:5000, //Liquids,Solid (kg)
-        food:0.01, water:0.001, medicine:1.2, //pop resources
-        iron:0.1, gold:1.4, silver:0.5, aluminium:0.2, titanium:0.6, silicon:0.05, chromium:0.12, carbon:0.075, polymer:0.5, lead:0.2, copper:0.25,tungsten:1, //building resources
-        electronics:1.8,steel:1,  //other
-    },
-    {
-        O2:{max:500000000,val:500000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["O2"], ratios:[0.2,0.5,0.8]}, N2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["N2"], ratios:[0.2,0.5,0.8]}, H2:{max:5000000,val:5000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["H2"], ratios:[0.2,0.5,0.8]}, He:{max:1000000,val:1000000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["He"], ratios:[0.2,0.5,0.8]}, //Gas (Litres)
-        deuterium:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["deuterium"], ratios:[0.2,0.5,0.8]}, fuel1:{max:6000000,val:5800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["fuel1"], ratios:[0.2,0.5,0.8]}, uranium:{max:20000,val:19990,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["uranium"], ratios:[0.15,0.3,0.6]}, //Liquids,Solid (kg)
-        food:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["food"], ratios:[0.3,0.6,0.8]}, water:{max:2000000,val:1800000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["water"], ratios:[0.3,0.6,0.8]}, medicine:{max:500000,val:480000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["medicine"], ratios:[0.2,0.5,0.8]}, //pop resources
-        iron:{max:20000,val:19000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["steel"], ratios:[0.2,0.4,0.7]}, gold:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["gold"], ratios:[0.2,0.4,0.7]}, silver:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["silver"], ratios:[0.2,0.4,0.7]}, aluminium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["aluminium"], ratios:[0.2,0.4,0.7]},
-        titanium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["titan"], ratios:[0.2,0.4,0.7]}, silicon:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["silicon"], ratios:[0.2,0.4,0.7]}, chromium:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["chromium"], ratios:[0.2,0.4,0.7]}, carbon:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["carbon"], ratios:[0.2,0.4,0.7]},
-        polymer:{max:10000,val:1000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["polymer"], ratios:[0.2,0.4,0.7]}, lead:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["lead"], ratios:[0.2,0.4,0.7]}, copper:{max:10000,val:9000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["copper"], ratios:[0.2,0.4,0.7]},tungsten:{max:10000,val:8500,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["tungsten"], ratios:[0.2,0.5,0.8]}, //building resources
-        electronics:{max:50000,val:49999,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["electronics"], ratios:[0.15,0.3,0.6]},steel:{max:90000,val:85000,selling:true, buying:false, maxPrice:0.0004, price:globalPrices["steel"], ratios:[0.2,0.5,0.8]}  //other
-    },
+    { },
+    {},
     "Test2",
     {x:4,y:4,z:0.5},
     [],
-    [{name:"steel",amount:2000,producing:true, input:["iron","carbon"], ratio:3},{name:"electronics",amount:1500,producing:true, input:["silicon","gold"], ratio:10},
-        {name:"medicine",amount:100,producing:true,input:["silicon","silver"], ratio:1},],
-    [{name:"iron",amount:7500 ,producing:true},{name:"carbon",amount:3000,producing:true},{name:"water",amount:100000,producing:true},{name:"food",amount:100000,producing:true},
-        {name:"O2",amount:500000,producing:true},{name:"N2",amount:50000,producing:true},{name:"H2",amount:50000,producing:true},{name:"He",amount:200,producing:true},
-        {name:"lead",amount:150,producing:true},{name:"gold",amount:250,producing:true},{name:"silver",amount:250,producing:true},{name:"aluminium",amount:300,producing:true},
-        {name:"titanium",amount:100,producing:true},{name:"chromium",amount:100,producing:true},{name:"polymer",amount:1000,producing:true},
-        {name:"copper",amount:1000,producing:true},{name:"tungsten",amount:70,producing:true},
-        {name:"deuterium",amount:10,producing:true},{name:"uranium",amount:2,producing:true},{name:"fuel1",amount:500,producing:true}],
-    0.2,
+    [],
+    [],
+    0.01,
     15,
 ))
 

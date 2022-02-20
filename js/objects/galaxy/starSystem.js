@@ -12,11 +12,14 @@ class StarSystem {
     timeServerAddress = false
 
     totalPopulation = 0
+    totalWorkers = 0
+    unemployment = 0
+
     faction = ""
     factionColor = "#999999"
 
-    resourcesNeed = [] // {name:"H2",amount:500,maxPrice:0.002}
-    producing = [] //{name:"H2",amount:1/* per minute */}
+    resourcesNeed = []
+    producing = []
     factories = []
 
     credits = 1000000
@@ -35,7 +38,24 @@ class StarSystem {
             Object.keys(this.resources).forEach(key => {
                 this.prices[key] = Math.round(this.resources[key].price*10000)/10000
             })
+            this.updatePop()
         }
+    }
+
+
+    updatePop() {
+        this.totalPopulation = 0
+        //population
+        for (let i = 0; i<this.planets.length; i++) {
+            this.totalPopulation += this.planets[i].population
+            for (let j = 0; j<this.planets[i].moons.length; j++) {
+                this.totalPopulation += this.planets[i].moons[j].population
+            }
+        }
+        for (let i = 0; i<this.asteroids.length; i++) {
+            this.totalPopulation+=this.asteroids[i].population
+        }
+        this.totalWorkers = this.totalPopulation*0.4
     }
 
     transferCredits() {
@@ -69,28 +89,70 @@ class StarSystem {
 
     produceResources(avgFPS) {
         let mul = 60/avgFPS
+
+        let prodNeed = []
+        let prodTotalNeed = 0
+        let factNeed = []
+        let factTotalNeed = 0
+
+        
         for (let i = 0; i<this.producing.length; i++) {
-            this.resources[this.producing[i].name].val += this.producing[i].amount*mul
-            //console.log(this.producing[i].name," +",this.producing[i].amount*mul )
+            prodNeed.push(this.producing[i].peopleNeed)
+            prodTotalNeed += this.producing[i].peopleNeed
         }
         for (let i = 0; i<this.factories.length; i++) {
-            let useA = this.factories[i].amount*this.factories[i].ratio*mul
-            let useB = this.factories[i].amount/this.factories[i].ratio*mul
-            let matA = this.factories[i].input[0]
-            let matB = this.factories[i].input[1]
-
-            if (this.resources[matA].val>useA && this.resources[matB].val>useB) {
-                this.resources[matA].val-= useA
-                this.resources[matB].val-= useB
-                //console.log(matA," -",useA )
-                //console.log(matB," -",useB )
-
-                this.resources[this.factories[i].name].val += this.factories[i].amount*mul
-                //console.log(this.factories[i].name," +",this.factories[i].amount*mul )
-            }
-
+            factNeed.push(this.factories[i].peopleNeed)
+            factTotalNeed += this.factories[i].peopleNeed
         }
 
+
+        let unemployed = this.totalWorkers - prodTotalNeed - factTotalNeed
+        let emRatio = 1
+        if (unemployed<0) {
+            emRatio = this.totalWorkers / (this.totalWorkers + (unemployed*(-1)))
+        }
+
+        //console.log(unemployed)
+        //console.log(emRatio)
+        //console.log("------------")
+        let prodMul = []
+        let factMul = []
+
+        for (let i = 0; i<this.producing.length; i++) {
+            prodMul.push(emRatio)
+        }
+        for (let i = 0; i<this.factories.length; i++) {
+            factMul.push(emRatio)
+        }
+
+
+
+        for (let i = 0; i<this.producing.length; i++) {
+            this.resources[this.producing[i].name].val += this.producing[i].amount*mul*prodMul[i]
+        }
+        for (let i = 0; i<this.factories.length; i++) {
+            if (this.factories[i].built) {
+                let useA = this.factories[i].amount*this.factories[i].ratio*mul*factMul[i]
+                let useB = this.factories[i].amount/this.factories[i].ratio*mul*factMul[i]
+                let matA = this.factories[i].input[0]
+                let matB = this.factories[i].input[1]
+
+                if (this.resources[matA].val>useA && this.resources[matB].val>useB) {
+                    this.resources[matA].val-= useA
+                    this.resources[matB].val-= useB
+
+                    this.resources[this.factories[i].name].val += this.factories[i].amount*mul*factMul[i]
+                }
+            } else {
+                //building factory
+                this.factories[i].timeB += 1/avgFPS
+                if (this.factories[i].timeB>=this.factories[i].time) {
+                    this.factories[i].built = true
+                }
+            }
+        }
+        this.unemployment = ((this.totalWorkers-(prodTotalNeed + factTotalNeed))/this.totalPopulation)*100 //%
+        if (this.unemployment<0) {this.unemployment=0}
     }
 
     checkResources() {
@@ -322,17 +384,11 @@ class StarSystem {
         for (let i = 0; i<asteroids.length; i++) {
             this.totalPopulation+=asteroids[i].population
         }
+        this.totalWorkers = this.totalPopulation*0.4
+
         //TODO:function updateFactories()
-        for (let i = 0; i<naturalResources.length; i++) {
-            if (naturalResources[i].producing) {
-                this.producing.push({name:naturalResources[i].name, amount:naturalResources[i].amount})
-            }
-        }
-        for (let i = 0; i<factories.length; i++) {
-            if (factories[i].producing) {
-                this.factories.push({name:factories[i].name, amount:factories[i].amount, input:factories[i].input, ratio:factories[i].ratio})
-            }
-        }
+        this.producing = naturalResources
+        this.factories = factories
 
         //servers
         for (let i = 0; i<servers.length; i++) {
