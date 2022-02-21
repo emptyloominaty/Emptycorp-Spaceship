@@ -10,6 +10,8 @@ class StarSystem {
     position = {x:0,y:0,z:0}
 
     timeServerAddress = false
+    popGrow = false
+    building = false
 
     totalPopulation = 0
     totalWorkers = 0
@@ -35,30 +37,113 @@ class StarSystem {
             this.checkResources()
             this.assignTrades()
             this.transferCredits()
+
             Object.keys(this.resources).forEach(key => {
                 this.prices[key] = Math.round(this.resources[key].price*10000)/10000
             })
+
             this.updatePop()
+
+            if (this.prosperity<0.5) {
+                this.prosperity+=0.01*(0.5-this.prosperity)
+            } else if (this.prosperity<0.1) {
+                this.prosperity = 0.1
+            } else if (this.prosperity>2) {
+                this.prosperity-=0.01*this.prosperity
+            }
+
+            this.buildNewFactories()
+        }
+    }
+
+    buildNewFactories() {
+        if (!this.building) {
+            if (this.unemployment>2) {
+                let fNames = ["electronics","steel","medicine"]
+                let name = fNames[Math.floor(Math.random()*2.99)]
+                let size = (this.totalWorkers*(this.unemployment/100)) / factories[name].peopleNeed
+                if (size>10) {size=10}
+                let f = factories.buildFactory(name,size)
+                Object.keys(f.buildResources).forEach(key => {
+                    if (f!==false)  {
+                        if (this.resources[key].val>f.buildResources[key]) {
+                            this.resources[key].val -= f.buildResources[key]
+                        } else {
+                            f = false
+                        }
+                    }
+                })
+                if (f!==false) {
+                    this.factories.push(f)
+                    //console.log("Building New Factory name:"+f.name+" size:"+f.size+" id:"+(this.factories.length-1))
+                }
+            }
         }
     }
 
 
     updatePop() {
-        this.totalPopulation = 0
-        //population
-        for (let i = 0; i<this.planets.length; i++) {
-            this.totalPopulation += this.planets[i].population
-            for (let j = 0; j<this.planets[i].moons.length; j++) {
-                this.totalPopulation += this.planets[i].moons[j].population
+        if (this.totalPopulation>0) {
+            if (this.popGrow) {
+                for (let i = 0; i < this.planets.length; i++) {
+                    if (this.planets[i].population > 0) {
+                        if (((this.planets[i].habitability * this.planets[i].radius) * 160000) > this.planets[i].population) {
+                            this.planets[i].population += Math.round(1000 * Math.random())
+                        }
+                    }
+                    for (let j = 0; j < this.planets[i].moons.length; j++) {
+                        if (this.planets[i].moons[j].population > 0) {
+                            if (((this.planets[i].moons[j].habitability * this.planets[i].moons[j].radius) * 160000) > this.planets[i].moons[j].population) {
+                                this.planets[i].moons[j].population += Math.round(1000 * Math.random())
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < this.asteroids.length; i++) {
+                    if (this.asteroids[i].population > 0) {
+                        if (((this.asteroids[i].habitability * this.asteroids[i].radius) * 160000) > this.asteroids[i].population) {
+                            this.asteroids[i].population += Math.round(100 * Math.random())
+                        }
+                    }
+
+                }
+            } else {
+                for (let i = 0; i < this.planets.length; i++) {
+                    this.planets[i].population -= Math.round(1000 * Math.random())
+                    if (this.planets[i].population < 0) {
+                        this.planets[i].population = 0
+                    }
+                    for (let j = 0; j < this.planets[i].moons.length; j++) {
+                        this.planets[i].moons[j].population -= Math.round(1000 * Math.random())
+                        if (this.planets[i].moons[j].population < 0) {
+                            this.planets[i].moons[j].population = 0
+                        }
+                    }
+                }
+                for (let i = 0; i < this.asteroids.length; i++) {
+                    this.asteroids[i].population -= Math.round(100 * Math.random())
+                    if (this.asteroids[i].population < 0) {
+                        this.asteroids[i].population = 0
+                    }
+                }
             }
+
+            this.totalPopulation = 0
+            for (let i = 0; i < this.planets.length; i++) {
+                this.totalPopulation += this.planets[i].population
+                for (let j = 0; j < this.planets[i].moons.length; j++) {
+                    this.totalPopulation += this.planets[i].moons[j].population
+                }
+            }
+            for (let i = 0; i < this.asteroids.length; i++) {
+                this.totalPopulation += this.asteroids[i].population
+            }
+            this.totalWorkers = this.totalPopulation * 0.4
         }
-        for (let i = 0; i<this.asteroids.length; i++) {
-            this.totalPopulation+=this.asteroids[i].population
-        }
-        this.totalWorkers = this.totalPopulation*0.4
     }
 
     transferCredits() {
+        this.prosperity += this.credits/1000000000
         factionList[this.faction].credits += this.credits
         this.credits = 0
     }
@@ -95,7 +180,7 @@ class StarSystem {
         let factNeed = []
         let factTotalNeed = 0
 
-        
+
         for (let i = 0; i<this.producing.length; i++) {
             prodNeed.push(this.producing[i].peopleNeed)
             prodTotalNeed += this.producing[i].peopleNeed
@@ -145,7 +230,7 @@ class StarSystem {
                 }
             } else {
                 //building factory
-                this.factories[i].timeB += 1/avgFPS
+                this.factories[i].timeB += mul
                 if (this.factories[i].timeB>=this.factories[i].time) {
                     this.factories[i].built = true
                 }
@@ -203,7 +288,10 @@ class StarSystem {
                 this.resourcesNeed[this.resources[key].need] = this.resources[key].maxPrice
             }
 
+            this.popGrow = true
             if (this.resources[key].val<0) {
+                this.popGrow = false
+                this.prosperity-=0.00000001 * ((this.resources[key].val*(-1))*this.resources[key].price)
                 this.resources[key].val=0
             }
             this.updateSellingPrice(key,ratio)
@@ -216,10 +304,10 @@ class StarSystem {
         if (ratio>1.4) {ratio = 1.4}
         if (ratio<0.15) {ratio = 0.15}
         this.resources[name].price = globalPrices[name]/(ratio)
-        //console.log(name," ",this.resources[name].price,"cr global:", globalPrices[name]," (",ratio," ratio)")
     }
 
     buy(name,amount,credits) { //system->ship
+        this.prosperity += 0.001*(credits/100000)
         this.credits += credits
         this.resources[name].val -= amount
         return amount
@@ -237,6 +325,7 @@ class StarSystem {
         }
         credits = amount*this.resources[name].price
         this.credits -= credits
+        this.prosperity += 0.001*(credits/100000)
         return credits
     }
 
