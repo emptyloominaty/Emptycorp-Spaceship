@@ -53,7 +53,22 @@ class StarSystem {
             }
 
             this.buildNewFactories()
+            this.updateGalaxyData()
         }
+    }
+
+    updateGalaxyData() {
+        Object.keys(this.resources).forEach(key => {
+            if (galaxy.priceHistory[this.id][key]===undefined) {
+                galaxy.priceHistory[this.id][key] = []
+            }
+            let amount = this.resources[key].val
+            let price = this.resources[key].price
+            galaxy.priceHistory[this.id][key].push({price:price, amount:amount, time:gameTime})
+            if ( galaxy.priceHistory[this.id][key].length>100) {
+                galaxy.priceHistory[this.id][key].shift()
+            }
+        })
     }
 
     buildNewFactories() {
@@ -301,7 +316,7 @@ class StarSystem {
     updateSellingPrice(name,ratio) {
         let rr = (1-this.resources[name].ratios[2])*(-1)
         ratio = 0.4+ratio+rr
-        if (ratio>1.4) {ratio = 1.4}
+        if (ratio>4) {ratio = 4}
         if (ratio<0.15) {ratio = 0.15}
         this.resources[name].price = globalPrices[name]/(ratio)
     }
@@ -486,6 +501,7 @@ class StarSystem {
            }
         }
 
+        galaxy.priceHistory[this.id] = {}
 
     }
 }

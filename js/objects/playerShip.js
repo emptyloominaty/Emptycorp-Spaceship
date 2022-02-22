@@ -877,4 +877,3 @@ let shipStats = {
 
 
 let playerShip = new Ship(shipDefaultParts,shipStats)
-

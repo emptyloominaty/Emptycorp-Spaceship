@@ -7,6 +7,7 @@ let avgFPSlastMin = []
 let avgFPS = 60
 let avgFPSlastSec = []
 let avgFPSSec = 60
+let gameTime = 0
 
 let inputRange_speed = 0
 let inputNumber_speed = 0
@@ -119,6 +120,7 @@ function update(progress) {
     }
     avgFPSSec = avgFPSSec / avgFPSlastSec.length
     //---------------------------------------------
+    gameTime+=1000/gameFPS
 
     aiShipsRun()
     playerShip.everyFrame(gameFPS)
