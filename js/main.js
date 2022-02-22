@@ -145,6 +145,23 @@ function update(progress) {
         updateSystems.i++
         if (updateSystems.i === 3600) {
             updateSystems.i = 0
+            //Update Avg Prices
+            let no = 0
+            let avgIdx = galaxy.avgPriceHistory["steel"].length
+            Object.keys(galaxy.avgPriceHistory).forEach(key => {
+                galaxy.avgPriceHistory[key][avgIdx] = 0
+            })
+            for (let i = 0; i<galaxy.priceHistory.length; i++) {
+                if (Object.keys(galaxy.priceHistory[i]).length>0) {
+                    no++
+                    Object.keys(galaxy.priceHistory[i]).forEach(key => {
+                        galaxy.avgPriceHistory[key][avgIdx] += galaxy.priceHistory[i][key][avgIdx].price
+                    })
+                }
+            }
+            Object.keys(galaxy.avgPriceHistory).forEach(key => {
+                galaxy.avgPriceHistory[key][avgIdx] = galaxy.avgPriceHistory[key][avgIdx]/no
+            })
         }
     }
 

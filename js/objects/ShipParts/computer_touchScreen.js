@@ -28,6 +28,10 @@ playerShip.computers[0].touchScreen = function(x,y) {
         {x1:50, y1:195,x2:200,y2:220,function: () => {if (this.tab==="jumpDrive") {this.inputData.jumpDrive.select="z"}}},
         {x1:50, y1:225,x2:200,y2:245,function: () => {if (this.tab==="jumpDrive") {playerShip.jumpDrive.jump(this.inputData.jumpDrive.x,this.inputData.jumpDrive.y,this.inputData.jumpDrive.z);this.inputData.jumpDrive.select=""}}},
     ]
+    if (this.tab==="nav2") {
+        buttons.push({x1:220, y1:325,x2:320,y2:345,function: () => {this.tab="priceHistory"}})
+
+    }
     if (this.tab==="lifeSupport") {
         buttons.push({x1:450, y1:180,x2:550,y2:205,function: () => {this.inputData.lifeSupport.select="temperature"}})
         buttons.push({x1:450, y1:40,x2:550,y2:65,function: () => {this.inputData.lifeSupport.select="pressure"}})
@@ -38,6 +42,46 @@ playerShip.computers[0].touchScreen = function(x,y) {
             }})
         buttons.push({x1:300, y1:10,x2:480,y2:30,function: () => {playerShip.lifeSupport[0].on = 1 - playerShip.lifeSupport[0].on}})  //atm
         buttons.push({x1:300, y1:150,x2:480,y2:170,function: () => {playerShip.lifeSupport[1].on = 1 - playerShip.lifeSupport[1].on}})  //temp
+    }
+    if (this.tab==="priceHistory") {
+        buttons.push({x1:300, y1:10,x2:400,y2:30,function: () => {
+            if (this.data.priceOrAmount ==="amount") {
+                this.data.priceOrAmount = "price"
+            } else {
+                this.data.priceOrAmount = "amount"
+            }
+            }})
+
+        buttons.push({x1:10, y1:10,x2:32,y2:30,function: () => { //<
+                this.data.priceHistoryKeyId--
+
+                let arr = []
+                Object.keys(galaxy.avgPriceHistory).forEach(key => {
+                    arr.push(key)
+                })
+
+                if (this.data.priceHistoryKeyId<0) {
+                    this.data.priceHistoryKeyId = Object.keys(arr).length-1
+                }
+
+                this.data.priceHistoryKey = arr[this.data.priceHistoryKeyId]
+            }})
+
+        buttons.push({x1:168, y1:10,x2:190,y2:30,function: () => { //>
+                this.data.priceHistoryKeyId++
+
+                let arr = []
+                Object.keys(galaxy.avgPriceHistory).forEach(key => {
+                    arr.push(key)
+                })
+
+                if (this.data.priceHistoryKeyId>=Object.keys(arr).length) {
+                    this.data.priceHistoryKeyId=0
+                }
+
+                this.data.priceHistoryKey = arr[this.data.priceHistoryKeyId]
+            }})
+
     }
     if (this.tab==="jumpDrive") {
         buttons.push({x1:50, y1:255,x2:200,y2:280,function: () => {

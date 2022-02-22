@@ -1,5 +1,10 @@
 let galaxy = {
-    priceHistory:[]
+    priceHistory:[],
+    avgPriceHistory:{ O2:[], N2:[], H2:[], He:[],
+    deuterium:[], fuel1:[], uranium:[],
+    food:[], water:[], medicine:[],
+    iron:[], gold:[], silver:[], aluminium:[], titanium:[], silicon:[], chromium:[], carbon:[], polymer:[], lead:[], copper:[], tungsten:[],
+    electronics:[], steel:[]}
 }
 
 let factories = {

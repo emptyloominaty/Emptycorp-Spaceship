@@ -6,7 +6,7 @@ class Computer extends Part {
     tab = "main"
     data = {engineThrust:0, engineThrottle:0, engineThrustString: "0N", shipDirection: 0,shipDirectionPitch:0, inputSpeed:0, targetSpeed:0, speed:0, cooling:0, heating:0, antennaRX:0, antennaTX:0, fuelConsumptionAvg:0, fuelRange:0,
         lastPing:0, lastPingServerName:"", rcsRThrust:0, rcsLThrust:0, rcsUThrust:0, rcsDThrust:0, priceData:{"Downloading Data...":""}, startId: 0, startIdPlanets:0, aiShipsScanned:[], aiShipsLongScanned:[],
-        shipPings:[], systemPings:[], distanceToSystems: [], priceHistoryKey:"steel"}
+        shipPings:[], systemPings:[], distanceToSystems: [], priceHistoryKey:"steel", priceHistoryKeyId:0, priceOrAmount:"price"}
 
     //network
     listeningPort = [0]
@@ -477,10 +477,14 @@ class Computer extends Part {
                     if (ii>11) {ii=0;iii=150}
                 })
 
-                this.display.drawRect(15,325,70,20,"#494949") //test
+                this.display.drawRect(15,325,70,20,"#494949")
                 this.display.drawText(50, 340, "Target", font1, color1, 'center')
-                this.display.drawRect(100,325,100,20,"#494949") //test
+                this.display.drawRect(100,325,100,20,"#494949")
                 this.display.drawText(150, 340, "Autopilot", font1, color1, 'center')
+
+                this.display.drawRect(220,325,100,20,"#494949")
+                this.display.drawText(270, 340, "Price History", "13px Consolas", color1, 'center')
+
             } else if (this.tab==="nav3") {//---------------------------------------------------------------------------------------Star Systems list
                 //this.data.startId = 0
                 let hColor = "#546db3"
@@ -818,72 +822,87 @@ class Computer extends Part {
 
                 //reset keyInput
                 this.keyInput = ""
-            } else if (this.tab==="priceHistory") { //---------------------------------------------------------------------------------------Price History 
+            } else if (this.tab==="priceHistory") { //---------------------------------------------------------------------------------------Price History
                 //        Object.keys(this.resources).forEach(key => { })
                 let priceData = galaxy.priceHistory[this.nav2PlanetView]
 
+                let priceOrAmount = this.data.priceOrAmount
+
                 let prices = priceData[this.data.priceHistoryKey]
 
+                this.display.drawText(22,25, "<", font1, "#d2d2d2", 'center')
+                this.display.drawRectStroke(10,10,22,20,"#d2d2d2")
 
-                this.display.drawText(20,20, this.data.priceHistoryKey, font1, "#d2d2d2", 'left')
-                let y=40
-                /*for (let i = 0; i<priceData[this.data.priceHistoryKey].length; i++) {
-                    y+=20
-                    this.display.drawText(20,y, i+": "+priceData[this.data.priceHistoryKey][i].price.toFixed(5)+" - "+priceData[this.data.priceHistoryKey][i].amount.toFixed(0), font1, "#d2d2d2", 'left')
-                }*/
+                this.display.drawText(100,25, this.data.priceHistoryKey, font1, "#d2d2d2", 'center')
+
+                this.display.drawText(180,25, ">", font1, "#d2d2d2", 'center')
+                this.display.drawRectStroke(168,10,22,20,"#d2d2d2")
+
+                this.display.drawText(350,25, this.data.priceOrAmount, font1, "#d2d2d2", 'center')
+                this.display.drawRectStroke(300,10,100,20,"#d2d2d2")
+
+                this.display.drawText(20,50, "price in the system", font1, "#5572b2", 'left')
+                this.display.drawText(20,70, "average price in the galaxy", font1, "#9f57b2", 'left')
+
 
                 let max = 0
                 for (let i = 0; i<prices.length; i++) {
-                    if (prices[i].price>max) {
-                        max = prices[i].price
+                    if (prices[i][priceOrAmount]>max) {
+                        max = prices[i][priceOrAmount]
                     }
                 }
                 let min = 0
 
+                let digits = 0
+                let strLength = 10
+                if (priceOrAmount==="price") {
+                    digits = 6
+                    strLength = 7
+                }
+
                 let lineColor = "#909090"
-                this.display.drawText(5,120, (max).toFixed(4) + "", font1, color1, 'left') //1
+                this.display.drawText(5,120, (max).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //1
                 this.display.drawLine(100,120,width,120,1,lineColor)
 
-                this.display.drawText(5,140, (max*0.9090).toFixed(4) + "", font1, color1, 'left') //1
+                this.display.drawText(5,140, (max*0.9090).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //1
                 this.display.drawLine(100,140,width,140,1,lineColor)
 
-                this.display.drawText(5,160, (max*0.8181).toFixed(4) + "", font1, color1, 'left') //0.9
+                this.display.drawText(5,160, (max*0.8181).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.9
                 this.display.drawLine(100,160,width,160,1,lineColor)
 
-                this.display.drawText(5,180, (max*0.7272).toFixed(4) + "", font1, color1, 'left') //0.8
+                this.display.drawText(5,180, (max*0.7272).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.8
                 this.display.drawLine(100,180,width,180,1,lineColor)
 
-                this.display.drawText(5,200, (max*0.6363).toFixed(4) + "", font1, color1, 'left') //0.7
+                this.display.drawText(5,200, (max*0.6363).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.7
                 this.display.drawLine(100,200,width,200,1,lineColor)
 
-                this.display.drawText(5,220, (max*0.5454).toFixed(4) + "", font1, color1, 'left') //0.6
+                this.display.drawText(5,220, (max*0.5454).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.6
                 this.display.drawLine(100,220,width,220,1,lineColor)
 
-                this.display.drawText(5,240, (max*0.4545).toFixed(4) + "", font1, color1, 'left') //0.5
+                this.display.drawText(5,240, (max*0.4545).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.5
                 this.display.drawLine(100,240,width,240,1,lineColor)
 
-                this.display.drawText(5,260, (max*0.3636).toFixed(4) + "", font1, color1, 'left') //0.4
+                this.display.drawText(5,260, (max*0.3636).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.4
                 this.display.drawLine(100,260,width,260,1,lineColor)
 
-                this.display.drawText(5,280, (max*0.2727).toFixed(4) + "", font1, color1, 'left') //0.3
+                this.display.drawText(5,280, (max*0.2727).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.3
                 this.display.drawLine(100,280,width,280,1,lineColor)
 
-                this.display.drawText(5,300, (max*0.1818).toFixed(4) + "", font1, color1, 'left') //0.2
+                this.display.drawText(5,300, (max*0.1818).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.2
                 this.display.drawLine(100,300,width,300,1,lineColor)
 
-                this.display.drawText(5,320, (max*0.0909).toFixed(4) + "", font1, color1, 'left') //0.1
+                this.display.drawText(5,320, (max*0.0909).toFixed(digits).substr(0, strLength) + "", font1, color1, 'left') //0.1
                 this.display.drawLine(100,320,width,320,1,lineColor)
 
-                this.display.drawText(5,340, (min).toFixed(4) + "", font1, color1, 'left') //0
+                this.display.drawText(5,340, (min).toFixed(0) + "", font1, color1, 'left') //0
                 this.display.drawLine(100,340,width,340,1,lineColor)
 
-                //TODO:CHART
                 for (let i = 0; i<prices.length; i++) {
-                    let y1 = prices[i].price
+                    let y1 = prices[i][priceOrAmount]
                     let y2 = y1
                     let xx = 0
                     if (i+1<prices.length) {
-                        y2 = prices[i+1].price
+                        y2 = prices[i+1][priceOrAmount]
                     } else {
                         xx = 4
                     }
@@ -893,6 +912,26 @@ class Computer extends Part {
                     this.display.drawLine((i*5)+100,y1,((i+1)*5)+100-xx,y2,2,"#5572b2")
                     this.display.drawCircle((i*5)+100,y1,2,"#a1c1ff")
                 }
+
+                if (priceOrAmount==="price") {
+                    prices = galaxy.avgPriceHistory[this.data.priceHistoryKey]
+                    for (let i = 0; i<prices.length; i++) {
+                        let y1 = prices[i]
+                        let y2 = y1
+                        let xx = 0
+                        if (i+1<prices.length) {
+                            y2 = prices[i+1]
+                        } else {
+                            xx = 4
+                        }
+                        y1 = 340-((y1/max)*220)
+                        y2 = 340-((y2/max)*220)
+
+                        this.display.drawLine((i*5)+100,y1,((i+1)*5)+100-xx,y2,2,"#9f57b2")
+                        this.display.drawCircle((i*5)+100,y1,2,"#d7b0ff")
+                    }
+                }
+
 
 
             }
