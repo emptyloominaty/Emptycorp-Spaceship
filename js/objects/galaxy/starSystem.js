@@ -169,13 +169,13 @@ class StarSystem {
             let pop = this.totalPopulation/1000000
             this.resources.water.val -= (pop*69.4)*mul
             this.resources.food.val -= (pop*0.694)*mul
-            this.resources.medicine.val -= (pop*0.07)*mul
+            this.resources.medicine.val -= (pop*0.05)*mul
             this.resources.electronics.val -= (pop*0.01)*mul
 
-            this.resources.steel.val -= (pop*0.02)*mul
-            this.resources.polymer.val -= (pop*0.07)*mul
+            this.resources.steel.val -= (pop*0.01)*mul
+            this.resources.polymer.val -= (pop*0.02)*mul
 
-            this.resources.O2.val -= (pop*381.94)*mul
+            this.resources.O2.val -= (pop*360)*mul
             this.resources.deuterium.val -= (pop*0.001)*mul
             this.resources.uranium.val -= (pop*0.0001)*mul
             this.resources.fuel1.val -= (pop*0.001)*mul
@@ -195,14 +195,52 @@ class StarSystem {
         let factNeed = []
         let factTotalNeed = 0
 
+        //this.resources[key].ratio
+        let tickets = 0
+        let ticketsFact = []
+        let ticketsProd = []
 
         for (let i = 0; i<this.producing.length; i++) {
-            prodNeed.push(this.producing[i].peopleNeed)
-            prodTotalNeed += this.producing[i].peopleNeed
+            let ratio = this.resources[this.producing[i].name].ratio
+            if (ratio<=1) {
+                ticketsProd[i] = 10
+            } else {
+                let t = Math.round((2-ratio)*10)
+                if (t<2) {t=2}
+                tickets += 10-t
+                ticketsProd[i] = t
+            }
         }
         for (let i = 0; i<this.factories.length; i++) {
-            factNeed.push(this.factories[i].peopleNeed)
-            factTotalNeed += this.factories[i].peopleNeed
+            let ratio = this.resources[this.factories[i].name].ratio
+            if (ratio<=1.1) {
+                ticketsFact[i] = 10
+
+            } else {
+                let t = Math.round((2-ratio)*10)
+                if (t<2) {t=2}
+                tickets += 10-t
+                ticketsFact[i] = t
+            }
+        }
+
+        let noPF = this.producing.length+this.factories.length
+        let ticketMul = 1+(Math.log1p(tickets/(noPF*10)))
+        /*console.log("----------------------")
+        console.log(tickets)
+        console.log("TM: "+ticketMul)*/
+
+        for (let i = 0; i<this.producing.length; i++) {
+            let mul = (ticketsProd[i]*ticketMul)/10
+            //console.log(this.producing[i].name+": "+mul+" ||| "+this.resources[this.producing[i].name].ratio+" - - - - "+ticketsProd[i])
+            prodNeed.push(this.producing[i].peopleNeed*mul)
+            prodTotalNeed += this.producing[i].peopleNeed*mul
+        }
+        for (let i = 0; i<this.factories.length; i++) {
+            let mul = (ticketsFact[i]*ticketMul)/10
+            //console.log(this.factories[i].name+": "+mul+" ||| "+this.resources[this.factories[i].name].ratio+" - - - - "+ticketsFact[i])
+            factNeed.push(this.factories[i].peopleNeed*mul)
+            factTotalNeed += this.factories[i].peopleNeed*mul
         }
 
 

@@ -33,7 +33,7 @@ class AiShip {
     consumption = 5 // kg per ly
     consumptionC = 5/8765.812756 //kg per c
 
-    cargo = {max:50000,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
+    cargo = {max:200/* t */,val:0,items:[]}  //items:[{name:itemName, val:5000, weight:5000,}]
 
     credits = 0
 

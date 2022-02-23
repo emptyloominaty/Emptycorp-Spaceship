@@ -841,8 +841,13 @@ class Computer extends Part {
                 this.display.drawText(350,25, this.data.priceOrAmount, font1, "#d2d2d2", 'center')
                 this.display.drawRectStroke(300,10,100,20,"#d2d2d2")
 
-                this.display.drawText(20,50, "price in the system", font1, "#5572b2", 'left')
-                this.display.drawText(20,70, "average price in the galaxy", font1, "#9f57b2", 'left')
+                if(this.data.priceOrAmount==="price"){
+                    this.display.drawText(20,50, "price in the system", font1, "#5572b2", 'left')
+                    this.display.drawText(20,70, "average price in the galaxy", font1, "#9f57b2", 'left')
+                } else if(this.data.priceOrAmount==="amount") {
+                    this.display.drawText(20,50, "Quantity in the system", font1, "#5572b2", 'left')
+                }
+
 
 
                 let max = 0
