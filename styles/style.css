@@ -407,17 +407,15 @@ input[type=number] {
     cursor: pointer;
 }
 
+#computerDisplay {
+    position:relative;
+    z-index:2;
+}
 
 
-/* ONLY FOR DEBUG*//*
-div {
+.debugDiv {
     border:1px solid #fff;
-}*/
-
-
-
-
-
+}
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

@@ -164,12 +164,12 @@ class AiShip {
 
                 let itemId = this.cargo.items.findIndex(x => x.name === item)
                 if (itemId===undefined || itemId===-1) {
-                    this.cargo.items.push({name:item, val:bought, weight: bought}) //TODO: WEIGHT FOR GASSES
+                    this.cargo.items.push({name:item, val:bought, weight: bought*constants.density[item]})
                 } else {
                     this.cargo.items[itemId].val+=bought
-                    this.cargo.items[itemId].weight+=bought //TODO: WEIGHT FOR GASSES
+                    this.cargo.items[itemId].weight+=bought*constants.density[item]
                 }
-                this.cargo.val+=bought //TODO: WEIGHT FOR GASSES
+                this.cargo.val+=bought*constants.density[item]  //TODO: WEIGHT FOR GASSES
 
 
                 this.currentTrade = {}
@@ -182,8 +182,8 @@ class AiShip {
 
                 let itemId = this.cargo.items.findIndex(x => x.name === item)
                 this.cargo.items[itemId].val-=amount
-                this.cargo.items[itemId].weight-=amount //TODO: WEIGHT FOR GASSES
-                this.cargo.val-=amount //TODO: WEIGHT FOR GASSES
+                this.cargo.items[itemId].weight-=amount*constants.density[item]
+                this.cargo.val-=amount*constants.density[item]
 
                 this.currentTrade = {}
             }

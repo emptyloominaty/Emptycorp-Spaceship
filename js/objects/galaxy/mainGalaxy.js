@@ -7,6 +7,18 @@ let galaxy = {
     electronics:[], steel:[]}
 }
 
+let constants = {
+    density:{ // gas: g/L
+        O2:0.001429, N2:0.0012506, H2:0.00008988, He:0.0001786,
+        //TODO: ?
+        deuterium:1, fuel1:1, uranium:0,
+        food:1, water:1, medicine:1,
+        iron:1, gold:1, silver:1, aluminium:1, titanium:1, silicon:1, chromium:1, carbon:1, polymer:1, lead:1, copper:1, tungsten:1,
+        electronics:1, steel:1,
+    }
+}
+
+
 let factories = {
     buildFactory:function(name,size,built = false) {
         let factory = JSON.parse(JSON.stringify(this[name]))

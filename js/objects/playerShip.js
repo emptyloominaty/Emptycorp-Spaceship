@@ -651,6 +651,10 @@ class Ship {
                     powerNeed = (thrust*(-1))*(this.weight/75)
                 }
 
+                if (settings.realRcs===0) {
+                    thrust = thrust*10
+                }
+
                 if (!playerShip.usePower(powerNeed/gameFPS,"engine")) {
                     thrust = 0
                 }

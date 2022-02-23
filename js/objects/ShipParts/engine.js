@@ -64,6 +64,9 @@ class Engine extends Part {
                 let thrust = this.thrust*((targetSpeed-speed)/30)*p
                 if (thrust>this.thrust) {thrust = this.thrust}
                 let throttle = thrust/this.thrust
+                if (settings.realRcs===0) {
+                    throttle=throttle/10
+                }
                 if (this.usePower(1,throttle)) {
                     if (this.useFuel(1,throttle)) {
                         return thrust
@@ -99,6 +102,9 @@ class Engine extends Part {
                 let thrust = this.thrust*((speed-targetSpeed)/30)*p
                 if (thrust>this.thrust) {thrust = this.thrust}
                 let throttle = thrust/this.thrust
+                if (settings.realRcs===0) {
+                    throttle=throttle/10
+                }
                 if (this.usePower(1,throttle)) {
                     if (this.useFuel(1,throttle)) {
                         return thrust*(-1)

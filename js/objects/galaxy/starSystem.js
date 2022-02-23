@@ -175,10 +175,26 @@ class StarSystem {
             this.resources.steel.val -= (pop*0.01)*mul
             this.resources.polymer.val -= (pop*0.02)*mul
 
-            this.resources.O2.val -= (pop*360)*mul
-            this.resources.deuterium.val -= (pop*0.001)*mul
-            this.resources.uranium.val -= (pop*0.0001)*mul
-            this.resources.fuel1.val -= (pop*0.001)*mul
+            this.resources.deuterium.val -= (pop*0.005)*mul
+            this.resources.uranium.val -= (pop*0.001)*mul
+            this.resources.fuel1.val -= (pop*0.01)*mul
+
+            this.resources.O2.val -= (pop*300)*mul
+            this.resources.H2.val -= (pop*0.01)*mul
+            this.resources.N2.val -= (pop*0.00001)*mul
+            this.resources.He.val -= (pop*0.0000001)*mul
+
+            this.resources.iron.val -= (pop*0.0005)*mul
+            this.resources.gold.val -= (pop*0.000001)*mul
+            this.resources.silver.val -= (pop*0.00001)*mul
+            this.resources.aluminium.val -= (pop*0.003)*mul
+            this.resources.titanium.val -= (pop*0.0001)*mul
+
+            this.resources.silicon.val -= (pop*0.001)*mul
+            this.resources.chromium.val -= (pop*0.0005)*mul
+            this.resources.lead.val -= (pop*0.0007)*mul
+            this.resources.copper.val -= (pop*0.005)*mul
+            this.resources.tungsten.val -= (pop*0.000001)*mul
 
             //
             this.credits += (pop*this.prosperity)*mul
@@ -454,18 +470,20 @@ class StarSystem {
 
                 let shipCargoAmount = ship.cargo.max-ship.cargo.val
                 let shipCargoLeft =  ship.cargo.max-ship.cargo.val
+
+                //
+
                 let amount = needResources[n].amount
                 let am = amount
-                if (shipCargoAmount<amount) {
+                if (shipCargoAmount<amount*constants.density[needResources[n].name] ) {
                     shipCargoLeft = 0
-                    amount = shipCargoAmount
-                    am = shipCargoAmount
-                    needResources[n].amount-=shipCargoAmount
+                    amount = shipCargoAmount/constants.density[needResources[n].name]
+                    am = shipCargoAmount/constants.density[needResources[n].name]
+                    needResources[n].amount-=shipCargoAmount/constants.density[needResources[n].name]
                 } else {
-                    shipCargoLeft = shipCargoAmount-amount
+                    shipCargoLeft = shipCargoAmount-(amount*constants.density[needResources[n].name])
                     am = amount
-                    amount-=shipCargoAmount
-
+                    amount-=shipCargoAmount/constants.density[needResources[n].name]
                 }
                 //console.log("assigned: "+i+" for:"+n+" - "+needResources[n].name+" ( from "+needResources[n].systemId+" to "+this.id+" )"+" amount:"+am)
                 ship.tradeTodo.push({do:"buy", item:needResources[n].name, amount:am, systemId:needResources[n].systemId})
