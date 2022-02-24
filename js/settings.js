@@ -98,6 +98,10 @@ let keybinds = {
     "Increase Speed":{mod:"",key:"KeyX"},
     "Decrease Speed" :{mod:"",key:"KeyZ"},
     "Shutdown Engine":{mod:"",key:"KeyC"},
+    "Speed Sensitivity +":{mod:"ShiftLeft",key:"Digit1"},
+    "Speed Sensitivity -":{mod:"ShiftLeft",key:"Digit2"},
+    "Mouse Steering":{mod:"ShiftLeft",key:"KeyM"},
+    "NextColumn1":"", //----------------------------------
     "Weapon 1":{mod:"",key:"Digit1"},
     "Weapon 2":{mod:"",key:"Digit2"},
     "Weapon 3":{mod:"",key:"Digit3"},
@@ -105,11 +109,12 @@ let keybinds = {
     "Target Nearest Enemy":{mod:"",key:"Tab"},
     "Reset Target":{mod:"",key:"KeyP"},
     "Show Target":{mod:"",key:"KeyB"},
+    "NextColumn2":"", //----------------------------------
     "Toggle Hud":{mod:"",key:"KeyH"},
     "Autopilot":{mod:"ShiftLeft",key:"KeyA"},
     "Main Generator":{mod:"",key:"KeyG"},
     "Show System Name":{mod:"",key:"Backquote"},
-    "Mouse Steering":{mod:"ShiftLeft",key:"KeyM"},
+    "Map":{mod:"",key:"KeyM"}
     }
 
 
@@ -238,20 +243,25 @@ let generateMenu = function(id) {
         updateSettingsHTML()
     } else if (menus[id]==="keybinds") {//-----------------------------------------------------------------------------------Keybinds
         html += "<div class='keybinds'>"
+        html += "<div class='keybindsColumn'>"
         //keybinds
         Object.keys(keybinds).forEach(key => {
-            if(key!=="keyListening" && key!=="keyDone") {
-                if (key==="Pitch Up" || key==="Pitch Down" || key==="Yaw Left"|| key==="Yaw Right" || key==="Increase Speed" || key==="Decrease Speed") {
-                    keybinds[key].mod=""
+            if (key==="NextColumn1" || key==="NextColumn2" || key==="NextColumn3") {
+                html += "</div><div class='keybindsColumn'>"
+            } else {
+                if(key!=="keyListening" && key!=="keyDone") {
+                    if (key==="Pitch Up" || key==="Pitch Down" || key==="Yaw Left"|| key==="Yaw Right" || key==="Increase Speed" || key==="Decrease Speed") {
+                        keybinds[key].mod=""
+                    }
+                    let mod = ""
+                    if (keybinds[key].mod!=="") {
+                        mod = keybinds[key].mod+" + "
+                    }
+                    html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' onclick='keybinds.keyListening=\""+key+"\"'>"+mod+keybinds[key].key+"</button></div>"
                 }
-                let mod = ""
-                if (keybinds[key].mod!=="") {
-                    mod = keybinds[key].mod+" + "
-                }
-                html+= "<div class='keybind'> <span class='keybindName'>"+key+"</span> <button class='settingItemC keybindButton' onclick='keybinds.keyListening=\""+key+"\"'>"+mod+keybinds[key].key+"</button></div>"
             }
         })
-        html+= "</div>"
+        html+= "</div></div>"
         elements.appSettings.innerHTML = html
     } else if (menus[id]==="galaxyMap") {//-----------------------------------------------------------------------------------Galaxy Map
         html+="<canvas id='galaxyMapCanvas' style='margin:10px;'></canvas>" //TODO: WIDTH 3Modes?  1920x1080 / 1600x900 / 1366x768  (get window size -> change canvas width and height)
@@ -398,6 +408,15 @@ let generateMenu = function(id) {
         }
 
         reDraw()
+        if (!gamePaused) {
+            let mapLoop = function() {
+                reDraw()
+                if (!gamePaused && settingsOpen) {
+                    setTimeout(mapLoop,50)
+                }
+            }
+            mapLoop()
+        }
 
 
 

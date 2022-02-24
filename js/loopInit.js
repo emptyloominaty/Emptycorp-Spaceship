@@ -12,7 +12,7 @@ function loop(timestamp) {
             progress = 250
         }
         keyLoop() //keyboard inputs
-        if (!settingsOpen) {
+        if (!gamePaused) {
             update(progress)
         }
         draw(progress)

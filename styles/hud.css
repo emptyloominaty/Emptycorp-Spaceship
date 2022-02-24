@@ -242,3 +242,15 @@
     width:20px;
     height:20px;
 }
+
+#gamePaused {
+    z-index:50;
+    opacity:0;
+    position:absolute;
+    top:20px;
+    font:35px Consolas;
+    text-shadow: #000 1px 1px 5px;
+    text-align: center;
+    width:100%;
+    transition:opacity 400ms;
+}

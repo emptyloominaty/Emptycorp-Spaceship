@@ -162,25 +162,25 @@ let keyLoop = () => {
     let valSpeed = 1
 
     if (!settingsOpen) {
-        if (speedInputSet==="Default") {
-            if (playerShip.speedMode==="FTL") {
+        if (speedInputSet === "Default") {
+            if (playerShip.speedMode === "FTL") {
                 valSpeed = 3000
             } else {
                 valSpeed = 0.00000006
             }
-        } else if (speedInputSet==="VeryFast") {
+        } else if (speedInputSet === "VeryFast") {
             valSpeed = 15000
-        } else if (speedInputSet==="Fast") {
+        } else if (speedInputSet === "Fast") {
             valSpeed = 3000
-        } else if (speedInputSet==="Medium-Fast") {
+        } else if (speedInputSet === "Medium-Fast") {
             valSpeed = 150
-        } else if (speedInputSet==="Medium") {
+        } else if (speedInputSet === "Medium") {
             valSpeed = 3
-        } else if (speedInputSet==="Medium-Slow") {
+        } else if (speedInputSet === "Medium-Slow") {
             valSpeed = 0.0001
-        } else if (speedInputSet==="Slow") {
+        } else if (speedInputSet === "Slow") {
             valSpeed = 0.00000006
-        } else if (speedInputSet==="VerySlow") {
+        } else if (speedInputSet === "VerySlow") {
             valSpeed = 0.000000006
         }
 
@@ -202,7 +202,39 @@ let keyLoop = () => {
         }*/
 
 
-        if (keybinds["Mouse Steering"].mod==="" || keyPressed[keybinds["Mouse Steering"].mod]) {
+        //"Speed Sensitivity +"
+        if (keybinds["Speed Sensitivity +"].mod === "" || keyPressed[keybinds["Speed Sensitivity +"].mod]) {
+            if (keyPressed[keybinds["Speed Sensitivity +"].key]) {
+                //------------------------------
+                speedIdArray++
+                if (speedIdArray > speedInputArray.length - 1) {
+                    speedIdArray = speedInputArray.length - 1
+                }
+                speedInputSet = speedInputArray[speedIdArray]
+                elements.speedSensitivityValue.innerText = speedInputSet + ""
+                //------------------------------
+                keyPressed[keybinds["Speed Sensitivity +"].key] = false
+            }
+        }
+
+
+        //"Speed Sensitivity -"
+        if (keybinds["Speed Sensitivity -"].mod === "" || keyPressed[keybinds["Speed Sensitivity -"].mod]) {
+            if (keyPressed[keybinds["Speed Sensitivity -"].key]) {
+                //------------------------------
+                speedIdArray--
+                if (speedIdArray < 0) {
+                    speedIdArray = 0
+                }
+                speedInputSet = speedInputArray[speedIdArray]
+                elements.speedSensitivityValue.innerText = speedInputSet + ""
+                //------------------------------
+                keyPressed[keybinds["Speed Sensitivity -"].key] = false
+            }
+        }
+
+
+        if (keybinds["Mouse Steering"].mod === "" || keyPressed[keybinds["Mouse Steering"].mod]) {
             if (keyPressed[keybinds["Mouse Steering"].key]) {
                 if (!mouseSteering) {
                     elements.spaceShipWindow.requestPointerLock()
@@ -218,7 +250,7 @@ let keyLoop = () => {
 
 
         //Toggle Showing Target
-        if (keybinds["Show Target"].mod==="" || keyPressed[keybinds["Show Target"].mod]) {
+        if (keybinds["Show Target"].mod === "" || keyPressed[keybinds["Show Target"].mod]) {
             if (keyPressed[keybinds["Show Target"].key]) {
                 shipWindow3D.enableTargetTorus = Boolean(1 - shipWindow3D.enableTargetTorus)
                 keyPressed[keybinds["Show Target"].key] = false
@@ -226,7 +258,7 @@ let keyLoop = () => {
         }
 
         //Reset Target
-        if (keybinds["Reset Target"].mod==="" || keyPressed[keybinds["Reset Target"].mod]) {
+        if (keybinds["Reset Target"].mod === "" || keyPressed[keybinds["Reset Target"].mod]) {
             if (keyPressed[keybinds["Reset Target"].key]) {
                 playerShip.computers[0].resetTarget()
                 keyPressed[keybinds["Reset Target"].key] = false
@@ -234,7 +266,7 @@ let keyLoop = () => {
         }
 
         //Toggle Star Systems Name
-        if (keybinds["Show System Name"].mod==="" || keyPressed[keybinds["Show System Name"].mod]) {
+        if (keybinds["Show System Name"].mod === "" || keyPressed[keybinds["Show System Name"].mod]) {
             if (keyPressed[keybinds["Show System Name"].key]) {
                 shipWindow3D.drawStarSystemsText = true
             } else {
@@ -243,7 +275,7 @@ let keyLoop = () => {
         }
 
         //Shutdown engines
-        if (keybinds["Shutdown Engine"].mod==="" || keyPressed[keybinds["Shutdown Engine"].mod]) {
+        if (keybinds["Shutdown Engine"].mod === "" || keyPressed[keybinds["Shutdown Engine"].mod]) {
             if (keyPressed[keybinds["Shutdown Engine"].key]) {
                 playerShip.propulsion = "off"
                 playerShip.targetSpeed = 0
@@ -251,7 +283,7 @@ let keyLoop = () => {
             }
         }
         //Autopilot
-        if (keybinds["Autopilot"].mod==="" || keyPressed[keybinds["Autopilot"].mod]) {
+        if (keybinds["Autopilot"].mod === "" || keyPressed[keybinds["Autopilot"].mod]) {
             if (keyPressed[keybinds["Autopilot"].key]) {
                 playerShip.computers[0].toggleAutopilot()
                 keyPressed[keybinds["Autopilot"].key] = false
@@ -260,7 +292,7 @@ let keyLoop = () => {
 
 
         //Main generator
-        if (keybinds["Main Generator"].mod==="" || keyPressed[keybinds["Main Generator"].mod]) {
+        if (keybinds["Main Generator"].mod === "" || keyPressed[keybinds["Main Generator"].mod]) {
             if (keyPressed[keybinds["Main Generator"].key]) {
                 playerShip.generators[0].on = 1 - playerShip.generators[0].on
                 keyPressed[keybinds["Main Generator"].key] = false
@@ -268,7 +300,7 @@ let keyLoop = () => {
         }
 
         //Hide HUD
-        if (keybinds["Toggle Hud"].mod==="" || keyPressed[keybinds["Toggle Hud"].mod]) {
+        if (keybinds["Toggle Hud"].mod === "" || keyPressed[keybinds["Toggle Hud"].mod]) {
             if (keyPressed[keybinds["Toggle Hud"].key]) {
                 hudEnabled = Boolean(1 - hudEnabled)
                 keyPressed[keybinds["Toggle Hud"].key] = false
@@ -288,28 +320,28 @@ let keyLoop = () => {
         }
 
         //weapons
-        if (keybinds["Weapon 1"].mod==="" || keyPressed[keybinds["Weapon 1"].mod]) {
-            if(keyPressed[keybinds["Weapon 1"].key]) {
-                if (playerShip.weapons[0]!==undefined) {
-                    playerShip.weapons[0].doDamage(0,0,0)
+        if (keybinds["Weapon 1"].mod === "" || keyPressed[keybinds["Weapon 1"].mod]) {
+            if (keyPressed[keybinds["Weapon 1"].key]) {
+                if (playerShip.weapons[0] !== undefined) {
+                    playerShip.weapons[0].doDamage(0, 0, 0)
                 }
             }
         }
-        if (keybinds["Weapon 2"].mod==="" || keyPressed[keybinds["Weapon 2"].mod]) {
+        if (keybinds["Weapon 2"].mod === "" || keyPressed[keybinds["Weapon 2"].mod]) {
             if (keyPressed[keybinds["Weapon 2"].key]) {
                 if (playerShip.weapons[1] !== undefined) {
                     playerShip.weapons[1].doDamage(0, 0, 0)
                 }
             }
         }
-        if (keybinds["Weapon 3"].mod==="" || keyPressed[keybinds["Weapon 3"].mod]) {
+        if (keybinds["Weapon 3"].mod === "" || keyPressed[keybinds["Weapon 3"].mod]) {
             if (keyPressed[keybinds["Weapon 3"].key]) {
                 if (playerShip.weapons[2] !== undefined) {
                     playerShip.weapons[2].doDamage(0, 0, 0)
                 }
             }
         }
-        if (keybinds["Weapon 4"].mod==="" || keyPressed[keybinds["Weapon 4"].mod]) {
+        if (keybinds["Weapon 4"].mod === "" || keyPressed[keybinds["Weapon 4"].mod]) {
             if (keyPressed[keybinds["Weapon 4"].key]) {
                 if (playerShip.weapons[3] !== undefined) {
                     playerShip.weapons[3].doDamage(0, 0, 0)
@@ -319,50 +351,50 @@ let keyLoop = () => {
 
         //speed
         if (keyPressed[keybinds["Increase Speed"].key]) {
-            playerShip.targetSpeed+=valSpeed
-            playerShip.propulsion="on"
-            if (playerShip.speedMode==="Sublight") {
-                if (playerShip.speed<playerShip.targetSpeed) {
+            playerShip.targetSpeed += valSpeed
+            playerShip.propulsion = "on"
+            if (playerShip.speedMode === "Sublight") {
+                if (playerShip.speed < playerShip.targetSpeed) {
                     playerShip.acc = 1
                 } else {
                     playerShip.acc = 0
                 }
             }
         } else if (keyPressed[keybinds["Decrease Speed"].key]) {
-            playerShip.targetSpeed-=valSpeed
-            if (playerShip.speedMode==="Sublight") {
-                playerShip.propulsion="on"
-                if (playerShip.speed<playerShip.targetSpeed) {
+            playerShip.targetSpeed -= valSpeed
+            if (playerShip.speedMode === "Sublight") {
+                playerShip.propulsion = "on"
+                if (playerShip.speed < playerShip.targetSpeed) {
                     playerShip.acc = 1
                 } else {
                     playerShip.acc = 0
                 }
             }
         }
-        if (keybinds["Target Nearest Enemy"].mod==="" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
+        if (keybinds["Target Nearest Enemy"].mod === "" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
             if (keyPressed[keybinds["Target Nearest Enemy"].key]) {
                 playerShip.computers[0].functions.findNearestEnemyTarget()
                 keyPressed[keybinds["Target Nearest Enemy"].key] = false
             }
         }
     } else {
-        if (menuIn==="galaxyMap") {
+        if (menuIn === "galaxyMap") {
             let s = settingsData.mapScaling
             if (keyPressed[keybinds["Yaw Left"].key]) {
-                settingsData.centerX += 10/s
+                settingsData.centerX += 10 / s
                 generateMenu(1)
             } else if (keyPressed[keybinds["Yaw Right"].key]) {
-                settingsData.centerX -= 10/s
+                settingsData.centerX -= 10 / s
                 generateMenu(1)
             }
             if (keyPressed[keybinds["Pitch Up"].key]) {
-                settingsData.centerY += 10/s
+                settingsData.centerY += 10 / s
                 generateMenu(1)
             } else if (keyPressed[keybinds["Pitch Down"].key]) {
-                settingsData.centerY -= 10/s
+                settingsData.centerY -= 10 / s
                 generateMenu(1)
             }
-            if (keybinds["Target Nearest Enemy"].mod==="" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
+            if (keybinds["Target Nearest Enemy"].mod === "" || keyPressed[keybinds["Target Nearest Enemy"].mod]) {
                 if (keyPressed[keybinds["Target Nearest Enemy"].key]) {
                     settingsData.centerX = playerShip.position.x
                     settingsData.centerY = playerShip.position.y
@@ -376,9 +408,26 @@ let keyLoop = () => {
 
     }
 
+    if (keybinds["Map"].mod === "" || keyPressed[keybinds["Map"].mod]) {
+        if (keyPressed[keybinds["Map"].key]) {
+            settingsOpen = !settingsOpen
+            updateMenu(1)
+            keyPressed[keybinds["Map"].key] = false
+        }
+    }
+
 
     if (keyPressed["Escape"]) {
         settingsOpen = !settingsOpen
+        if (!settingsOpen) {
+            document.getElementById("gamePaused").style.opacity = 0
+            gamePaused = false
+        } else {
+            document.getElementById("gamePaused").style.opacity = 1
+            gamePaused = true
+        }
+
+
         keyPressed["Escape"] = false
     }
 

@@ -1,5 +1,6 @@
 let debug = {performance:false,timeA:0,timeB:0,timeC:0,timeD:0,timeE:0,timeF:0}
 let settingsOpen = false
+let gamePaused = false
 let lastRender = 0
 let progress = 16.666666666666666666666666666667
 let gameFPS = 60
