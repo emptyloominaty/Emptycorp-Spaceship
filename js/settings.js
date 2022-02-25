@@ -250,9 +250,6 @@ let generateMenu = function(id) {
                 html += "</div><div class='keybindsColumn'>"
             } else {
                 if(key!=="keyListening" && key!=="keyDone") {
-                    if (key==="Pitch Up" || key==="Pitch Down" || key==="Yaw Left"|| key==="Yaw Right" || key==="Increase Speed" || key==="Decrease Speed") {
-                        keybinds[key].mod=""
-                    }
                     let mod = ""
                     if (keybinds[key].mod!=="") {
                         mod = keybinds[key].mod+" + "
