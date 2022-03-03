@@ -66,7 +66,7 @@ let settingsList = {
     ],
     "Graphics":[
         new Setting("Render Quality","renderQuality",[0,1,2],{0:"50%",1:"75%",2:"100%"},[0.5,0.75,1],2),
-        new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,1000,100000],2),
+        new Setting("Render Distance","renderDistance",[0,1,2],{0:"Low",1:"Medium",2:"High"},[10,50,100],2),
         new Setting("Antialiasing","antialiasing",[0,1,2,3],{0:"Off",1:"SMAA",2:"SSAA 2x",3:"SSAA 4x"},[0,1,2,3],0),
         new Setting("MSAA","antialiasingmsaa",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Bloom","bloom",[0,1,2],{0:"Off",1:"Low",2:"High"},[0,0.8,1.6],1),
@@ -264,6 +264,8 @@ let generateMenu = function(id) {
         html+="<canvas id='galaxyMapCanvas' style='margin:10px;'></canvas>" //TODO: WIDTH 3Modes?  1920x1080 / 1600x900 / 1366x768  (get window size -> change canvas width and height)
         elements.appSettings.innerHTML = html
         let canvasElement = document.getElementById("galaxyMapCanvas")
+
+        let mapObjects = [] // {id: 0-x, type:system, data:...}  {id: x-y, type:ship, data:...}
 
         let changeScaling = (event) => {
             event.preventDefault()

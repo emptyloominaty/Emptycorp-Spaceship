@@ -244,6 +244,7 @@
 }
 
 #gamePaused {
+    pointer-events: none;
     z-index:50;
     opacity:0;
     position:absolute;
