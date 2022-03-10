@@ -149,7 +149,13 @@ function update(progress) {
             //Update Avg Prices
             let no = 0
             let avgIdx = galaxy.avgPriceHistory["steel"].length
+            if (avgIdx>99) {
+                avgIdx=99
+            }
             Object.keys(galaxy.avgPriceHistory).forEach(key => {
+                if (galaxy.avgPriceHistory["steel"].length===100) {
+                    galaxy.avgPriceHistory[key].shift()
+                }
                 galaxy.avgPriceHistory[key][avgIdx] = 0
             })
             for (let i = 0; i<galaxy.priceHistory.length; i++) {

@@ -1,3 +1,5 @@
+let speedInc2 = 1
+
 function loop(timestamp) {
     //TODO:FIX SYNC
     let wait = false
@@ -13,7 +15,9 @@ function loop(timestamp) {
         }
         keyLoop() //keyboard inputs
         if (!gamePaused) {
-            update(progress)
+            for (let i = 0; i<speedInc2; i++) {
+                update(progress)
+            }
         }
         draw(progress)
 

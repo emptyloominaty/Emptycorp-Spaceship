@@ -265,7 +265,7 @@ let generateMenu = function(id) {
         elements.appSettings.innerHTML = html
         let canvasElement = document.getElementById("galaxyMapCanvas")
 
-        let mapObjects = [] // {id: 0-x, type:system, data:...}  {id: x-y, type:ship, data:...}
+        let mapObjects = [] //TODO: {id: 0-x, type:system, data:...}  {id: x-y, type:ship, data:...}
 
         let changeScaling = (event) => {
             event.preventDefault()
