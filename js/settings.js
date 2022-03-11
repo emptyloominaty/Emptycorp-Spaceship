@@ -440,9 +440,9 @@ let generateMenu = function(id) {
 
         for (let i = 0; i<playerShip.generators.length; i++) {
             let generatorFuelLeft = playerShip.checkTank(playerShip.generators[i].generatorFuelType)/playerShip.generators[i].consumption
-            let totalPowerLeft = (generatorFuelLeft*playerShip.generators[i].output)/3600
+            let totalPowerLeft = ((generatorFuelLeft*playerShip.generators[i].output)/3600)*1000000 //Wh
 
-            html+="<span>"+playerShip.generators[i].type+" Total Power Left: "+(totalPowerLeft).toFixed(0)+" MWh </span>"
+            html+="<span>"+playerShip.generators[i].type+" Total Power Left: "+getPowerText(totalPowerLeft)+" </span>"
         }
         html+="<span>Weapons: </span>"
         for (let i = 0; i<playerShip.weapons.length; i++) {

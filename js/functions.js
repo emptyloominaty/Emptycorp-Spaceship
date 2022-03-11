@@ -73,6 +73,22 @@ let getSpeedText = function(speed) {
     return ret
 }
 
+let getPowerText = function(power) {
+    let ret
+    if (power>1000000000000) {
+        ret = (power/1000000000000).toFixed(1)+" TWh"
+    } else if (power>1000000000) {
+        ret = (power/1000000000).toFixed(1)+" GWh"
+    } else if (power>1000000) {
+        ret = (power/1000000).toFixed(1)+" MWh"
+    } else if (power>1000) {
+        ret = (power/1000).toFixed(1)+" kWh"
+    } else {
+        ret = (power)+"Wh"
+    }
+    return ret
+}
+
 let throttleBar = function(throttle,el,a=0,b=10,c=20,d=30,e=40,f=50,g=60,h=70,i=80,j=90) {
     elements[el+1].style.backgroundColor = "#000"
     elements[el+2].style.backgroundColor = "#000"
