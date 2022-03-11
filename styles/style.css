@@ -376,6 +376,14 @@ input[type=number] {
     transition: transform 500ms;
 }
 
+#rcsControl label {
+    margin-right:50px;
+}
+
+#antennasControl {
+    width:140px;
+}
+
 .inputRange {
     -webkit-appearance: none;
     width: 70px;

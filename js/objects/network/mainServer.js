@@ -18,7 +18,7 @@ class MainServer {
         let a = this.addressList[senderAddress].object.position.x - this.addressList[address].object.position.x
         let b = this.addressList[senderAddress].object.position.y - this.addressList[address].object.position.y
         let c = this.addressList[senderAddress].object.position.z - this.addressList[address].object.position.z
-        let latency = (Math.sqrt( a*a + b*b + c*c )/this.speedOfData*1000)*2
+        let latency = ((Math.sqrt( a*a + b*b + c*c )/this.speedOfData*1000)*2)
         if (latency<2) { latency = 1+Math.random()}
         //console.log(latency)
 
@@ -34,7 +34,7 @@ class MainServer {
             }
             //console.log(senderAddress+" -> "+address)
             return this.addressList[address].object.receive(size,address,port,data,senderAddress)
-        },latency)
+        },(latency/speedInc)/speedInc2)
     }
 
     run() {

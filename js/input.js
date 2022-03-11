@@ -103,8 +103,16 @@ let inputFunctions = {
     setDirection() {
         playerShip.position.yaw.targetDirection =  +(document.getElementById("inputRange_direction").value)+360
     },
-    setTime() {
-        speedInc =  +(document.getElementById("inputRange_time").value)
+    setPitchDirection() {
+        playerShip.position.pitch.targetDirection =  +(document.getElementById("inputRange_directionPitch").value)+180
+    },
+    setTimeFPS() {
+        speedInc =  Number(document.getElementById("timeSpeedFPS").value)
+        elements.timeSpeed.textContent = "Time Speed "+(speedInc*speedInc2)+"x"
+    },
+    setTimeMul() {
+        speedInc2 =  Number(document.getElementById("timeSpeedMul").value)
+        elements.timeSpeed.textContent = "Time Speed "+(speedInc*speedInc2)+"x"
     },
     toggleAutopilot() {
         playerShip.computers[0].toggleAutopilot()

@@ -92,6 +92,7 @@ let elements = {
     hudPitchCenter: document.getElementById("hudPitchCenter"),
     hudRCS:document.getElementById("hudRCS"),
     rcsControl: document.getElementById("rcsControl"),
+    timeSpeed: document.getElementById("timeSpeed"),
 }
 
 let speedInc = 1

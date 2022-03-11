@@ -76,7 +76,6 @@ let settingsList = {
     "Dev/Experimental":[
         new Setting("Debug Perf","debugPerformance",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Debug Div","debugDiv",[0,1],{0:"Off",1:"On"},[0,1],0),
-        new Setting("Max Time Speed (DONT!)","maxTimeSpeed",[4,5,8,10,30,60],{4:"4x",5:"5x",8:"8x",10:"10x",30:"30x",60:"60x"},[4,5,8,10,30,60],4),
         new Setting("MultiThreading","multiThreading",[0,1],{0:"Off",1:"On"},[0,1],0),
         new Setting("Draw ALL ships in Nav","drawAllShips",[0,1],{0:"Off",1:"On"},[0,1],1),
         new Setting("Far Update (every x frames)","shipFarUpdate",[6,10,15,20,30],{6:"6",10:"10",15:"15",20:"20",30:"30"},[6,10,15,20,30],20),
@@ -165,8 +164,6 @@ let updateSettings = function() {
     shipWindow3D.camera.updateProjectionMatrix()
     //render Quality
     shipWindow3D.renderer.setPixelRatio(settingsList["Graphics"][0].values[settingsList["Graphics"][0].value])
-    //
-    document.getElementById("inputRange_time").max = settings.maxTimeSpeed //settingsList["Dev/Experimental"][1].value
     //
     debug.performance = Boolean(settings.debugPerformance)
     if (settings.disableResourceSim===1) {
